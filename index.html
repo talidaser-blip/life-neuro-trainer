@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuroHero: Daily Practice</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #f0f4f8; margin: 0; padding: 20px; display: flex; justify-content: center; }
+    .card { background: white; max-width: 450px; width: 100%; border-radius: 16px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+    h1 { font-size: 20px; margin-top: 0; color: #1e293b; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 8px; font-size: 12px; font-weight: 600; background: #e0e7ff; color: #4338ca; margin-bottom: 12px; }
+    .quest-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 20px; }
+    .quest-title { font-weight: 600; color: #0f172a; margin-bottom: 6px; }
+    .quest-desc { font-size: 14px; color: #475569; line-height: 1.4; }
+    .btn { display: block; width: 100%; padding: 12px; border: none; border-radius: 10px; background: #2563eb; color: white; font-weight: 600; cursor: pointer; text-align: center; }
+    .btn:hover { background: #1d4ed8; }
+    .stats { display: flex; justify-content: space-between; margin-top: 20px; font-size: 13px; color: #64748b; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <span class="badge" id="levelBadge">Level 1 • Valley of Words</span>
+    <h1 id="questHeading">Task of the Day</h1>
+    
+    <div class="quest-box">
+      <div class="quest-title" id="questTitle">Stop-Words Purge</div>
+      <div class="quest-desc" id="questDesc">
+        Find 3 negative phrases in your speech today and rephrase them.
+        <br><br>
+        <i>Instead of:</i> "I am too old for this"<br>
+        <i>Say:</i> "I am slightly tired today"
+      </div>
+    </div>
+
+    <button class="btn" id="completeBtn" onclick="nextLevel()">Mark as Completed (+50 XP)</button>
+
+    <div class="stats">
+      <span>Personal Power: <b id="xpVal">0 XP</b></span>
+      <span>Streak: <b id="streakVal">1 day</b></span>
+    </div>
+  </div>
+
+  <script>
+    const quests = [
+      {
+        badge: "Level 1 • Valley of Words",
+        title: "Stop-Words Purge",
+        desc: "Find 3 negative phrases in your speech today and rephrase them.<br><br><i>Rule:</i> Replace 'exhausted' with 'a bit tired' and 'old' with 'experienced'."
+      },
+      {
+        badge: "Level 2 • Temple of Neurobics",
+        title: "Non-Dominant Hand",
+        desc: "Brush your teeth and scroll your phone using your left hand (or right if you are left-handed).<br><br><i>Goal:</i> Build new neural pathways."
+      },
+      {
+        badge: "Level 3 • Daily Reflection",
+        title: "Three Daily Wins",
+        desc: "Write down 3 small wins of today in simple English (Past Simple):<br><br>1. I walked outside.<br>2. I drank enough water.<br>3. I practiced English."
+      }
+    ];
+
+    let currentIdx = 0;
+    let xp = 0;
+
+    function nextLevel() {
+      xp += 50;
+      document.getElementById('xpVal').innerText = xp + " XP";
+      currentIdx++;
+      if (currentIdx < quests.length) {
+        document.getElementById('levelBadge').innerText = quests[currentIdx].badge;
+        document.getElementById('questTitle').innerText = quests[currentIdx].title;
+        document.getElementById('questDesc').innerHTML = quests[currentIdx].desc;
+      } else {
+        document.getElementById('questHeading').innerText = "All levels completed!";
+        document.getElementById('questDesc').innerText = "Great job! Keep practicing your healthy habits.";
+        document.getElementById('completeBtn').style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>
