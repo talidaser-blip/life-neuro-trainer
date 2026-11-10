@@ -1,61 +1,148 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NeuroHero: Daily Practice</title>
+  <title>NeuroHero: Ежедневная практика</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #f0f4f8; margin: 0; padding: 20px; display: flex; justify-content: center; }
-    .card { background: white; max-width: 450px; width: 100%; border-radius: 16px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-    h1 { font-size: 20px; margin-top: 0; color: #1e293b; }
-    .badge { display: inline-block; padding: 4px 8px; border-radius: 8px; font-size: 12px; font-weight: 600; background: #e0e7ff; color: #4338ca; margin-bottom: 12px; }
-    .quest-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 20px; }
-    .quest-title { font-weight: 600; color: #0f172a; margin-bottom: 6px; }
-    .quest-desc { font-size: 14px; color: #475569; line-height: 1.4; }
-    .btn { display: block; width: 100%; padding: 12px; border: none; border-radius: 10px; background: #2563eb; color: white; font-weight: 600; cursor: pointer; text-align: center; }
-    .btn:hover { background: #1d4ed8; }
-    .stats { display: flex; justify-content: space-between; margin-top: 20px; font-size: 13px; color: #64748b; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0d0d0d;
+      color: #ff8c00;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 90vh;
+    }
+    .card {
+      background: #1a1a1a;
+      max-width: 480px;
+      width: 100%;
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 8px 32px rgba(255, 140, 0, 0.15);
+      border: 1px solid #332211;
+    }
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      background: #2b1805;
+      color: #ff9900;
+      border: 1px solid #ff7700;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    h1 {
+      font-size: 24px;
+      margin-top: 0;
+      margin-bottom: 16px;
+      color: #ffffff;
+    }
+    .quest-box {
+      background: #141414;
+      border: 1px solid #ff6600;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    .quest-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #ff8c00;
+      margin-bottom: 10px;
+    }
+    .quest-desc {
+      font-size: 15px;
+      color: #ffd8a8;
+      line-height: 1.6;
+    }
+    .quest-desc i {
+      color: #ffaa44;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #ff8c00, #ff5500);
+      color: #000000;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 15px rgba(255, 102, 0, 0.4);
+    }
+    .btn:hover {
+      background: linear-gradient(135deg, #ffa31a, #ff6a00);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 102, 0, 0.6);
+    }
+    .btn:active {
+      transform: translateY(0);
+    }
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 24px;
+      font-size: 14px;
+      color: #888888;
+      border-top: 1px solid #262626;
+      padding-top: 16px;
+    }
+    .stats b {
+      color: #ff9900;
+    }
   </style>
 </head>
 <body>
   <div class="card">
-    <span class="badge" id="levelBadge">Level 1 • Valley of Words</span>
-    <h1 id="questHeading">Task of the Day</h1>
+    <span class="badge" id="levelBadge">Уровень 1 • Долина слов</span>
+    <h1 id="questHeading">Задание дня</h1>
     
     <div class="quest-box">
-      <div class="quest-title" id="questTitle">Stop-Words Purge</div>
+      <div class="quest-title" id="questTitle">Очистка от стоп-слов</div>
       <div class="quest-desc" id="questDesc">
-        Find 3 negative phrases in your speech today and rephrase them.
-        <br><br>
-        <i>Instead of:</i> "I am too old for this"<br>
-        <i>Say:</i> "I am slightly tired today"
+        Найдите 3 негативные фразы о возрасте и перефразируйте их.<br><br>
+        <i>Вместо:</i> «I am too old for this» (Я слишком стар(а) для этого)<br>
+        <i>Говорите:</i> «I am slightly tired today» (Я сегодня слегка устал(а))
       </div>
     </div>
 
-    <button class="btn" id="completeBtn" onclick="nextLevel()">Mark as Completed (+50 XP)</button>
+    <button class="btn" id="completeBtn" onclick="nextLevel()">Выполнено (+50 XP)</button>
 
     <div class="stats">
-      <span>Personal Power: <b id="xpVal">0 XP</b></span>
-      <span>Streak: <b id="streakVal">1 day</b></span>
+      <span>Личная сила: <b id="xpVal">0 XP</b></span>
+      <span>Серия: <b id="streakVal">1 день</b></span>
     </div>
   </div>
 
   <script>
     const quests = [
       {
-        badge: "Level 1 • Valley of Words",
-        title: "Stop-Words Purge",
-        desc: "Find 3 negative phrases in your speech today and rephrase them.<br><br><i>Rule:</i> Replace 'exhausted' with 'a bit tired' and 'old' with 'experienced'."
+        badge: "Уровень 1 • Долина слов",
+        heading: "Задание дня",
+        title: "Очистка от стоп-слов",
+        desc: "Найдите 3 негативные фразы о возрасте в речи или мыслях и замените их на нейтральные.<br><br><i>Правило:</i> Заменяйте 'exhausted' на 'a bit tired', а слово 'old' на 'experienced'."
       },
       {
-        badge: "Level 2 • Temple of Neurobics",
-        title: "Non-Dominant Hand",
-        desc: "Brush your teeth and scroll your phone using your left hand (or right if you are left-handed).<br><br><i>Goal:</i> Build new neural pathways."
+        badge: "Уровень 2 • Храм нейробики",
+        heading: "Задание дня",
+        title: "Неведущая рука",
+        desc: "Почистите зубы и листайте ленту в телефоне левой рукой (или правой, если вы левша).<br><br><i>Цель:</i> Пробудить мозг и создать новые нейронные связи."
       },
       {
-        badge: "Level 3 • Daily Reflection",
-        title: "Three Daily Wins",
-        desc: "Write down 3 small wins of today in simple English (Past Simple):<br><br>1. I walked outside.<br>2. I drank enough water.<br>3. I practiced English."
+        badge: "Уровень 3 • Вечерний журнал",
+        heading: "Задание дня",
+        title: "Три победы за день",
+        desc: "Запишите 3 приятных события или маленьких успеха за сегодня на простом английском (Past Simple):<br><br>1. <i>I walked outside.</i> (Я погулял(а) на улице)<br>2. <i>I drank enough water.</i> (Я выпил(а) достаточно воды)<br>3. <i>I practiced a new habit.</i> (Я попрактиковал(а) новую привычку)"
       }
     ];
 
@@ -68,11 +155,14 @@
       currentIdx++;
       if (currentIdx < quests.length) {
         document.getElementById('levelBadge').innerText = quests[currentIdx].badge;
+        document.getElementById('questHeading').innerText = quests[currentIdx].heading;
         document.getElementById('questTitle').innerText = quests[currentIdx].title;
         document.getElementById('questDesc').innerHTML = quests[currentIdx].desc;
       } else {
-        document.getElementById('questHeading').innerText = "All levels completed!";
-        document.getElementById('questDesc').innerText = "Great job! Keep practicing your healthy habits.";
+        document.getElementById('levelBadge').innerText = "Все уровни пройдены!";
+        document.getElementById('questHeading').innerText = "Великолепная работа!";
+        document.getElementById('questTitle').innerText = "Практика завершена";
+        document.getElementById('questDesc').innerHTML = "Вы отлично справились со всеми шагами на сегодня. Сохраняйте этот настрой и продолжайте закреплять привычки!";
         document.getElementById('completeBtn').style.display = "none";
       }
     }
