@@ -3,169 +3,320 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NeuroHero: Ежедневная практика</title>
+  <title>НейроГерой: Практика молодости</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #0d0d0d;
-      color: #ff8c00;
+      background: #e89500; /* Теплый сочный оранжевый фон как на картинке */
+      color: #2b1f14;
       margin: 0;
-      padding: 20px;
+      padding: 16px;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 90vh;
+      min-height: 95vh;
+      box-sizing: border-box;
     }
+
     .card {
-      background: #1a1a1a;
+      background: #ffffff;
       max-width: 480px;
       width: 100%;
-      border-radius: 20px;
-      padding: 28px;
-      box-shadow: 0 8px 32px rgba(255, 140, 0, 0.15);
-      border: 1px solid #332211;
+      border-radius: 28px;
+      padding: 26px;
+      box-shadow: 0 14px 35px rgba(180, 100, 0, 0.28);
+      border: 3px solid #ffffff;
+      box-sizing: border-box;
+      position: relative;
     }
+
+    .badge-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
     .badge {
       display: inline-block;
-      padding: 6px 12px;
-      border-radius: 8px;
+      padding: 6px 14px;
+      border-radius: 20px;
       font-size: 13px;
-      font-weight: 700;
-      background: #2b1805;
-      color: #ff9900;
-      border: 1px solid #ff7700;
-      margin-bottom: 16px;
+      font-weight: 800;
+      background: #fff0f3;
+      color: #ff3b65; /* Розовый акцент как сердечко */
+      border: 1.5px solid #ffccd5;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
-    h1 {
-      font-size: 24px;
-      margin-top: 0;
-      margin-bottom: 16px;
-      color: #ffffff;
-    }
-    .quest-box {
-      background: #141414;
-      border: 1px solid #ff6600;
-      border-radius: 14px;
-      padding: 20px;
-      margin-bottom: 24px;
-    }
-    .quest-title {
-      font-size: 18px;
+
+    .xp-pill {
+      background: #e8f7f8;
+      color: #198c90; /* Голубой акцент */
+      font-size: 13px;
       font-weight: 700;
-      color: #ff8c00;
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1.5px solid #bce6e8;
+    }
+
+    h1 {
+      font-size: 22px;
+      margin: 4px 0 16px 0;
+      color: #2b1f14;
+      font-weight: 800;
+    }
+
+    .progress-bar {
+      background: #f4ede4;
+      border-radius: 12px;
+      height: 10px;
+      width: 100%;
+      margin-bottom: 22px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      background: linear-gradient(90deg, #38b6ba, #ff5b79); /* Переход от голубого к розовому */
+      height: 100%;
+      width: 0%;
+      transition: width 0.35s ease;
+      border-radius: 12px;
+    }
+
+    .phrase-box {
+      background: #fffaf4;
+      border: 2px solid #f6cf8a;
+      border-radius: 20px;
+      padding: 24px 20px;
+      margin-bottom: 22px;
+      min-height: 130px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-shadow: inset 0 2px 6px rgba(232, 149, 0, 0.06);
+    }
+
+    .old-phrase {
+      font-size: 14px;
+      color: #9d8b7a;
+      text-decoration: line-through;
       margin-bottom: 10px;
+      font-weight: 500;
     }
-    .quest-desc {
-      font-size: 15px;
-      color: #ffd8a8;
-      line-height: 1.6;
+
+    .new-phrase {
+      font-size: 19px;
+      font-weight: 800;
+      color: #d66c00; /* Выразительный оранжево-терракотовый для текста мысли */
+      line-height: 1.45;
     }
-    .quest-desc i {
-      color: #ffaa44;
-    }
+
     .btn {
       display: block;
       width: 100%;
-      padding: 14px;
+      padding: 16px;
       border: none;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #ff8c00, #ff5500);
-      color: #000000;
+      border-radius: 18px;
+      background: #ff5b79; /* Розовая кнопка */
+      color: #ffffff;
       font-size: 16px;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
       text-align: center;
       transition: all 0.2s ease;
-      box-shadow: 0 4px 15px rgba(255, 102, 0, 0.4);
+      box-shadow: 0 6px 18px rgba(255, 91, 121, 0.35);
+      margin-bottom: 10px;
     }
+
     .btn:hover {
-      background: linear-gradient(135deg, #ffa31a, #ff6a00);
+      background: #ff3b61;
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(255, 102, 0, 0.6);
+      box-shadow: 0 8px 22px rgba(255, 91, 121, 0.45);
     }
+
     .btn:active {
       transform: translateY(0);
     }
+
+    .btn-secondary {
+      background: #ffffff;
+      border: 2px solid #38b6ba; /* Голубая обводка */
+      color: #198c90;
+      box-shadow: none;
+    }
+
+    .btn-secondary:hover {
+      background: #effafb;
+      transform: none;
+      box-shadow: none;
+    }
+
     .stats {
       display: flex;
       justify-content: space-between;
-      margin-top: 24px;
-      font-size: 14px;
-      color: #888888;
-      border-top: 1px solid #262626;
-      padding-top: 16px;
+      margin-top: 18px;
+      font-size: 13px;
+      color: #8c7b6d;
+      border-top: 2px dashed #f0e6da;
+      padding-top: 14px;
+      font-weight: 600;
     }
+
     .stats b {
-      color: #ff9900;
+      color: #d66c00;
     }
   </style>
 </head>
 <body>
   <div class="card">
-    <span class="badge" id="levelBadge">Уровень 1 • Долина слов</span>
-    <h1 id="questHeading">Задание дня</h1>
-    
-    <div class="quest-box">
-      <div class="quest-title" id="questTitle">Очистка от стоп-слов</div>
-      <div class="quest-desc" id="questDesc">
-        Найдите 3 негативные фразы о возрасте и перефразируйте их.<br><br>
-        <i>Вместо:</i> «I am too old for this» (Я слишком стар(а) для этого)<br>
-        <i>Говорите:</i> «I am slightly tired today» (Я сегодня слегка устал(а))
-      </div>
+    <div class="badge-row">
+      <span class="badge" id="blockBadge">Уровень 1 • Блок 1</span>
+      <span class="xp-pill"><b id="xpVal">0</b> XP</span>
     </div>
 
-    <button class="btn" id="completeBtn" onclick="nextLevel()">Выполнено (+50 XP)</button>
+    <h1 id="blockTitle">Очистка от стоп-слов</h1>
+    
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <div class="phrase-box">
+      <div class="old-phrase" id="oldText">Загрузка карточки...</div>
+      <div class="new-phrase" id="newText">Пожалуйста, подождите</div>
+    </div>
+
+    <button class="btn" id="nextBtn" onclick="nextCard()">Запомнила (+5 XP)</button>
+    <button class="btn btn-secondary" id="restartBlockBtn" onclick="restartBlock()" style="display: none;">Пройти блок заново</button>
 
     <div class="stats">
-      <span>Личная сила: <b id="xpVal">0 XP</b></span>
-      <span>Серия: <b id="streakVal">1 день</b></span>
+      <span>Прогресс: <b id="cardCount">0 / 0</b></span>
+      <span>Статус: <b id="statusVal">В процессе</b></span>
     </div>
   </div>
 
   <script>
-    const quests = [
-      {
-        badge: "Уровень 1 • Долина слов",
-        heading: "Задание дня",
-        title: "Очистка от стоп-слов",
-        desc: "Найдите 3 негативные фразы о возрасте в речи или мыслях и замените их на нейтральные.<br><br><i>Правило:</i> Заменяйте 'exhausted' на 'a bit tired', а слово 'old' на 'experienced'."
-      },
-      {
-        badge: "Уровень 2 • Храм нейробики",
-        heading: "Задание дня",
-        title: "Неведущая рука",
-        desc: "Почистите зубы и листайте ленту в телефоне левой рукой (или правой, если вы левша).<br><br><i>Цель:</i> Пробудить мозг и создать новые нейронные связи."
-      },
-      {
-        badge: "Уровень 3 • Вечерний журнал",
-        heading: "Задание дня",
-        title: "Три победы за день",
-        desc: "Запишите 3 приятных события или маленьких успеха за сегодня на простом английском (Past Simple):<br><br>1. <i>I walked outside.</i> (Я погулял(а) на улице)<br>2. <i>I drank enough water.</i> (Я выпил(а) достаточно воды)<br>3. <i>I practiced a new habit.</i> (Я попрактиковал(а) новую привычку)"
-      }
+    // Список блоков Уровня 1
+    const blocks = [
+      { file: "levels/level_1_block_1.txt", badge: "Уровень 1 • Блок 1", title: "Замена слов-разрушителей" },
+      { file: "levels/level_1_block_2.txt", badge: "Уровень 1 • Блок 2", title: "Молодость и сияние кожи" },
+      { file: "levels/level_1_block_3.txt", badge: "Уровень 1 • Блок 3", title: "Ясность ума и энергия" },
+      { file: "levels/level_1_block_4.txt", badge: "Уровень 1 • Блок 4", title: "Золотые афоризмы мудрости" }
     ];
 
-    let currentIdx = 0;
+    // Встроенный запасной список карточек на случай, если файлы ещё не созданы
+    const fallbackCards = [
+      { oldP: "Я древняя", newP: "Я опытная и мудрая" },
+      { oldP: "Я совершенно истощена", newP: "Я слегка утомлена, мне нужен хороший отдых" },
+      { oldP: "Я слишком стара для этого", newP: "Я выбираю то, что радует меня сегодня" },
+      { oldP: "Все мое тело в ужасных морщинах", newP: "Это едва заметные следы смеха и улыбок" },
+      { oldP: "Я выгляжу старо", newP: "Моя кожа слегка обезвожена, я выпью чистой воды" },
+      { oldP: "У меня гусиные лапки", newP: "Мои глаза излучают тепло, смех и доброту" },
+      { oldP: "Я чувствую себя разбитой", newP: "Моя энергия временно восстанавливается" },
+      { oldP: "Моя память как решето", newP: "Моя память острая, я просто держала в голове много дел" },
+      { oldP: "Я слишком немощная", newP: "Я внимательна и бережна к своему телу" },
+      { oldP: "Я устарела и вышла в тираж", newP: "Я постоянно учусь, обновляюсь и развиваюсь" },
+      { oldP: "Мои суставы стареют", newP: "Моим суставам нужна мягкая разминка и растяжка" },
+      { oldP: "Я теряю зрение из-за возраста", newP: "Моим глазам просто нужно лучшее освещение и отдых" },
+      { oldP: "Я умираю от усталости", newP: "Я с предвкушением жду глубокого восстанавливающего сна" },
+      { oldP: "Поезд ушел, уже поздно", newP: "Сейчас идеальное время для нового начала" },
+      { oldP: "По утрам я выгляжу ужасно", newP: "Я просыпаюсь отдохнувшей, свежей и обновленной" }
+    ];
+
+    let currentBlockIdx = 0;
+    let currentCardIdx = 0;
+    let cards = [];
     let xp = 0;
 
-    function nextLevel() {
-      xp += 50;
-      document.getElementById('xpVal').innerText = xp + " XP";
-      currentIdx++;
-      if (currentIdx < quests.length) {
-        document.getElementById('levelBadge').innerText = quests[currentIdx].badge;
-        document.getElementById('questHeading').innerText = quests[currentIdx].heading;
-        document.getElementById('questTitle').innerText = quests[currentIdx].title;
-        document.getElementById('questDesc').innerHTML = quests[currentIdx].desc;
-      } else {
-        document.getElementById('levelBadge').innerText = "Все уровни пройдены!";
-        document.getElementById('questHeading').innerText = "Великолепная работа!";
-        document.getElementById('questTitle').innerText = "Практика завершена";
-        document.getElementById('questDesc').innerHTML = "Вы отлично справились со всеми шагами на сегодня. Сохраняйте этот настрой и продолжайте закреплять привычки!";
-        document.getElementById('completeBtn').style.display = "none";
+    async function loadBlock(blockIdx) {
+      if (blockIdx >= blocks.length) {
+        showLevelComplete();
+        return;
+      }
+      currentCardIdx = 0;
+      document.getElementById('blockBadge').innerText = blocks[blockIdx].badge;
+      document.getElementById('blockTitle').innerText = blocks[blockIdx].title;
+      document.getElementById('restartBlockBtn').style.display = "none";
+      document.getElementById('nextBtn').style.display = "block";
+      document.getElementById('nextBtn').innerText = "Запомнила (+5 XP)";
+      document.getElementById('statusVal').innerText = "В процессе";
+
+      try {
+        const response = await fetch(blocks[blockIdx].file);
+        if (!response.ok) throw new Error("Файл не найден");
+        const text = await response.text();
+        cards = text.trim().split("\n").filter(line => line.includes("//")).map(line => {
+          const parts = line.split("//");
+          return { oldP: parts[0].trim(), newP: parts[1].trim() };
+        });
+        if (cards.length === 0) throw new Error("Пустой файл");
+        showCard();
+      } catch (e) {
+        // Если файла в папке нет, используем карточки по умолчанию
+        cards = fallbackCards;
+        showCard();
       }
     }
+
+    function showCard() {
+      if (cards.length === 0) return;
+      const card = cards[currentCardIdx];
+      document.getElementById('oldText').innerText = card.oldP;
+      document.getElementById('newText').innerText = card.newP;
+      
+      const progress = ((currentCardIdx + 1) / cards.length) * 100;
+      document.getElementById('progressFill').style.width = progress + "%";
+      document.getElementById('cardCount').innerText = `${currentCardIdx + 1} / ${cards.length}`;
+    }
+
+    function nextCard() {
+      xp += 5;
+      document.getElementById('xpVal').innerText = xp;
+      currentCardIdx++;
+
+      if (currentCardIdx < cards.length) {
+        showCard();
+      } else {
+        // Текущий блок завершен
+        document.getElementById('oldText').innerText = "Блок успешно пройден!";
+        document.getElementById('newText').innerText = `Вы закрепили «${blocks[currentBlockIdx].title}»!`;
+        document.getElementById('nextBtn').innerText = "Следующий блок (+20 XP)";
+        document.getElementById('restartBlockBtn').style.display = "block";
+        document.getElementById('statusVal').innerText = "Блок освоен";
+        document.getElementById('nextBtn').onclick = finishBlock;
+      }
+    }
+
+    function finishBlock() {
+      xp += 20;
+      document.getElementById('xpVal').innerText = xp;
+      currentBlockIdx++;
+      document.getElementById('nextBtn').onclick = nextCard;
+      loadBlock(currentBlockIdx);
+    }
+
+    function restartBlock() {
+      currentCardIdx = 0;
+      document.getElementById('restartBlockBtn').style.display = "none";
+      document.getElementById('nextBtn').innerText = "Запомнила (+5 XP)";
+      document.getElementById('nextBtn').onclick = nextCard;
+      document.getElementById('statusVal').innerText = "Повторение";
+      showCard();
+    }
+
+    function showLevelComplete() {
+      document.getElementById('blockBadge').innerText = "Уровень 1 завершен!";
+      document.getElementById('blockTitle').innerText = "Поздравляем!";
+      document.getElementById('oldText').innerText = "Базовый фундамент заложен";
+      document.getElementById('newText').innerText = "Все 4 блока усвоены. Повторяйте эти установки каждый день, пока они не станут естественной частью мышления!";
+      document.getElementById('nextBtn').style.display = "none";
+      document.getElementById('restartBlockBtn').style.display = "none";
+      document.getElementById('progressFill').style.width = "100%";
+      document.getElementById('statusVal').innerText = "Завершено 🌟";
+    }
+
+    // Запуск приложения
+    loadBlock(currentBlockIdx);
   </script>
 </body>
 </html>
