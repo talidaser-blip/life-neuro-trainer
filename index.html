@@ -3,31 +3,73 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>НейроГерой: Практика молодости</title>
+  <title>НейроГерой: 100 способов и практика молодости</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #e89500; /* Теплый сочный оранжевый фон */
+      background: #e89500;
       color: #2b1f14;
       margin: 0;
-      padding: 16px;
+      padding: 12px;
       display: flex;
       justify-content: center;
       align-items: flex-start;
       min-height: 100vh;
-      box-sizing: border-box;
     }
 
     .card {
       background: #ffffff;
-      max-width: 620px;
+      max-width: 650px;
       width: 100%;
       border-radius: 28px;
-      padding: 24px;
+      padding: 20px;
       box-shadow: 0 14px 35px rgba(180, 100, 0, 0.28);
       border: 3px solid #ffffff;
-      box-sizing: border-box;
-      margin: 10px auto;
+      margin: 6px auto 24px auto;
+    }
+
+    /* Главные вкладки */
+    .main-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      background: #fff6e8;
+      padding: 6px;
+      border-radius: 20px;
+      border: 1.5px solid #f6cf8a;
+      margin-bottom: 18px;
+    }
+
+    .tab-btn {
+      border: none;
+      background: transparent;
+      color: #7c4b00;
+      padding: 10px 6px;
+      border-radius: 15px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      line-height: 1.25;
+    }
+
+    .tab-btn.active {
+      background: #ff5b79;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(255, 91, 121, 0.35);
+    }
+
+    .tab-section {
+      display: none;
+    }
+
+    .tab-section.active {
+      display: block;
     }
 
     .header-row {
@@ -43,13 +85,19 @@
       display: inline-block;
       padding: 6px 14px;
       border-radius: 20px;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 800;
       background: #fff0f3;
       color: #ff3b65;
       border: 1.5px solid #ffccd5;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
+    }
+
+    .badge-teal {
+      background: #e8f7f8;
+      color: #198c90;
+      border-color: #bce6e8;
     }
 
     .audio-btn {
@@ -86,23 +134,23 @@
     }
 
     h1 {
-      font-size: 22px;
-      margin: 8px 0 16px 0;
+      font-size: 21px;
+      margin: 6px 0 14px 0;
       color: #2b1f14;
       font-weight: 800;
     }
 
-    /* Навигация переключения блоков */
+    /* Навигация переключения блоков/фаз */
     .nav-bar {
       display: flex;
       justify-content: space-between;
       gap: 10px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .nav-btn {
       flex: 1;
-      padding: 12px 14px;
+      padding: 11px 12px;
       border: 2px solid #38b6ba;
       background: #ffffff;
       color: #198c90;
@@ -124,22 +172,28 @@
       color: #9ca3af;
     }
 
-    /* Список выражений */
+    /* Список выражений (Вкладка 1) */
     .phrase-list {
       display: flex;
       flex-direction: column;
       gap: 12px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .phrase-item {
       background: #fffaf4;
       border: 1.5px solid #f6cf8a;
       border-radius: 18px;
-      padding: 14px 18px;
+      padding: 14px 16px;
       display: flex;
       flex-direction: column;
       gap: 6px;
+    }
+
+    .phrase-item.active-speaking {
+      border-color: #ff5b79;
+      background: #fff0f3;
+      box-shadow: 0 4px 14px rgba(255, 91, 121, 0.22);
     }
 
     .phrase-item .num-badge {
@@ -166,6 +220,402 @@
       line-height: 1.4;
     }
 
+    /* ВКЛАДКА 2: ПЛАН НА 6 МЕСЯЦЕВ */
+    .phase-box {
+      background: #fff8ee;
+      border: 2px solid #f6cf8a;
+      border-radius: 20px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+    }
+
+    .phase-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .phase-mode {
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 12px;
+      background: #ff5b79;
+      color: #ffffff;
+    }
+
+    .phase-mode.unload {
+      background: #38b6ba;
+    }
+
+    .phase-progress-wrap {
+      margin-top: 8px;
+    }
+
+    .phase-progress-text {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 700;
+      color: #7c4b00;
+      margin-bottom: 5px;
+    }
+
+    .progress-bar {
+      background: #efe2cf;
+      border-radius: 10px;
+      height: 10px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      background: linear-gradient(90deg, #38b6ba, #ff5b79);
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* Карточки упражнений */
+    .ex-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .ex-card {
+      background: #ffffff;
+      border: 2px solid #f6cf8a;
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: 0 4px 14px rgba(232, 149, 0, 0.08);
+      transition: all 0.2s ease;
+    }
+
+    .ex-card.done-today {
+      border-color: #38b6ba;
+      background: #f4fcfc;
+    }
+
+    .ex-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .ex-tag {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 10px;
+      background: #fff0f3;
+      color: #ff3b65;
+    }
+
+    .ex-streak {
+      font-size: 12px;
+      font-weight: 800;
+      color: #198c90;
+      background: #e8f7f8;
+      padding: 3px 10px;
+      border-radius: 10px;
+    }
+
+    .ex-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: #2b1f14;
+      margin: 4px 0 6px 0;
+    }
+
+    .ex-short {
+      font-size: 14px;
+      color: #5c4b3c;
+      line-height: 1.45;
+      margin-bottom: 10px;
+    }
+
+    .ex-toggle-btn {
+      background: #fff6e8;
+      border: 1.5px solid #f6cf8a;
+      color: #b55900;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .ex-details {
+      display: none;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1.5px dashed #f0e6da;
+    }
+
+    .ex-details.open {
+      display: block;
+    }
+
+    .steps-list {
+      margin: 0 0 12px 0;
+      padding-left: 18px;
+      font-size: 14px;
+      color: #2b1f14;
+      line-height: 1.5;
+    }
+
+    .steps-list li {
+      margin-bottom: 6px;
+    }
+
+    /* Встроенный таймер и блокнот */
+    .tool-box {
+      background: #fffaf4;
+      border: 1.5px solid #38b6ba;
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .tool-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #198c90;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .timer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .timer-display {
+      font-size: 24px;
+      font-weight: 800;
+      color: #ff3b65;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .small-btn {
+      padding: 8px 14px;
+      border-radius: 12px;
+      border: none;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      background: #38b6ba;
+      color: #ffffff;
+    }
+
+    .small-btn.pink {
+      background: #ff5b79;
+    }
+
+    .ex-textarea {
+      width: 100%;
+      min-height: 95px;
+      border-radius: 12px;
+      border: 1.5px solid #d6aa65;
+      padding: 10px;
+      font-family: inherit;
+      font-size: 14px;
+      color: #2b1f14;
+      resize: vertical;
+      background: #ffffff;
+    }
+
+    .save-hint {
+      font-size: 11px;
+      color: #198c90;
+      font-weight: 700;
+      margin-top: 4px;
+      text-align: right;
+    }
+
+    /* Ползунки Колеса призвания */
+    .wheel-row {
+      margin-bottom: 8px;
+    }
+
+    .wheel-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .wheel-row input[type="range"] {
+      width: 100%;
+      accent-color: #ff5b79;
+    }
+
+    .wheel-total {
+      font-size: 14px;
+      font-weight: 800;
+      color: #d66c00;
+      text-align: right;
+      margin-top: 6px;
+    }
+
+    /* Кнопки действий в карточке */
+    .ex-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-done {
+      flex: 1;
+      min-width: 140px;
+      padding: 11px 12px;
+      border-radius: 14px;
+      border: none;
+      background: #ff5b79;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(255, 91, 121, 0.3);
+    }
+
+    .btn-done.checked {
+      background: #38b6ba;
+      box-shadow: 0 4px 12px rgba(56, 182, 186, 0.3);
+    }
+
+    .btn-mastered {
+      flex: 1;
+      min-width: 140px;
+      padding: 11px 12px;
+      border-radius: 14px;
+      border: 2px solid #f6cf8a;
+      background: #fffaf4;
+      color: #b55900;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    /* ВКЛАДКА 3: ШПАРГАЛКИ */
+    .search-input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 16px;
+      border: 2px solid #38b6ba;
+      font-size: 14px;
+      margin-bottom: 12px;
+      outline: none;
+    }
+
+    .filter-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .chip-btn {
+      padding: 6px 12px;
+      border-radius: 14px;
+      border: 1.5px solid #f6cf8a;
+      background: #fffaf4;
+      color: #7c4b00;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .chip-btn.active {
+      background: #38b6ba;
+      border-color: #38b6ba;
+      color: #ffffff;
+    }
+
+    .tip-card {
+      background: #fffaf4;
+      border: 1.5px solid #f6cf8a;
+      border-radius: 18px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+
+    .tip-cat {
+      font-size: 11px;
+      font-weight: 800;
+      color: #ff3b65;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .tip-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #2b1f14;
+      margin-bottom: 6px;
+    }
+
+    .tip-body {
+      font-size: 14px;
+      color: #4a3b2c;
+      line-height: 1.45;
+    }
+
+    /* Модальное окно замены упражнения */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(43, 31, 20, 0.65);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #ffffff;
+      max-width: 540px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      border-radius: 24px;
+      padding: 20px;
+      border: 3px solid #f6cf8a;
+    }
+
+    .catalog-item {
+      border: 1.5px solid #f6cf8a;
+      background: #fffaf4;
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
     .footer-note {
       text-align: center;
       font-size: 13px;
@@ -178,72 +628,846 @@
 </head>
 <body>
   <div class="card">
-    <div class="header-row">
-      <span class="badge" id="blockBadge">Уровень 1 • Блок 1</span>
-      <!-- Кнопка плеера -->
-      <button class="audio-btn" id="audioToggleBtn" onclick="toggleAudio()">
-        <span id="audioIcon">🎧</span>
-        <span id="audioLabel">Озвучить блок</span>
-      </button>
+    <!-- Главные 3 вкладки приложения -->
+    <div class="main-tabs">
+      <button class="tab-btn active" id="tabBtn-audio" onclick="switchTab('audio')">🎧 Убеждения<br><small>(8 блоков)</small></button>
+      <button class="tab-btn" id="tabBtn-plan" onclick="switchTab('plan')">🎯 План 6 мес.<br><small>(12 фаз)</small></button>
+      <button class="tab-btn" id="tabBtn-tips" onclick="switchTab('tips')">💡 Шпаргалки<br><small>(Законы)</small></button>
     </div>
 
-    <h1 id="blockTitle">Загрузка...</h1>
+    <!-- =========================================================
+         ВКЛАДКА 1: УБЕЖДЕНИЯ И ЗАКОНЫ (MP3 + ТЕКСТ)
+         ========================================================= -->
+    <div class="tab-section active" id="tab-audio">
+      <div class="header-row">
+        <span class="badge" id="blockBadge">Уровень 1 • Блок 1</span>
+        <button class="audio-btn" id="audioToggleBtn" onclick="toggleAudio()">
+          <span id="audioIcon">🎧</span>
+          <span id="audioLabel">Озвучить блок</span>
+        </button>
+      </div>
 
-    <!-- Верхняя навигация -->
-    <div class="nav-bar">
-      <button class="nav-btn" id="prevBtn" onclick="prevBlock()">← Назад</button>
-      <button class="nav-btn" id="nextBtn" onclick="nextBlock()">Следующий блок →</button>
+      <h1 id="blockTitle">Загрузка...</h1>
+
+      <div class="nav-bar">
+        <button class="nav-btn" id="prevBtn" onclick="prevBlock()">← Назад</button>
+        <button class="nav-btn" id="nextBtn" onclick="nextBlock()">Следующий блок →</button>
+      </div>
+
+      <div class="phrase-list" id="phraseList">
+        <div style="text-align: center; padding: 20px; color: #8c7b6d;">Загрузка списка фраз...</div>
+      </div>
+
+      <div class="nav-bar">
+        <button class="nav-btn" id="prevBtnBottom" onclick="prevBlock()">← Назад</button>
+        <button class="nav-btn" id="nextBtnBottom" onclick="nextBlock()">Следующий блок →</button>
+      </div>
+
+      <div class="footer-note" id="blockSummary">
+        Наденьте наушники, включите аудио и можете убрать телефон в карман.
+      </div>
     </div>
 
-    <!-- Контейнер для всех фраз -->
-    <div class="phrase-list" id="phraseList">
-      <div style="text-align: center; padding: 20px; color: #8c7b6d;">Загрузка списка фраз...</div>
+    <!-- =========================================================
+         ВКЛАДКА 2: ПЛАН НА 6 МЕСЯЦЕВ (ФАЗЫ ПО 14 ДНЕЙ)
+         ========================================================= -->
+    <div class="tab-section" id="tab-plan">
+      <div class="header-row">
+        <span class="badge" id="phaseMonthBadge">Месяц 1 • Недели 1–2</span>
+        <span class="badge badge-teal" id="masteredCountBadge">🏆 Освоено: 0</span>
+      </div>
+
+      <h1 id="phaseTitle">Фаза 1: Очистка головы, тела и лени</h1>
+
+      <div class="nav-bar">
+        <button class="nav-btn" id="prevPhaseBtn" onclick="prevPhase()">← Пред. фаза</button>
+        <button class="nav-btn" id="nextPhaseBtn" onclick="nextPhase()">След. фаза →</button>
+      </div>
+
+      <div class="phase-box">
+        <div class="phase-meta">
+          <span class="phase-mode" id="phaseModeBadge">🔥 Интенсив • 4 практики</span>
+          <span style="font-size: 13px; font-weight: 800; color: #7c4b00;" id="phaseDaysLabel">Цикл: 14 дней</span>
+        </div>
+        <div style="font-size: 13px; color: #5c4b3c; line-height: 1.4;" id="phaseDesc">
+          Входим в ритм: мягко разгружаем голову и убираем утечки энергии.
+        </div>
+        <div class="phase-progress-wrap">
+          <div class="phase-progress-text">
+            <span>Прогресс 14-дневной фазы</span>
+            <span id="phaseProgressVal">0 / 14 дн.</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="phaseProgressFill"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Список упражнений текущей фазы -->
+      <div class="ex-list" id="exerciseList"></div>
+
+      <div class="nav-bar">
+        <button class="nav-btn" id="prevPhaseBtnBottom" onclick="prevPhase()">← Пред. фаза</button>
+        <button class="nav-btn" id="nextPhaseBtnBottom" onclick="nextPhase()">След. фаза →</button>
+      </div>
+
+      <div class="footer-note">
+        Нажмите «🏆 Внедрено в голову» на любом упражнении, чтобы заменить его на новое из каталога (37 практик).
+      </div>
     </div>
 
-    <!-- Нижняя навигация -->
-    <div class="nav-bar">
-      <button class="nav-btn" id="prevBtnBottom" onclick="prevBlock()">← Назад</button>
-      <button class="nav-btn" id="nextBtnBottom" onclick="nextBlock()">Следующий блок →</button>
-    </div>
+    <!-- =========================================================
+         ВКЛАДКА 3: КОПИЛКА ПРАВИЛ, ЗАКОНОВ И ШПАРГАЛОК
+         ========================================================= -->
+    <div class="tab-section" id="tab-tips">
+      <div class="header-row">
+        <span class="badge">Быстрые фильтры и законы</span>
+        <span class="badge badge-teal" id="tipsCountBadge">Все советы</span>
+      </div>
 
-    <div class="footer-note" id="blockSummary">
-      Наденьте наушники, включите аудио и можете убрать телефон в карман.
+      <h1>Копилка правил на каждый день</h1>
+
+      <input type="text" class="search-input" id="tipSearchInput" placeholder="🔍 Поиск по шпаргалкам (например: 48 часов, Poh, 90, грабли)..." oninput="renderTips()">
+
+      <div class="filter-chips" id="tipFilters">
+        <button class="chip-btn active" onclick="setTipFilter('all', this)">Все</button>
+        <button class="chip-btn" onclick="setTipFilter('focus', this)">🎯 Фокус и дела</button>
+        <button class="chip-btn" onclick="setTipFilter('boundaries', this)">🛡️ Границы и эмоции</button>
+        <button class="chip-btn" onclick="setTipFilter('people', this)">🤝 Окружение</button>
+        <button class="chip-btn" onclick="setTipFilter('action', this)">🚀 Как начать</button>
+        <button class="chip-btn" onclick="setTipFilter('laws', this)">🔮 12 законов шарика</button>
+      </div>
+
+      <div id="tipsContainer"></div>
+    </div>
+  </div>
+
+  <!-- Модальное окно для замены упражнения -->
+  <div class="modal-backdrop" id="replaceModal">
+    <div class="modal-card">
+      <div class="header-row">
+        <span class="badge">🏆 Привычка внедрена!</span>
+        <button class="small-btn pink" onclick="closeReplaceModal()">✕ Закрыть</button>
+      </div>
+      <h1 style="font-size: 18px; margin-top: 4px;">Выберите новое упражнение в этот слот:</h1>
+      <p style="font-size: 13px; color: #6e5d4f; margin-top: 0;">
+        Вы можете поставить любую практику из полного каталога (включая резервные техники из книг).
+      </p>
+      <div id="catalogList"></div>
     </div>
   </div>
 
   <script>
-    // Здесь мы привязываем каждому блоку свой аудиофайл!
+    /* =========================================================================
+       ЧАСТЬ 1. ДАННЫЕ ДЛЯ ВКЛАДКИ 1 (УБЕЖДЕНИЯ И ЗАКОНЫ)
+       Сохраняем ваши пути к файлам levels/ и audio/ + добавляем новые блоки!
+       ========================================================================= */
     const blocks = [
-      { file: "levels/level_1_block_1.txt", audio: "audio/block_1.mp3", badge: "Уровень 1 • Блок 1", title: "Замена слов-разрушителей" },
-      { file: "levels/level_1_block_2.txt", audio: "audio/block_2.mp3", badge: "Уровень 1 • Блок 2", title: "Молодость и сияние кожи" },
-      { file: "levels/level_1_block_3.txt", audio: "audio/block_3.mp3", badge: "Уровень 1 • Блок 3", title: "Ясность ума и энергия" },
-      { file: "levels/level_1_block_4.txt", audio: "audio/block_4.mp3", badge: "Уровень 1 • Блок 4", title: "Золотые афоризмы мудрости" }
+      {
+        file: "levels/level_1_block_1.txt",
+        audio: "audio/block_1.mp3",
+        badge: "Уровень 1 • Блок 1",
+        title: "Замена слов-разрушителей",
+        fallback: [
+          { oldP: "Я древняя", newP: "Я опытная и мудрая" },
+          { oldP: "Я совершенно истощена", newP: "Я слегка утомлена, мне нужен хороший отдых" },
+          { oldP: "Я слишком стара для этого", newP: "Я выбираю то, что радует меня сегодня" },
+          { oldP: "Все мое тело в ужасных морщинах", newP: "Это едва заметные следы смеха и улыбок" },
+          { oldP: "Я выгляжу старо", newP: "Моя кожа слегка обезвожена, я выпью чистой воды" },
+          { oldP: "У меня гусиные лапки", newP: "Мои глаза излучают тепло, смех и доброту" },
+          { oldP: "Я чувствую себя разбитой", newP: "Моя энергия временно восстанавливается" },
+          { oldP: "Моя память как решето", newP: "Моя память острая, я просто держала в голове много дел" },
+          { oldP: "Я слишком немощная", newP: "Я внимательна и бережна к своему телу" },
+          { oldP: "Я устарела и вышла в тираж", newP: "Я постоянно учусь, обновляюсь и развиваюсь" }
+        ]
+      },
+      {
+        file: "levels/level_1_block_2.txt",
+        audio: "audio/block_2.mp3",
+        badge: "Уровень 1 • Блок 2",
+        title: "Молодость и сияние кожи",
+        fallback: [
+          { oldP: "Установка красоты", newP: "Я красивая, сияющая и вне возраста" },
+          { oldP: "Установка кожи", newP: "Моя кожа гладкая, напитанная и глубоко увлажненная" },
+          { oldP: "Клеточное обновление", newP: "Мое тело регенерирует и обновляется каждый день" },
+          { oldP: "Осанка и легкость", newP: "Моя осанка прямая, легкая и уверенная" },
+          { oldP: "Свежесть лица", newP: "Мое лицо отражает радость, покой и внутреннее сияние" },
+          { oldP: "Сила клеток", newP: "Мои клетки функционируют как молодые, здоровые клетки" },
+          { oldP: "Любовь к себе", newP: "Я люблю, уважаю и ценю свое физическое тело" },
+          { oldP: "Свобода от цифр", newP: "Возраст — это просто цифра, мой дух вечно молод" }
+        ]
+      },
+      {
+        file: "levels/level_1_block_3.txt",
+        audio: "audio/block_3.mp3",
+        badge: "Уровень 1 • Блок 3",
+        title: "Ясность ума и энергия",
+        fallback: [
+          { oldP: "Острота ума", newP: "Мой ум острый, любознательный и ясный" },
+          { oldP: "Хозяйка мыслей", newP: "Я полная хозяйка своих собственных мыслей" },
+          { oldP: "Крепкая память", newP: "Моя память служит мне легко, четко и точно" },
+          { oldP: "Смелость решений", newP: "Я выбираю смелость вместо страха и действие вместо сомнений" },
+          { oldP: "Нейропластичность", newP: "Каждый день создает новые нейронные связи в моем мозге" },
+          { oldP: "Источник энергии", newP: "Я наполнена живой, неудержимой жизненной энергией" },
+          { oldP: "Свобода от обид", newP: "Я легко отпускаю прошлые обиды и возвращаю свою силу" },
+          { oldP: "Сила настоящего", newP: "Я живу в настоящем моменте с миром в душе и ясным смыслом" }
+        ]
+      },
+      {
+        file: "levels/level_1_block_4.txt",
+        audio: "audio/block_4.mp3",
+        badge: "Уровень 1 • Блок 4",
+        title: "Золотые афоризмы мудрости",
+        fallback: [
+          { oldP: "Джордж Бернс", newP: "Нельзя не становиться старше, но можно сказать «нет» старению" },
+          { oldP: "Джордж Эдейр", newP: "Всё, о чем вы мечтаете, находится на другой стороне вашего страха" },
+          { oldP: "Альберт Эйнштейн", newP: "Воображение гораздо сильнее обычного знания" },
+          { oldP: "Лао-цзы", newP: "Путь в тысячу миль всегда начинается с первого шага" },
+          { oldP: "Джилл Болти Тейлор", newP: "Лишь одна спокойная мысль отделяет нас от душевного покоя" },
+          { oldP: "Вадим Зеланд", newP: "Когда душа говорит «да», нет никакой нужды себя уговаривать" },
+          { oldP: "Антон Чехов", newP: "Кто испытал радость чистого творчества, нашел высшее наслаждение" }
+        ]
+      },
+      {
+        file: "levels/level_1_block_5.txt",
+        audio: "audio/block_5.mp3",
+        badge: "Уровень 2 • Блок 5",
+        title: "Личная сила и смелость действий",
+        fallback: [
+          { oldP: "Мне нужно дождаться идеального момента", newP: "Я начинаю с малого прямо сейчас и корректирую курс в пути" },
+          { oldP: "У меня нет врождённого таланта", newP: "Талант создаётся моей дисциплиной и осознанной практикой" },
+          { oldP: "Я боюсь ошибиться и выглядеть глупо", newP: "Каждая ошибка — это мой опыт, и я говорю себе: «Как интересно получилось!»" },
+          { oldP: "Сомнения останавливают меня", newP: "Моё усердие и конкретные шаги всегда сильнее любых сомнений" },
+          { oldP: "Это невозможно", newP: "Это всего лишь временная трудность на пути к моей цели" },
+          { oldP: "У меня опускаются руки", newP: "Я праздную момент отчаяния — именно здесь рождаются настоящие лидеры" },
+          { oldP: "Я не знаю своего предназначения", newP: "Моё предназначение — делать то, что зажигает меня и даёт энергию" },
+          { oldP: "Я обязана быть удобной для всех", newP: "Каждое «нет» чужому в ущерб себе — это громкое «да» моей жизни" }
+        ]
+      },
+      {
+        file: "levels/level_1_block_6.txt",
+        audio: "audio/block_6.mp3",
+        badge: "Уровень 2 • Блок 6",
+        title: "Масштаб, мечты и разрешение себе",
+        fallback: [
+          { oldP: "Надо довольствоваться малым", newP: "Я повышаю свой уровень нормы и выбираю только прекрасное" },
+          { oldP: "Деньги достаются только тяжёлой каторгой", newP: "Деньги — это энергия, и я зарабатываю на том, что меня наполняет" },
+          { oldP: "Мне стыдно хотеть большего", newP: "Я разрешаю себе целиться в Луну и мечтать без границ" },
+          { oldP: "Я должна терпеть то, что мне не нравится", newP: "Я убираю из жизни мелкие камушки в ботинке и разрушающие компромиссы" },
+          { oldP: "Мне нужно заслужить отдых", newP: "Я разрешаю себе тишину, прогулки и заботу о себе просто по праву рождения" },
+          { oldP: "У меня за спиной никого нет", newP: "За моей спиной сила 128 предков, и их стойкость живёт во мне" },
+          { oldP: "Мир ко мне враждебен", newP: "Вселенная постоянно разговаривает со мной и подбрасывает подарки" }
+        ]
+      },
+      {
+        file: "levels/level_1_block_7.txt",
+        audio: "audio/block_7.mp3",
+        badge: "Уровень 2 • Блок 7",
+        title: "Законы жизни и трезвого мышления",
+        fallback: [
+          { oldP: "Я смотрю на чужой успех и завидую", newP: "Я помню об ошибке выжившего и спокойно строю свой собственный путь" },
+          { oldP: "Я справлюсь за счёт одной силы воли", newP: "Среда сильнее силы воли, поэтому я осознанно выбираю свою стаю" },
+          { oldP: "Мне нужно набрать побольше курсов и планов", newP: "Мои глаза не больше рта: я беру ровно столько, сколько внедряю в жизнь" },
+          { oldP: "Я буду просто надеяться на лучшее", newP: "Надежда — хороший завтрак, но плохой ужин; я подкрепляю её действиями" },
+          { oldP: "Почему эта ситуация снова повторяется?", newP: "Жизнь бережно распрямляет мои вмятины, и я с благодарностью прохожу этот урок" },
+          { oldP: "Я сопротивляюсь и боюсь перемен", newP: "То, чему я сопротивляюсь, усиливается — я отпускаю Страх и выбираю Любовь" },
+          { oldP: "Я привязана к своим старым привычкам", newP: "Сегодня я уже новая, и я выбираю только то, что радует меня сегодняшнюю" }
+        ]
+      },
+      {
+        file: "levels/level_1_block_8.txt",
+        audio: "audio/block_8.mp3",
+        badge: "Уровень 2 • Блок 8",
+        title: "Разрешалки («Мне с собой хорошо»)",
+        fallback: [
+          { oldP: "Я должна всё контролировать", newP: "Я разрешаю себе расслабиться и довериться потоку жизни" },
+          { oldP: "Нельзя быть эгоисткой", newP: "Психологический комфорт — главный фундамент любых моих отношений" },
+          { oldP: "Я должна оправдываться за отказ", newP: "Я имею право сказать спокойное «нет» без объяснения причин" },
+          { oldP: "Сначала дела, потом радость", newP: "Каждый день я выделяю созидательный час на то, от чего поёт душа" },
+          { oldP: "Я обязана дочитывать скучные книги и терпеть скучных людей", newP: "Я легко закрываю то, что не набирает 90 баллов из 100 по моему внутреннему отклику" },
+          { oldP: "Мне с собой скучно и тревожно", newP: "Мне с собой хорошо, интересно, спокойно и тепло" }
+        ]
+      }
     ];
 
-    const fallbackBlock1 = [
-      { oldP: "Я древняя", newP: "Я опытная и мудрая" },
-      { oldP: "Я совершенно истощена", newP: "Я слегка утомлена, мне нужен хороший отдых" },
-      { oldP: "Я слишком стара для этого", newP: "Я выбираю то, что радует меня сегодня" }
+    /* =========================================================================
+       ЧАСТЬ 2. КАТАЛОГ ВСЕХ 37 УПРАЖНЕНИЙ И 12 ФАЗ ПОЛУГОДОВОГО ПЛАНА
+       ========================================================================= */
+    const exercisesCatalog = {
+      "nihuane": {
+        id: "nihuane",
+        tag: "🌅 Утро • Тишина",
+        title: "Утренний ритуал «Нихуанеделания»",
+        short: "Первые 20 минут после пробуждения без телефона, новостей и суеты.",
+        steps: [
+          "Проснувшись, не берите телефон в руки минимум 20 минут.",
+          "Медленно потянитесь, выпейте стакан чистой воды, посмотрите в окно.",
+          "Побудьте в тишине правого полушария: почувствуйте тело и спокойный старт дня."
+        ],
+        tool: "timer",
+        timerMinutes: 20
+      },
+      "freewriting": {
+        id: "freewriting",
+        tag: "✍️ Письменная • 15 мин",
+        title: "Утренний фрирайтинг (Утренние страницы)",
+        short: "15 минут непрерывного письма без остановки, чтобы отключить внутреннего критика.",
+        steps: [
+          "Запустите встроенный таймер на 15 минут.",
+          "Пишите всё, что приходит в голову, не останавливаясь и не исправляя ошибки.",
+          "Если мыслей нет — пишите «я не знаю, о чём писать», пока не пойдёт поток истинных желаний."
+        ],
+        tool: "timer_note",
+        timerMinutes: 15,
+        placeholder: "Пишите сюда поток мыслей без критики и остановок..."
+      },
+      "three_wins": {
+        id: "three_wins",
+        tag: "🌙 Вечер • Самооценка",
+        title: "Вечерние 3 победы + Досье успеха",
+        short: "Каждый вечер записываем минимум 3 свои победы дня, приучая мозг быть победителем.",
+        steps: [
+          "Перед сном вспомните прожитый день.",
+          "Запишите 3 конкретные победы или приятных шага (даже самых маленьких).",
+          "Перечитайте список с улыбкой — мозг запоминает, что вы молодец."
+        ],
+        tool: "note",
+        placeholder: "Мои 3 победы сегодня:\n1. \n2. \n3. "
+      },
+      "declutter_joy": {
+        id: "declutter_joy",
+        tag: "🧹 Пространство • Энергия",
+        title: "«Кто украл мою радость?» + Правило 49 свечей",
+        short: "Находим утечки энергии и каждый день выбрасываем 1–3 лишние вещи.",
+        steps: [
+          "Оглянитесь вокруг: какая вещь, незавершённое дело или подписка забирает радость?",
+          "Уберите или выбросьте от 1 до 3 ненужных вещей прямо сегодня.",
+          "Освободите место для новой энергии и свежего воздуха."
+        ],
+        tool: "note",
+        placeholder: "Что я убрала/выбросила сегодня и где вернула себе радость:"
+      },
+      "antiseal": {
+        id: "antiseal",
+        tag: "🛋️ Анти-лень • Перезагрузка",
+        title: "Упражнение-антиТЮлень",
+        short: "Если одолела лень — лечь и действительно ничего не делать (без телефона, ТВ и книг).",
+        steps: [
+          "Если напала апатия — не ругайте себя и не залипайте в ленту новостей.",
+          "Лягте на диван в полной тишине: без смартфона, телевизора, музыки и книг.",
+          "Просто лежите и смотрите в потолок — через 30–60 минут мозг сам соскучится и попросит дела."
+        ],
+        tool: "timer",
+        timerMinutes: 30
+      },
+      "compromises_rakes": {
+        id: "compromises_rakes",
+        tag: "🔍 Ревизия • Границы",
+        title: "Ревизия компромиссов + «Любимые грабли»",
+        short: "Выписываем «камушки в ботинке» и повторяющиеся ситуации: чему мир пытается научить?",
+        steps: [
+          "Запишите ситуацию или мелкий компромисс, который повторяется из года в год.",
+          "Задайте честный вопрос: «Чему эта ситуация пытается меня научить? Как мир пытается меня распрямить?»",
+          "Сделайте один маленький шаг, чтобы убрать этот «камушек из ботинка»."
+        ],
+        tool: "note",
+        placeholder: "Мои грабли / компромисс → Чему это меня учит:"
+      },
+      "killer_forgiveness": {
+        id: "killer_forgiveness",
+        tag: "🔥 Очистка прошлого",
+        title: "«Профессиональный убийца» + 5 шагов прощения",
+        short: "Выписываем ограничивающие установки семьи и пишем терапевтические письма обидчикам.",
+        steps: [
+          "Выпишите 10 навязанных установок из детства (например, «не высовывайся») и физически сожгите/порвите лист.",
+          "Для прощения обиды напишите письмо по 5 шагам: 1) Обвинение, 2) Ожидание, 3) Объяснение (из его травмы), 4) Чувства, 5) Ответственность 50/50.",
+          "Письмо отправлять не нужно — уничтожьте его, освободив себя."
+        ],
+        tool: "note",
+        placeholder: "Установки для проработки или черновик 5 шагов прощения:"
+      },
+      "larcido_code": {
+        id: "larcido_code",
+        tag: "📜 Правила • Границы",
+        title: "Личный кодекс Ларсидо (15 заповедей)",
+        short: "Создаём и держим перед глазами свои 15 железных правил обращения с собой.",
+        steps: [
+          "Сформулируйте свои личные заповеди (например: «Со мной нельзя разговаривать на повышенных тонах», «Я не извиняюсь, если не виновата»).",
+          "Дописывайте и перечитывайте свой Кодекс каждый день.",
+          "Сверяйте с ним свои решения при общении с людьми."
+        ],
+        tool: "note",
+        placeholder: "Мои личные заповеди (1–15):\n1. \n2. \n3. "
+      },
+      "good_girl_list": {
+        id: "good_girl_list",
+        tag: "🏅 Самооценка • Опора",
+        title: "Список молодца (Похвальная грамота)",
+        short: "Минимум 20 реальных достижений с детства + по 1 новому пункту каждый день.",
+        steps: [
+          "Вспомните и запишите минимум 10–20 своих достижений за всю жизнь (включая школьные и бытовые).",
+          "Каждый день дописывайте сюда минимум 1 новый пункт, за который вы молодец.",
+          "Перечитывайте грамоту в моменты сомнений."
+        ],
+        tool: "note",
+        placeholder: "Я молодец, потому что:\n1. \n2. \n3. "
+      },
+      "creative_hour": {
+        id: "creative_hour",
+        tag: "🎨 Душа • Призвание",
+        title: "Один созидательный час в день",
+        short: "Ровно 1 час в день на дело, которое вас волнует, без оглядки на деньги или результат.",
+        steps: [
+          "Выделите 30–60 минут чистого времени только для себя.",
+          "Займитесь тем, что искренне волнует: чтение, прогулка в тишине, рисование, размышления, идеи.",
+          "Главное правило: никакой оценки «полезно/выгодно» — только чистый интерес."
+        ],
+        tool: "timer",
+        timerMinutes: 60
+      },
+      "black_dot_breath": {
+        id: "black_dot_breath",
+        tag: "👁️ Фокус • Концентрация",
+        title: "«Чёрная точка» + Дыхание по квадрату",
+        short: "Тренируем железную концентрацию на точке и быструю фокусировку взглядом.",
+        steps: [
+          "Дыхание по квадрату (1 мин): вдох 4 сек (взгляд в правый верхний угол) → выдох 4 сек (в правый нижний) → вдох 4 сек (в левый верхний) → выдох 4 сек (в левый нижний).",
+          "Поставьте точку на листе бумаги (или смотрите на символ ● ниже) 5–15 минут, не отводя взгляд.",
+          "Каждый раз, когда мысль убегает, мягко возвращайте взгляд в центр точки."
+        ],
+        tool: "timer",
+        timerMinutes: 15
+      },
+      "micro_decisions": {
+        id: "micro_decisions",
+        tag: "👣 Анти-прокрастинация",
+        title: "Техника микрорешений и «Только сегодня»",
+        short: "Дробим большую цель на крошечные шаги и держим слово «только сегодня».",
+        steps: [
+          "Разбейте большую задачу на смехотворно маленький шаг (не «навести порядок», а «разобрать одну полку»).",
+          "Если хочется сорваться или бросить дело, скажите: «Я могу сорваться завтра. Но сегодня я продержусь».",
+          "Отметьте выполненный микрошаг."
+        ],
+        tool: "note",
+        placeholder: "Мой микрошаг на сегодня:"
+      },
+      "vocation_wheel": {
+        id: "vocation_wheel",
+        tag: "🧭 Призвание • 4 оси",
+        title: "Колесо призвания + «Техника 5 жизней»",
+        short: "Оцениваем дело по 4 осям (от 1 до 10) и придумываем 5 профессий для 5 жизней.",
+        steps: [
+          "Оцените выбранное дело по 4 ползункам ниже (идеально — от 32 баллов и выше).",
+          "Запишите в заметки: кем бы вы стали, если бы у вас было 5 разных жизней? Как объединить эти интересы в одной?"
+        ],
+        tool: "wheel_note",
+        placeholder: "Мои 5 жизней (кем бы я стала в каждой из 5 жизней):\n1. \n2. \n3. \n4. \n5. "
+      },
+      "five_year_pauk": {
+        id: "five_year_pauk",
+        tag: "🕸️ Стратегия • ПАУК",
+        title: "Пятилетний анализ + Система «ПАУК»",
+        short: "Проверяем, где мы «притворялись активными», и сортируем направления по системе ПАУК.",
+        steps: [
+          "Сравните: что волновало вас 1–5 лет назад и что реально сделано для решения?",
+          "Выпишите 6–10 своих направлений/дел и промаркируйте каждое буквой ПАУК: П — Продолжаю, А — Аткладываю, У — Убираю в долгий ящик, К — Корректирую."
+        ],
+        tool: "note",
+        placeholder: "Мои направления по системе ПАУК (П / А / У / К):"
+      },
+      "raise_stakes": {
+        id: "raise_stakes",
+        tag: "⏳ Отрезвление • Приоритеты",
+        title: "«Повышение ставок» / Мотивация смертью",
+        short: "Убираем всё лишнее и наносное через осознание ценности времени.",
+        steps: [
+          "Представьте, что вам осталось всего 2 недели или загляните в рейтинг сожалений в конце жизни.",
+          "Честно ответьте: чем бы вы точно перестали заниматься прямо сегодня, а на что направили бы всё внимание?",
+          "Сделайте одно действие в пользу по-настоящему важного."
+        ],
+        tool: "note",
+        placeholder: "Что лишнее я убираю и что делаю в первую очередь:"
+      },
+      "small_bets_new": {
+        id: "small_bets_new",
+        tag: "🌱 Гибкость • Обновление",
+        title: "Способ мелких ставок + «Я уже новый»",
+        short: "Не ждём гениальной идеи — делаем маленькие пробы и проверяем отклик себя сегодняшней.",
+        steps: [
+          "Утром спросите себя: «А мне сегодняшней действительно нравится делать то, что я делала по привычке?»",
+          "Сделайте одну «мелкую ставку» — попробуйте новое действие без ожидания идеального результата."
+        ],
+        tool: "note",
+        placeholder: "Моя мелкая ставка / что нового я попробовала сегодня:"
+      },
+      "dialogue_ro": {
+        id: "dialogue_ro",
+        tag: "🧘 Интуиция • Наставник",
+        title: "Диалог с Ро (внутренним наставником)",
+        short: "Разговор со своим мудрым бессознательным в тишине.",
+        steps: [
+          "Сядьте в тишине на 10 минут, закройте глаза и сделайте 3 глубоких вдоха.",
+          "Обратитесь к своему внутреннему мудрому наставнику (Ро) с главным вопросом дня.",
+          "Запишите первый спокойный, добрый ответ, который придёт без суеты."
+        ],
+        tool: "timer_note",
+        timerMinutes: 10,
+        placeholder: "Мой вопрос к Ро и ответ из глубины:"
+      },
+      "greatness_list": {
+        id: "greatness_list",
+        tag: "🚀 Масштаб • Мечты",
+        title: "Список Величия («Целься в Луну»)",
+        short: "Выписываем дерзкие, масштабные мечты без скромности, стыда и оглядки на «реалистичность».",
+        steps: [
+          "Отключите внутреннего бухгалтера и напишите мечты масштаба «Целься в Луну».",
+          "Не думайте о том, «как» это сделать — разрешите себе захотеть по-крупному."
+        ],
+        tool: "note",
+        placeholder: "Мой Список Величия (дерзкие мечты):"
+      },
+      "ancestors_128": {
+        id: "ancestors_128",
+        tag: "🌳 Сила рода • Опора",
+        title: "Доска предков (Сила 128 человек за спиной)",
+        short: "Опираемся на примеры стойкости, таланта и выживания в своём роду.",
+        steps: [
+          "Вспомните, что за вашей спиной стоят 128 предков в 7 поколениях — и каждый из них выжил и передал жизнь вам.",
+          "Запишите 3 реальные истории силы, юмора или стойкости ваших бабушек, дедушек и родных."
+        ],
+        tool: "note",
+        placeholder: "3 опоры и силы моего рода:"
+      },
+      "heritage_chest": {
+        id: "heritage_chest",
+        tag: "💎 Дар рода + Энергия",
+        title: "Сундук наследства + Энергоаудит («+» и «–»)",
+        short: "Забираем лучшие качества родителей и отмечаем, что даёт и забирает энергию за день.",
+        steps: [
+          "Снимите «старые халаты» (негативные сценарии семьи) и запишите «бриллианты» — лучшие качества, которые вы берёте с собой.",
+          "Вечером пробегитесь по делам дня и поставьте «+» (дало энергию) или «–» (высосало силы)."
+        ],
+        tool: "note",
+        placeholder: "Мои бриллианты наследства и энергоаудит дня (+/-):"
+      },
+      "power_hour": {
+        id: "power_hour",
+        tag: "⚡ Утро • Драйв",
+        title: "«Час силы» (по Тони Роббинсу)",
+        short: "15 мин настройка на цели + 15 мин аффирмации + 15 мин визуализация + 15 мин план дня.",
+        steps: [
+          "15 минут: благодарность и настройка на главные цели.",
+          "15 минут: проговаривание/прослушивание сильных установок.",
+          "15 минут: яркая визуализация пройденного пути и результата.",
+          "15 минут: выбор 3 главных задач дня."
+        ],
+        tool: "timer",
+        timerMinutes: 60
+      },
+      "goals_to_feelings": {
+        id: "goals_to_feelings",
+        tag: "💖 Состояние • Смысл",
+        title: "Перевод целей в чувства",
+        short: "Переписываем сухие цели и цифры в те живые эмоции и состояния, ради которых мы их хотим.",
+        steps: [
+          "Возьмите любую сухую цель (например, «заработать сумму» или «сделать ремонт»).",
+          "Спросите себя: «Что я буду чувствовать, когда это случится?» (свободу, лёгкость, гордость, тепло).",
+          "Проживите это состояние прямо сейчас."
+        ],
+        tool: "note",
+        placeholder: "Сухая цель → Какое чувство я на самом деле хочу испытать:"
+      },
+      /* РЕЗЕРВНЫЕ УПРАЖНЕНИЯ (ДОСТУПНЫ В КАТАЛОГЕ ЗАМЕН) */
+      "barter_7": {
+        id: "barter_7",
+        tag: "💡 Креативность • Ресурсы",
+        title: "7 идей бартера (Упражнение на смекалку)",
+        short: "Превращаем «у меня нет денег/связей» в творческую задачку: 7 способов быть полезной.",
+        steps: [
+          "Выберите ресурс, обучение или вещь, которую вы хотите получить.",
+          "Придумайте минимум 7 способов получить это без денег — через ваши навыки, время, обмен или помощь."
+        ],
+        tool: "note",
+        placeholder: "Цель → 7 идей бартера и обмена:"
+      },
+      "five_points_map": {
+        id: "five_points_map",
+        tag: "🗺️ Биография • Путь",
+        title: "Система 5 точек (Карта Пути)",
+        short: "Описываем свой путь: Рассвет, Эра накапливания, 1-й прорыв, 2-й прорыв и Кульминация.",
+        steps: [
+          "Распишите этапы своей жизни как захватывающую книгу: где был Рассвет, где шла Эра накапливания опыта, где случились прорывы.",
+          "Увидьте, на какой точке вы находитесь сейчас и куда ведёт следующая глава."
+        ],
+        tool: "note",
+        placeholder: "Мои 5 точек пути:"
+      },
+      "pyramid_relations": {
+        id: "pyramid_relations",
+        tag: "❤️ Отношения • Комфорт",
+        title: "Перепросмотр пирамиды отношений",
+        short: "Ставим психологический комфорт и безопасность в фундамент любого общения.",
+        steps: [
+          "Оцените своё ближайшее окружение: с кем вам легко, спокойно и тепло, а с кем приходится «заслуживать» любовь?",
+          "Перестройте пирамиду: на первом месте — ваш душевный покой."
+        ],
+        tool: "note",
+        placeholder: "Мои выводы по пирамиде отношений:"
+      },
+      "spontaneity_challenge": {
+        id: "spontaneity_challenge",
+        tag: "🎲 Смелость • Вызов",
+        title: "Микровызов зоне комфорта / Спонтанность",
+        short: "Раз в 2–3 дня делаем нелогичное доброе действие по первому импульсу сердца.",
+        steps: [
+          "Пойти домой незнакомой дорогой, заговорить с интересным человеком, заказать непривычное блюдо или сделать комплимент незнакомке.",
+          "Раскачиваем мозг и ловим подсказки Вселенной."
+        ],
+        tool: "note",
+        placeholder: "Мой спонтанный вызов сегодня:"
+      },
+      "non_dominant_hand": {
+        id: "non_dominant_hand",
+        tag: "🧠 Нейробика • Мариса Пир",
+        title: "Неведущая рука и бытовая нейробика",
+        short: "Чистим зубы, держим кружку и листаем телефон другой рукой для новых нейронных связей.",
+        steps: [
+          "Сегодня выполняйте привычные бытовые действия левой рукой (или правой, если вы левша).",
+          "Начинайте подъём или спуск по лестнице с другой ноги."
+        ],
+        tool: "note",
+        placeholder: "Какие действия сегодня сделала другой рукой:"
+      },
+      "bucket_balloon": {
+        id: "bucket_balloon",
+        tag: "🎈 Гипно-тест • Мариса Пир",
+        title: "Ведро и воздушный шарик (Сила мысли)",
+        short: "2-минутная практика, доказывающая, как воображение мгновенно управляет телом.",
+        steps: [
+          "Встаньте, вытяните обе руки вперёд и закройте глаза.",
+          "Представьте, что к левой руке привязали тяжёлое ведро с песком, а к правой — огромный воздушный шарик с гелием.",
+          "Почувствуйте через 1 минуту, как руки сами разошлись на разную высоту."
+        ],
+        tool: "timer",
+        timerMinutes: 2
+      },
+      "young_dance": {
+        id: "young_dance",
+        tag: "💃 Лимфа • Плейлист Young",
+        title: "10 минут танцев под плейлист «Young»",
+        short: "Включаем треки со словом Young (Sinatra, Forever Young) и свободно двигаемся.",
+        steps: [
+          "Включите любимую ритмичную песню со словом «Young».",
+          "Потанцуйте, попрыгайте и подпевайте вслух 10 минут, разгоняя лимфу и омолаживая подсознание."
+        ],
+        tool: "timer",
+        timerMinutes: 10
+      },
+      "horizon_20": {
+        id: "horizon_20",
+        tag: "🌅 Созерцание • Тишина",
+        title: "Созерцание горизонта (20 минут)",
+        short: "Смотрим вдаль без гаджетов, возвращая зрению и мозгу глубину и покой.",
+        steps: [
+          "Выйдите на улицу или подойдите к окну с дальним видом.",
+          "20 минут смотрите на линию горизонта, облака или деревья без телефона."
+        ],
+        tool: "timer",
+        timerMinutes: 20
+      }
+    };
+
+    /* 12 двухнедельных фаз полугодового плана (интенсив 4 / разгрузка 1–2) */
+    const defaultPhases = [
+      {
+        month: "Месяц 1 • Недели 1–2",
+        title: "Фаза 1: Очистка головы, тела и лени",
+        mode: "🔥 Интенсив • 4 практики",
+        isUnload: false,
+        desc: "Входим в ритм: мягко разгружаем голову с утра, фиксируем победы вечером и убираем хлам.",
+        slots: ["nihuane", "freewriting", "three_wins", "declutter_joy"]
+      },
+      {
+        month: "Месяц 1 • Недели 3–4",
+        title: "Фаза 2: Перезагрузка через тишину",
+        mode: "🌿 Разгрузка • 1 практика",
+        isUnload: true,
+        desc: "Недели отдыха: первые 4 навыка укладываются в голове, а мы осваиваем честный отдых без гаджетов.",
+        slots: ["antiseal"]
+      },
+      {
+        month: "Месяц 2 • Недели 5–6",
+        title: "Фаза 3: Закрепление базы и ревизия граблей",
+        mode: "🔄 Повтор + Новое • 4 практики",
+        isUnload: false,
+        desc: "Закрепляем фрирайтинг и 3 победы, а также разбираем повторяющиеся ситуации и старые обиды.",
+        slots: ["freewriting", "three_wins", "compromises_rakes", "killer_forgiveness"]
+      },
+      {
+        month: "Месяц 2 • Недели 7–8",
+        title: "Фаза 4: Разгрузка + утренний хвост",
+        mode: "🌿 Разгрузка + Хвост • 2 практики",
+        isUnload: true,
+        desc: "Закрепляем антиТЮлень и возвращаем утренние 20 минут без телефона.",
+        slots: ["antiseal", "nihuane"]
+      },
+      {
+        month: "Месяц 3 • Недели 9–12",
+        title: "Фаза 5: Личный Кодекс, самооценка и фокус",
+        mode: "🔥 Интенсив • 4 практики",
+        isUnload: false,
+        desc: "Выстраиваем личные правила границ, собираем похвальную грамоту и тренируем концентрацию.",
+        slots: ["larcido_code", "good_girl_list", "creative_hour", "black_dot_breath"]
+      },
+      {
+        month: "Месяц 3 • Недели 11–12",
+        title: "Фаза 6: Искусство маленьких шагов",
+        mode: "🌿 Разгрузка • 1 практика",
+        isUnload: true,
+        desc: "Отдыхаем от нагрузки и оттачиваем мягкую дисциплину «Только сегодня».",
+        slots: ["micro_decisions"]
+      },
+      {
+        month: "Месяц 4 • Недели 13–14",
+        title: "Фаза 7: Границы и Карта призвания",
+        mode: "🔄 Повтор + Новое • 4 практики",
+        isUnload: false,
+        desc: "Сверяем жизнь с Кодексом и оцениваем свои интересы по Колесу призвания и системе ПАУК.",
+        slots: ["larcido_code", "good_girl_list", "vocation_wheel", "five_year_pauk"]
+      },
+      {
+        month: "Месяц 4 • Недели 15–16",
+        title: "Фаза 8: Разгрузка + созидательный час",
+        mode: "🌿 Разгрузка + Хвост • 2 практики",
+        isUnload: true,
+        desc: "Закрепляем микрорешения и возвращаем созидательный час для души.",
+        slots: ["micro_decisions", "creative_hour"]
+      },
+      {
+        month: "Месяц 5 • Недели 17–18",
+        title: "Фаза 9: Масштаб, наставник и сила рода",
+        mode: "🔥 Интенсив • 4 практики",
+        isUnload: false,
+        desc: "Выходим на крупный масштаб: диалог с внутренним наставником Ро, дерзкие мечты и опора на 128 предков.",
+        slots: ["dialogue_ro", "greatness_list", "raise_stakes", "ancestors_128"]
+      },
+      {
+        month: "Месяц 5 • Недели 19–20",
+        title: "Фаза 10: Лёгкость и мелкие ставки",
+        mode: "🌿 Разгрузка • 1 практика",
+        isUnload: true,
+        desc: "Сбрасываем важность и играем в мелкие ставки с вопросом «А мне сегодняшней это нравится?».",
+        slots: ["small_bets_new"]
+      },
+      {
+        month: "Месяц 6 • Недели 21–22",
+        title: "Фаза 11: Смелость, бриллианты рода и Час силы",
+        mode: "🔄 Повтор + Новое • 4 практики",
+        isUnload: false,
+        desc: "Закрепляем диалог с Ро и Список Величия, забираем лучшие качества рода и собираем утренний Час силы.",
+        slots: ["dialogue_ro", "greatness_list", "heritage_chest", "power_hour"]
+      },
+      {
+        month: "Месяц 6 • Недели 23–24",
+        title: "Фаза 12: Финальная интеграция состояния",
+        mode: "🌿 Разгрузка + Хвост • 2 практики",
+        isUnload: true,
+        desc: "Завершаем полугодие в состоянии лёгкости: мелкие ставки и перевод всех целей в живые чувства.",
+        slots: ["small_bets_new", "goals_to_feelings"]
+      }
     ];
 
-    let currentBlockIdx = 0;
+    /* =========================================================================
+       ЧАСТЬ 3. КОПИЛКА ПРАВИЛ, ЛАЙФХАКОВ И 12 ЗАКОНОВ ШАРИКА (ВКЛАДКА 3)
+       ========================================================================= */
+    const tipsData = [
+      { cat: "focus", catLabel: "🎯 Фокус и дела", title: "Правило 90", body: "Если возможность, проект, книга или вещь не набирают 90 баллов из 100 по вашему главному критерию — смело отказывайтесь. Выбирайте только прекрасное, а не просто «хорошее»." },
+      { cat: "focus", catLabel: "🎯 Фокус и дела", title: "Правило трёх задач", body: "Каждое утро выделяйте только 3 самые важные задачи дня и делайте их в первую очередь, пока мозг свежий." },
+      { cat: "focus", catLabel: "🎯 Фокус и дела", title: "Техника 4Д для приоритетов", body: "Любое дело пропускайте через 4 фильтра: 1) Долой (отказаться), 2) Делегировать, 3) До лучших времен (отложить), 4) Давай (сделать прямо сейчас)." },
+      { cat: "focus", catLabel: "🎯 Фокус и дела", title: "90% времени в талантах и запрет на многозадачность", body: "Многозадачность — иллюзия, которая замедляет мозг. Делайте дела последовательно и стремитесь 90% времени заниматься тем, что получается блестяще." },
+      { cat: "focus", catLabel: "🎯 Фокус и дела", title: "Остановись! День размышлений в тишине", body: "Возьмите за правило устраивать себе «Неделю размышлений» (или хотя бы 1 день без гаджетов), чтобы свериться с внутренним компасом, а не бежать по часам." },
+      { cat: "focus", catLabel: "🎯 Фокус и дела", title: "Принцип 4 конфорок", body: "Жизнь — плита с 4 конфорками (Работа, Семья, Друзья, Здоровье). Чтобы добиться прорыва в чём-то одном, временно прикрутите одну конфорку, но никогда не выключайте Здоровье." },
+
+      { cat: "boundaries", catLabel: "🛡️ Границы и эмоции", title: "Диета от «информационного фастфуда»", body: "Жёстко ограничивайте сплетни, нытьё знакомых (не позволяйте бесплатно использовать себя как жилетку), депрессивную музыку и бессмысленный скроллинг." },
+      { cat: "boundaries", catLabel: "🛡️ Границы и эмоции", title: "Техника «Заезженной пластинки» (Как говорить НЕТ)", body: "Каждое «да» другому в ущерб себе — это «нет» себе. Отказывайте спокойно, без оправданий, повторяя одну мягкую фразу, или предлагайте жёсткий компромисс, удобный именно вам." },
+      { cat: "boundaries", catLabel: "🛡️ Границы и эмоции", title: "Правило 48 часов", body: "Любой сильной эмоции или обиде дайте ровно 48 часов на проживание. После этого принимайте трезвое решение, не застревая в драме на годы." },
+      { cat: "boundaries", catLabel: "🛡️ Границы и эмоции", title: "Празднуйте «момент отчаяния»", body: "На пути к любой цели всегда бывает «яма» (спад мотивации). Это норма! Лидеры отличаются от остальных только тем, что не сдаются именно в этой яме." },
+      { cat: "boundaries", catLabel: "🛡️ Границы и эмоции", title: "Стратегии Poh и Nah", body: "Poh (пофигизм к чужому мнению и мелочам, на которые вы не влияете) и Nah (твёрдое «нет» всему, что разрушает ваш покой)." },
+      { cat: "boundaries", catLabel: "🛡️ Границы и эмоции", title: "Никогда не извиняться, если не виновата", body: "Перестаньте говорить «извините, что отвлекаю» или «простите за беспокойство» там, где вы имеете полное право задать вопрос или заявить о себе." },
+
+      { cat: "people", catLabel: "🤝 Окружение", title: "Три сита для окружения", body: "Оценивайте людей по 3 фильтрам: 1) Наличие высшей цели, 2) Верность своей мечте (не сдаются ли они), 3) Стоимость встречи (окупает ли она ваше время и энергию)." },
+      { cat: "people", catLabel: "🤝 Окружение", title: "Найдите свою «стаю» и повышайте уровень нормы", body: "Если вы самый умный человек в комнате — смените комнату. Общайтесь с теми, для кого ваши мечты и большие достижения — это обычная норма." },
+      { cat: "people", catLabel: "🤝 Окружение", title: "Как найти ментора (Правило 20 писем)", body: "Выберите 10–20 человек, которыми восхищаетесь, и напишите им короткое вежливое письмо с просьбой о 10 минутах разговора в месяц. Один из двадцати точно согласится." },
+
+      { cat: "action", catLabel: "🚀 Как начать", title: "Бросьте себе абсурдный вызов", body: "Если жизнь зашла в тупик — не пишите списки целей. Сделайте что-то необычное (новая дорога, выступление, творческий челлендж), чтобы «раскачать» мозг." },
+      { cat: "action", catLabel: "🚀 Как начать", title: "Используйте «добрую злость» и «Как интересно получилось!»", body: "Вспомните скептиков и используйте желание доказать обратное как топливо (но ради СВОЕЙ цели). А при любой ошибке говорите: «Как интересно получилось!» и ищите выгоду." },
+      { cat: "action", catLabel: "🚀 Как начать", title: "Всегда говорите «ДА» случайностям", body: "Будьте открыты миру: случайный разговор в очереди, книга или неожиданное приглашение — так Вселенная передаёт нам подсказки." },
+      { cat: "action", catLabel: "🚀 Как начать", title: "Глаза больше, чем рот", body: "Не покупайте и не скачивайте больше курсов, книг и планов, чем можете переварить — непрожитая информация крадёт вашу ментальную энергию." },
+      { cat: "action", catLabel: "🚀 Как начать", title: "Формула счастья из 7 ежедневных дел", body: "Каждый день встраивайте в расписание хотя бы по 10 минут: движение, обучение, творчество, тишина, общение со своими, забота о теле и маленькая победа." },
+
+      { cat: "laws", catLabel: "🔮 12 законов шарика", title: "Законы 1–4: Шарик из пластилина и «вмятины»", body: "1) Человек рождается идеальным шариком, но жизнь наносит ему «вмятины» (травмы). 2) Вселенная стремится выпрямить нас через людей и ситуации. 3) Мы копируем перекосы родителей и притягиваем партнёров, которые их подсвечивают. 4) Чем сильнее сопротивляемся уроку (например, боимся просить о помощи), тем чаще попадаем в ситуации, где просить придётся." },
+      { cat: "laws", catLabel: "🔮 12 законов шарика", title: "Законы 5–8: Повторение уроков и эффект бабочки", body: "5) Непройденный урок повторяется снова и снова. 6) Самые большие проблемы таят в себе самые большие подарки. 7) Мы не видим всей картины целиком (опоздание на рейс может спасти жизнь). 8) Всё в мире взаимосвязано — каждое действие возвращается." },
+      { cat: "laws", catLabel: "🔮 12 законов шарика", title: "Законы 9–12: Взросление, Любовь и Страх", body: "9) Метафорически «убить родителей» — значит освободиться от навязанных страхов и стать взрослым. 10) То, чему сопротивляешься, усиливается. 11) Темную сторону (злость, зависть) нельзя подавлять — её нужно направлять в мирное русло. 12) Во Вселенной есть только два базовых чувства: Любовь и Страх." }
+    ];
+
+    /* =========================================================================
+       ЛОГИКА СОХРАНЕНИЯ СОСТОЯНИЯ В БРАУЗЕРЕ (localStorage)
+       ========================================================================= */
+    const STORAGE_KEY = "neurohero_app_state_v2";
+    let appState = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null") || {
+      currentBlockIdx: 0,
+      currentPhaseIdx: 0,
+      phaseSlots: defaultPhases.map(p => [...p.slots]),
+      doneToday: {},       // ключ: "phaseIdx_exId_YYYY-MM-DD"
+      streakCounts: {},    // ключ: "phaseIdx_exId" -> число дней (до 14)
+      notes: {},           // ключ: "exId" -> текст
+      wheel: { passion: 7, talent: 7, values: 8, state: 8 },
+      masteredIds: []
+    };
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+    }
+
+    function getTodayStr() {
+      return new Date().toISOString().slice(0, 10);
+    }
+
+    /* =========================================================================
+       ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
+       ========================================================================= */
+    function switchTab(tabName) {
+      stopAudio();
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+
+      document.getElementById('tabBtn-' + tabName).classList.add('active');
+      document.getElementById('tab-' + tabName).classList.add('active');
+
+      if (tabName === 'plan') renderPhase();
+      if (tabName === 'tips') renderTips();
+    }
+
+    /* =========================================================================
+       ЛОГИКА ВКЛАДКИ 1: УБЕЖДЕНИЯ И ПЛЕЕР (MP3 + РЕЗЕРВНЫЙ СИНТЕЗ РЕЧИ)
+       ========================================================================= */
     let currentPhrases = [];
-    
-    // Переменные для нашего нового аудиоплеера
     let currentAudio = null;
     let isPlaying = false;
+    let isFallbackSpeaking = false;
 
     async function loadCurrentBlock() {
-      stopAudio(); // Останавливаем звук при переключении блока
+      stopAudio();
+      const idx = appState.currentBlockIdx;
+      const b = blocks[idx];
 
-      const b = blocks[currentBlockIdx];
       document.getElementById('blockBadge').innerText = b.badge;
       document.getElementById('blockTitle').innerText = b.title;
 
-      document.getElementById('prevBtn').disabled = (currentBlockIdx === 0);
-      document.getElementById('prevBtnBottom').disabled = (currentBlockIdx === 0);
-      document.getElementById('nextBtn').disabled = (currentBlockIdx === blocks.length - 1);
-      document.getElementById('nextBtnBottom').disabled = (currentBlockIdx === blocks.length - 1);
+      document.getElementById('prevBtn').disabled = (idx === 0);
+      document.getElementById('prevBtnBottom').disabled = (idx === 0);
+      document.getElementById('nextBtn').disabled = (idx === blocks.length - 1);
+      document.getElementById('nextBtnBottom').disabled = (idx === blocks.length - 1);
 
       try {
         const response = await fetch(b.file);
@@ -255,11 +1479,10 @@
         });
         if (currentPhrases.length === 0) throw new Error("Пустой блок");
       } catch (e) {
-        currentPhrases = fallbackBlock1; // если файла нет на github
+        currentPhrases = b.fallback;
       }
 
       renderPhrases();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function renderPhrases() {
@@ -269,6 +1492,7 @@
       currentPhrases.forEach((p, idx) => {
         const item = document.createElement('div');
         item.className = 'phrase-item';
+        item.id = `phrase-item-${idx}`;
         item.innerHTML = `
           <div class="num-badge">#${idx + 1}</div>
           <div class="old-phrase">${escapeHtml(p.oldP)}</div>
@@ -276,23 +1500,29 @@
         `;
         container.appendChild(item);
       });
+
+      document.getElementById('blockSummary').innerText =
+        `Блок ${appState.currentBlockIdx + 1} из ${blocks.length} • Выражений: ${currentPhrases.length}. Наденьте наушники и нажмите «Озвучить блок».`;
     }
 
     function prevBlock() {
-      if (currentBlockIdx > 0) {
-        currentBlockIdx--;
+      if (appState.currentBlockIdx > 0) {
+        appState.currentBlockIdx--;
+        saveState();
         loadCurrentBlock();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     }
 
     function nextBlock() {
-      if (currentBlockIdx < blocks.length - 1) {
-        currentBlockIdx++;
+      if (appState.currentBlockIdx < blocks.length - 1) {
+        appState.currentBlockIdx++;
+        saveState();
         loadCurrentBlock();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     }
 
-    /* Логика воспроизведения MP3 файла */
     function toggleAudio() {
       if (isPlaying) {
         stopAudio();
@@ -302,39 +1532,82 @@
     }
 
     function playAudio() {
-      const b = blocks[currentBlockIdx];
-      
-      // Создаем плеер, если его еще нет или если сменился блок
-      if (!currentAudio || currentAudio.src.indexOf(b.audio) === -1) {
-        if (currentAudio) currentAudio.pause();
-        
-        currentAudio = new Audio(b.audio);
-        currentAudio.onended = () => stopAudio(); // Когда трек доиграл
-        currentAudio.onerror = () => {
-          alert("Не удалось загрузить аудио! Проверьте, загрузили ли вы файл " + b.audio + " на GitHub.");
-          stopAudio();
-        };
+      const b = blocks[appState.currentBlockIdx];
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio = null;
       }
-      
-      currentAudio.play();
+
+      currentAudio = new Audio(b.audio);
+      currentAudio.onended = () => stopAudio();
+      currentAudio.onerror = () => {
+        // Если MP3 файл для нового блока ещё не записан — мягко включаем встроенную озвучку фраз
+        currentAudio = null;
+        startFallbackSpeech();
+      };
+
+      currentAudio.play().then(() => {
+        isPlaying = true;
+        updateAudioBtn(true);
+      }).catch(() => {
+        startFallbackSpeech();
+      });
+    }
+
+    function startFallbackSpeech() {
+      if (!('speechSynthesis' in window)) {
+        alert("Загрузите файл " + blocks[appState.currentBlockIdx].audio + " в папку audio на GitHub.");
+        stopAudio();
+        return;
+      }
+      window.speechSynthesis.cancel();
       isPlaying = true;
+      isFallbackSpeaking = true;
       updateAudioBtn(true);
+      speakPhraseStep(0);
+    }
+
+    function speakPhraseStep(index) {
+      if (!isPlaying || !isFallbackSpeaking || index >= currentPhrases.length) {
+        stopAudio();
+        return;
+      }
+      document.querySelectorAll('.phrase-item').forEach(el => el.classList.remove('active-speaking'));
+      const activeEl = document.getElementById(`phrase-item-${index}`);
+      if (activeEl) activeEl.classList.add('active-speaking');
+
+      const utter = new SpeechSynthesisUtterance(currentPhrases[index].newP);
+      utter.lang = 'ru-RU';
+      utter.rate = 0.92;
+      utter.onend = () => {
+        setTimeout(() => {
+          if (isPlaying && isFallbackSpeaking) speakPhraseStep(index + 1);
+        }, 1500);
+      };
+      utter.onerror = () => {
+        if (isPlaying && isFallbackSpeaking) speakPhraseStep(index + 1);
+      };
+      window.speechSynthesis.speak(utter);
     }
 
     function stopAudio() {
       if (currentAudio) {
         currentAudio.pause();
-        currentAudio.currentTime = 0; // Сбрасываем в начало
+        currentAudio.currentTime = 0;
+      }
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
       }
       isPlaying = false;
+      isFallbackSpeaking = false;
       updateAudioBtn(false);
+      document.querySelectorAll('.phrase-item').forEach(el => el.classList.remove('active-speaking'));
     }
 
     function updateAudioBtn(speaking) {
       const btn = document.getElementById('audioToggleBtn');
       const icon = document.getElementById('audioIcon');
       const label = document.getElementById('audioLabel');
-
       if (speaking) {
         btn.classList.add('speaking');
         icon.innerText = "⏹️";
@@ -346,13 +1619,333 @@
       }
     }
 
+    /* =========================================================================
+       ЛОГИКА ВКЛАДКИ 2: ПОЛУГОДОВОЙ ПЛАН (12 ФАЗ ПО 14 ДНЕЙ)
+       ========================================================================= */
+    let activeTimers = {};
+    let replacingSlotIndex = null;
+
+    function prevPhase() {
+      if (appState.currentPhaseIdx > 0) {
+        appState.currentPhaseIdx--;
+        saveState();
+        renderPhase();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function nextPhase() {
+      if (appState.currentPhaseIdx < defaultPhases.length - 1) {
+        appState.currentPhaseIdx++;
+        saveState();
+        renderPhase();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function renderPhase() {
+      const pIdx = appState.currentPhaseIdx;
+      const phase = defaultPhases[pIdx];
+      const slots = appState.phaseSlots[pIdx] || phase.slots;
+
+      document.getElementById('phaseMonthBadge').innerText = phase.month;
+      document.getElementById('masteredCountBadge').innerText = `🏆 Освоено: ${appState.masteredIds.length}`;
+      document.getElementById('phaseTitle').innerText = phase.title;
+      document.getElementById('phaseDesc').innerText = phase.desc;
+
+      const modeBadge = document.getElementById('phaseModeBadge');
+      modeBadge.innerText = phase.mode;
+      modeBadge.className = phase.isUnload ? 'phase-mode unload' : 'phase-mode';
+
+      document.getElementById('prevPhaseBtn').disabled = (pIdx === 0);
+      document.getElementById('prevPhaseBtnBottom').disabled = (pIdx === 0);
+      document.getElementById('nextPhaseBtn').disabled = (pIdx === defaultPhases.length - 1);
+      document.getElementById('nextPhaseBtnBottom').disabled = (pIdx === defaultPhases.length - 1);
+
+      // Подсчёт среднего прогресса 14 дней по текущей фазе
+      let totalDays = 0;
+      slots.forEach(exId => {
+        const key = `${pIdx}_${exId}`;
+        totalDays += Math.min(14, appState.streakCounts[key] || 0);
+      });
+      const avgDays = slots.length ? Math.round(totalDays / slots.length) : 0;
+      document.getElementById('phaseProgressVal').innerText = `${avgDays} / 14 дн.`;
+      document.getElementById('phaseProgressFill').style.width = `${Math.min(100, (avgDays / 14) * 100)}%`;
+
+      const container = document.getElementById('exerciseList');
+      container.innerHTML = "";
+      const today = getTodayStr();
+
+      slots.forEach((exId, slotIdx) => {
+        const ex = exercisesCatalog[exId];
+        if (!ex) return;
+
+        const streakKey = `${pIdx}_${exId}`;
+        const todayKey = `${pIdx}_${exId}_${today}`;
+        const daysDone = appState.streakCounts[streakKey] || 0;
+        const isDoneToday = !!appState.doneToday[todayKey];
+
+        const card = document.createElement('div');
+        card.className = 'ex-card' + (isDoneToday ? ' done-today' : '');
+
+        let toolHtml = '';
+        if (ex.tool === 'timer' || ex.tool === 'timer_note') {
+          const mins = ex.timerMinutes || 15;
+          toolHtml += `
+            <div class="tool-box">
+              <div class="tool-title">⏱️ Таймер практики (${mins} мин)</div>
+              <div class="timer-row">
+                <div class="timer-display" id="timer-disp-${slotIdx}">${String(mins).padStart(2, '0')}:00</div>
+                <div style="display:flex; gap:6px;">
+                  <button class="small-btn" onclick="toggleTimer(${slotIdx}, ${mins})">Старт / Пауза</button>
+                  <button class="small-btn pink" onclick="resetTimer(${slotIdx}, ${mins})">Сброс</button>
+                </div>
+              </div>
+              ${ex.id === 'black_dot_breath' ? '<div style="text-align:center; font-size:42px; margin-top:10px; color:#000;">●</div>' : ''}
+            </div>
+          `;
+        }
+
+        if (ex.tool === 'wheel_note') {
+          const w = appState.wheel;
+          const sum = w.passion + w.talent + w.values + w.state;
+          toolHtml += `
+            <div class="tool-box">
+              <div class="tool-title">🧭 Колесо призвания (Оценка от 1 до 10)</div>
+              <div class="wheel-row">
+                <div class="wheel-label"><span>🔥 Одержимость (страсть/боль)</span><b id="wVal-passion">${w.passion}</b></div>
+                <input type="range" min="1" max="10" value="${w.passion}" oninput="updateWheel('passion', this.value)">
+              </div>
+              <div class="wheel-row">
+                <div class="wheel-label"><span>✨ Таланты (или желание развить)</span><b id="wVal-talent">${w.talent}</b></div>
+                <input type="range" min="1" max="10" value="${w.talent}" oninput="updateWheel('talent', this.value)">
+              </div>
+              <div class="wheel-row">
+                <div class="wheel-label"><span>🌟 Ценности и Высшая цель</span><b id="wVal-values">${w.values}</b></div>
+                <input type="range" min="1" max="10" value="${w.values}" oninput="updateWheel('values', this.value)">
+              </div>
+              <div class="wheel-row">
+                <div class="wheel-label"><span>💖 Состояние (какие эмоции даёт)</span><b id="wVal-state">${w.state}</b></div>
+                <input type="range" min="1" max="10" value="${w.state}" oninput="updateWheel('state', this.value)">
+              </div>
+              <div class="wheel-total" id="wheelTotalScore">Итого: ${sum} / 40 баллов</div>
+            </div>
+          `;
+        }
+
+        if (ex.tool === 'note' || ex.tool === 'timer_note' || ex.tool === 'wheel_note') {
+          const savedText = appState.notes[exId] || "";
+          toolHtml += `
+            <div class="tool-box">
+              <div class="tool-title">📝 Личный блокнот (сохраняется автоматически)</div>
+              <textarea class="ex-textarea" placeholder="${escapeHtml(ex.placeholder || 'Ваши записи...')}" oninput="saveNote('${exId}', this.value)">${escapeHtml(savedText)}</textarea>
+              <div class="save-hint">✓ Сохранено в телефоне</div>
+            </div>
+          `;
+        }
+
+        card.innerHTML = `
+          <div class="ex-top">
+            <span class="ex-tag">${ex.tag}</span>
+            <span class="ex-streak">Дней: ${daysDone} / 14</span>
+          </div>
+          <div class="ex-title">${slotIdx + 1}. ${ex.title}</div>
+          <div class="ex-short">${ex.short}</div>
+
+          <button class="ex-toggle-btn" onclick="toggleExDetails(${slotIdx})">
+            <span>📖 Инструкция и инструмент выполнения</span>
+            <span id="arrow-${slotIdx}">▼</span>
+          </button>
+
+          <div class="ex-details" id="details-${slotIdx}">
+            <ol class="steps-list">
+              ${ex.steps.map(s => `<li>${escapeHtml(s)}</li>`).join('')}
+            </ol>
+            ${toolHtml}
+          </div>
+
+          <div class="ex-actions">
+            <button class="btn-done ${isDoneToday ? 'checked' : ''}" onclick="markDoneToday('${exId}')">
+              ${isDoneToday ? '✅ Выполнено сегодня!' : '✅ Сделала сегодня'}
+            </button>
+            <button class="btn-mastered" onclick="openReplaceModal(${slotIdx}, '${exId}')">
+              🏆 Внедрено в голову
+            </button>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function toggleExDetails(slotIdx) {
+      const el = document.getElementById(`details-${slotIdx}`);
+      const arr = document.getElementById(`arrow-${slotIdx}`);
+      const isOpen = el.classList.toggle('open');
+      arr.innerText = isOpen ? '▲' : '▼';
+    }
+
+    function saveNote(exId, val) {
+      appState.notes[exId] = val;
+      saveState();
+    }
+
+    function updateWheel(axis, val) {
+      appState.wheel[axis] = parseInt(val, 10);
+      saveState();
+      document.getElementById('wVal-' + axis).innerText = val;
+      const w = appState.wheel;
+      const sum = w.passion + w.talent + w.values + w.state;
+      document.getElementById('wheelTotalScore').innerText = `Итого: ${sum} / 40 баллов`;
+    }
+
+    function markDoneToday(exId) {
+      const pIdx = appState.currentPhaseIdx;
+      const today = getTodayStr();
+      const streakKey = `${pIdx}_${exId}`;
+      const todayKey = `${pIdx}_${exId}_${today}`;
+
+      if (!appState.doneToday[todayKey]) {
+        appState.doneToday[todayKey] = true;
+        appState.streakCounts[streakKey] = (appState.streakCounts[streakKey] || 0) + 1;
+      } else {
+        delete appState.doneToday[todayKey];
+        appState.streakCounts[streakKey] = Math.max(0, (appState.streakCounts[streakKey] || 1) - 1);
+      }
+      saveState();
+      renderPhase();
+    }
+
+    /* Таймеры внутри упражнений */
+    function toggleTimer(slotIdx, defaultMins) {
+      if (activeTimers[slotIdx] && activeTimers[slotIdx].interval) {
+        clearInterval(activeTimers[slotIdx].interval);
+        activeTimers[slotIdx].interval = null;
+        return;
+      }
+      if (!activeTimers[slotIdx]) {
+        activeTimers[slotIdx] = { remaining: defaultMins * 60, interval: null };
+      }
+      activeTimers[slotIdx].interval = setInterval(() => {
+        activeTimers[slotIdx].remaining--;
+        const rem = activeTimers[slotIdx].remaining;
+        const disp = document.getElementById(`timer-disp-${slotIdx}`);
+        if (rem <= 0) {
+          clearInterval(activeTimers[slotIdx].interval);
+          activeTimers[slotIdx] = null;
+          if (disp) disp.innerText = "00:00 🎉";
+          alert("Время практики вышло! Вы молодец!");
+          return;
+        }
+        const m = String(Math.floor(rem / 60)).padStart(2, '0');
+        const s = String(rem % 60).padStart(2, '0');
+        if (disp) disp.innerText = `${m}:${s}`;
+      }, 1000);
+    }
+
+    function resetTimer(slotIdx, defaultMins) {
+      if (activeTimers[slotIdx] && activeTimers[slotIdx].interval) {
+        clearInterval(activeTimers[slotIdx].interval);
+      }
+      activeTimers[slotIdx] = { remaining: defaultMins * 60, interval: null };
+      const disp = document.getElementById(`timer-disp-${slotIdx}`);
+      if (disp) disp.innerText = `${String(defaultMins).padStart(2, '0')}:00`;
+    }
+
+    /* Замена освоенного упражнения из каталога */
+    function openReplaceModal(slotIdx, currentExId) {
+      replacingSlotIndex = slotIdx;
+      if (!appState.masteredIds.includes(currentExId)) {
+        appState.masteredIds.push(currentExId);
+        saveState();
+      }
+
+      const list = document.getElementById('catalogList');
+      list.innerHTML = "";
+
+      Object.values(exercisesCatalog).forEach(ex => {
+        const isMastered = appState.masteredIds.includes(ex.id);
+        const item = document.createElement('div');
+        item.className = 'catalog-item';
+        item.innerHTML = `
+          <div>
+            <div style="font-size:11px; font-weight:800; color:#ff3b65;">${ex.tag} ${isMastered ? '• 🏆 Освоено' : ''}</div>
+            <div style="font-size:14px; font-weight:800; color:#2b1f14;">${ex.title}</div>
+            <div style="font-size:12px; color:#6e5d4f;">${ex.short}</div>
+          </div>
+          <button class="small-btn" onclick="selectReplacement('${ex.id}')">Выбрать</button>
+        `;
+        list.appendChild(item);
+      });
+
+      document.getElementById('replaceModal').classList.add('open');
+    }
+
+    function closeReplaceModal() {
+      document.getElementById('replaceModal').classList.remove('open');
+      renderPhase();
+    }
+
+    function selectReplacement(newExId) {
+      if (replacingSlotIndex !== null) {
+        const pIdx = appState.currentPhaseIdx;
+        appState.phaseSlots[pIdx][replacingSlotIndex] = newExId;
+        saveState();
+      }
+      closeReplaceModal();
+    }
+
+    /* =========================================================================
+       ЛОГИКА ВКЛАДКИ 3: ШПАРГАЛКИ И ПРАВИЛА
+       ========================================================================= */
+    let currentTipCat = 'all';
+
+    function setTipFilter(cat, btn) {
+      currentTipCat = cat;
+      document.querySelectorAll('.chip-btn').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      renderTips();
+    }
+
+    function renderTips() {
+      const q = (document.getElementById('tipSearchInput').value || "").toLowerCase().trim();
+      const container = document.getElementById('tipsContainer');
+      container.innerHTML = "";
+
+      const filtered = tipsData.filter(t => {
+        const matchCat = (currentTipCat === 'all' || t.cat === currentTipCat);
+        const matchText = !q || t.title.toLowerCase().includes(q) || t.body.toLowerCase().includes(q);
+        return matchCat && matchText;
+      });
+
+      document.getElementById('tipsCountBadge').innerText = `Найдено: ${filtered.length}`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div style="text-align:center; padding:20px; color:#8c7b6d;">По вашему запросу ничего не найдено. Попробуйте другое слово.</div>`;
+        return;
+      }
+
+      filtered.forEach(t => {
+        const card = document.createElement('div');
+        card.className = 'tip-card';
+        card.innerHTML = `
+          <div class="tip-cat">${t.catLabel}</div>
+          <div class="tip-title">${escapeHtml(t.title)}</div>
+          <div class="tip-body">${escapeHtml(t.body)}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
     function escapeHtml(text) {
       const div = document.createElement('div');
       div.innerText = text;
       return div.innerHTML;
     }
 
+    /* Первый запуск */
     loadCurrentBlock();
+    renderTips();
   </script>
 </body>
 </html>
