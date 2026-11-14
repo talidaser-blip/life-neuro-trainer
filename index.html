@@ -7,7 +7,7 @@
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #e89500;
+      background: #e89500; /* Теплый сочный оранжевый фон */
       color: #2b1f14;
       margin: 0;
       padding: 16px;
@@ -85,66 +85,14 @@
       100% { transform: scale(1); }
     }
 
-    /* Панель выбора голоса */
-    .voice-settings {
-      background: #fdf6ec;
-      border: 1.5px solid #f6cf8a;
-      border-radius: 16px;
-      padding: 12px 16px;
-      margin-bottom: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .voice-settings-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .voice-settings label {
-      font-size: 13px;
-      font-weight: 700;
-      color: #7c4b00;
-    }
-
-    .voice-select {
-      flex: 1;
-      min-width: 200px;
-      padding: 6px 10px;
-      border-radius: 10px;
-      border: 1px solid #d6aa65;
-      background: #ffffff;
-      font-size: 13px;
-      color: #2b1f14;
-      font-weight: 600;
-      outline: none;
-    }
-
-    .rate-controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      font-weight: 700;
-      color: #7c4b00;
-    }
-
-    .rate-controls input[type="range"] {
-      accent-color: #ff5b79;
-      cursor: pointer;
-    }
-
     h1 {
       font-size: 22px;
-      margin: 4px 0 16px 0;
+      margin: 8px 0 16px 0;
       color: #2b1f14;
       font-weight: 800;
     }
 
+    /* Навигация переключения блоков */
     .nav-bar {
       display: flex;
       justify-content: space-between;
@@ -176,6 +124,7 @@
       color: #9ca3af;
     }
 
+    /* Список выражений */
     .phrase-list {
       display: flex;
       flex-direction: column;
@@ -191,14 +140,6 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
-      transition: all 0.25s ease;
-      position: relative;
-    }
-
-    .phrase-item.active-speaking {
-      border-color: #ff5b79;
-      background: #fff0f3;
-      box-shadow: 0 4px 16px rgba(255, 91, 121, 0.25);
     }
 
     .phrase-item .num-badge {
@@ -239,135 +180,61 @@
   <div class="card">
     <div class="header-row">
       <span class="badge" id="blockBadge">Уровень 1 • Блок 1</span>
+      <!-- Кнопка плеера -->
       <button class="audio-btn" id="audioToggleBtn" onclick="toggleAudio()">
         <span id="audioIcon">🎧</span>
         <span id="audioLabel">Озвучить блок</span>
       </button>
     </div>
 
-    <!-- Настройки голоса -->
-    <div class="voice-settings">
-      <div class="voice-settings-row">
-        <label for="voiceSelect">🗣 Голос:</label>
-        <select id="voiceSelect" class="voice-select" onchange="onVoiceChanged()">
-          <option value="">Поиск русских голосов...</option>
-        </select>
-      </div>
-      <div class="voice-settings-row">
-        <label>Скорость: <span id="rateVal">0.9x</span></label>
-        <div class="rate-controls">
-          <span>Медленнее</span>
-          <input type="range" id="rateRange" min="0.6" max="1.3" step="0.05" value="0.9" oninput="updateRate()">
-          <span>Быстрее</span>
-        </div>
-      </div>
-    </div>
-
     <h1 id="blockTitle">Загрузка...</h1>
 
+    <!-- Верхняя навигация -->
     <div class="nav-bar">
       <button class="nav-btn" id="prevBtn" onclick="prevBlock()">← Назад</button>
       <button class="nav-btn" id="nextBtn" onclick="nextBlock()">Следующий блок →</button>
     </div>
 
+    <!-- Контейнер для всех фраз -->
     <div class="phrase-list" id="phraseList">
       <div style="text-align: center; padding: 20px; color: #8c7b6d;">Загрузка списка фраз...</div>
     </div>
 
+    <!-- Нижняя навигация -->
     <div class="nav-bar">
       <button class="nav-btn" id="prevBtnBottom" onclick="prevBlock()">← Назад</button>
       <button class="nav-btn" id="nextBtnBottom" onclick="nextBlock()">Следующий блок →</button>
     </div>
 
     <div class="footer-note" id="blockSummary">
-      Выберите удобный голос, наденьте наушники и нажмите «Озвучить блок».
+      Наденьте наушники, включите аудио и можете убрать телефон в карман.
     </div>
   </div>
 
   <script>
+    // Здесь мы привязываем каждому блоку свой аудиофайл!
     const blocks = [
-      { file: "levels/level_1_block_1.txt", badge: "Уровень 1 • Блок 1", title: "Замена слов-разрушителей" },
-      { file: "levels/level_1_block_2.txt", badge: "Уровень 1 • Блок 2", title: "Молодость и сияние кожи" },
-      { file: "levels/level_1_block_3.txt", badge: "Уровень 1 • Блок 3", title: "Ясность ума и энергия" },
-      { file: "levels/level_1_block_4.txt", badge: "Уровень 1 • Блок 4", title: "Золотые афоризмы мудрости" }
+      { file: "levels/level_1_block_1.txt", audio: "audio/block_1.mp3", badge: "Уровень 1 • Блок 1", title: "Замена слов-разрушителей" },
+      { file: "levels/level_1_block_2.txt", audio: "audio/block_2.mp3", badge: "Уровень 1 • Блок 2", title: "Молодость и сияние кожи" },
+      { file: "levels/level_1_block_3.txt", audio: "audio/block_3.mp3", badge: "Уровень 1 • Блок 3", title: "Ясность ума и энергия" },
+      { file: "levels/level_1_block_4.txt", audio: "audio/block_4.mp3", badge: "Уровень 1 • Блок 4", title: "Золотые афоризмы мудрости" }
     ];
 
     const fallbackBlock1 = [
       { oldP: "Я древняя", newP: "Я опытная и мудрая" },
       { oldP: "Я совершенно истощена", newP: "Я слегка утомлена, мне нужен хороший отдых" },
-      { oldP: "Я слишком стара для этого", newP: "Я выбираю то, что радует меня сегодня" },
-      { oldP: "Все мое тело в ужасных морщинах", newP: "Это едва заметные следы смеха и улыбок" },
-      { oldP: "Я выгляжу старо", newP: "Моя кожа слегка обезвожена, я выпью чистой воды" },
-      { oldP: "У меня гусиные лапки", newP: "Мои глаза излучают тепло, смех и доброту" },
-      { oldP: "Я чувствую себя разбитой", newP: "Моя энергия временно восстанавливается" },
-      { oldP: "Моя память как решето", newP: "Моя память острая, я просто держала в голове много дел" },
-      { oldP: "Я слишком немощная", newP: "Я внимательна и бережна к своему телу" },
-      { oldP: "Я устарела и вышла в тираж", newP: "Я постоянно учусь, обновляюсь и развиваюсь" },
-      { oldP: "Мои суставы стареют", newP: "Моим суставам нужна мягкая разминка и растяжка" },
-      { oldP: "Я теряю зрение из-за возраста", newP: "Моим глазам просто нужно лучшее освещение и отдых" },
-      { oldP: "Я умираю от усталости", newP: "Я с предвкушением жду глубокого восстанавливающего сна" },
-      { oldP: "Поезд ушел, уже поздно", newP: "Сейчас идеальное время для нового начала" },
-      { oldP: "По утрам я выгляжу ужасно", newP: "Я просыпаюсь отдохнувшей, свежей и обновленной" }
+      { oldP: "Я слишком стара для этого", newP: "Я выбираю то, что радует меня сегодня" }
     ];
 
     let currentBlockIdx = 0;
     let currentPhrases = [];
-    let isSpeaking = false;
-    let synth = window.speechSynthesis;
-    let russianVoices = [];
-    let selectedVoice = null;
-    let currentSpeechRate = 0.9;
-
-    function populateVoices() {
-      if (!('speechSynthesis' in window)) return;
-      const allVoices = synth.getVoices();
-      russianVoices = allVoices.filter(v => v.lang.toLowerCase().startsWith('ru'));
-
-      const select = document.getElementById('voiceSelect');
-      select.innerHTML = '';
-
-      if (russianVoices.length === 0) {
-        const opt = document.createElement('option');
-        opt.value = '';
-        opt.innerText = 'Стандартный голос системы (RU)';
-        select.appendChild(opt);
-        return;
-      }
-
-      const savedVoiceName = localStorage.getItem('preferred_voice_name');
-
-      russianVoices.forEach((voice, i) => {
-        const opt = document.createElement('option');
-        opt.value = voice.name;
-        opt.innerText = `${voice.name} (${voice.lang})`;
-        if (savedVoiceName && voice.name === savedVoiceName) {
-          opt.selected = true;
-          selectedVoice = voice;
-        } else if (!savedVoiceName && i === 0) {
-          selectedVoice = voice;
-        }
-        select.appendChild(opt);
-      });
-    }
-
-    function onVoiceChanged() {
-      const select = document.getElementById('voiceSelect');
-      selectedVoice = russianVoices.find(v => v.name === select.value) || null;
-      if (selectedVoice) {
-        localStorage.setItem('preferred_voice_name', selectedVoice.name);
-      }
-      if (isSpeaking) {
-        stopAudio();
-      }
-    }
-
-    function updateRate() {
-      currentSpeechRate = parseFloat(document.getElementById('rateRange').value);
-      document.getElementById('rateVal').innerText = currentSpeechRate.toFixed(2) + 'x';
-    }
+    
+    // Переменные для нашего нового аудиоплеера
+    let currentAudio = null;
+    let isPlaying = false;
 
     async function loadCurrentBlock() {
-      stopAudio();
+      stopAudio(); // Останавливаем звук при переключении блока
 
       const b = blocks[currentBlockIdx];
       document.getElementById('blockBadge').innerText = b.badge;
@@ -388,7 +255,7 @@
         });
         if (currentPhrases.length === 0) throw new Error("Пустой блок");
       } catch (e) {
-        currentPhrases = fallbackBlock1;
+        currentPhrases = fallbackBlock1; // если файла нет на github
       }
 
       renderPhrases();
@@ -402,7 +269,6 @@
       currentPhrases.forEach((p, idx) => {
         const item = document.createElement('div');
         item.className = 'phrase-item';
-        item.id = `phrase-item-${idx}`;
         item.innerHTML = `
           <div class="num-badge">#${idx + 1}</div>
           <div class="old-phrase">${escapeHtml(p.oldP)}</div>
@@ -410,9 +276,6 @@
         `;
         container.appendChild(item);
       });
-
-      document.getElementById('blockSummary').innerText = 
-        `Всего выражений в блоке: ${currentPhrases.length}. Переключайтесь свободно между блоками.`;
     }
 
     function prevBlock() {
@@ -429,74 +292,42 @@
       }
     }
 
+    /* Логика воспроизведения MP3 файла */
     function toggleAudio() {
-      if (isSpeaking) {
+      if (isPlaying) {
         stopAudio();
       } else {
-        startAudio();
+        playAudio();
       }
     }
 
-    function startAudio() {
-      if (!('speechSynthesis' in window)) {
-        alert("Синтез речи не поддерживается в этом браузере.");
-        return;
+    function playAudio() {
+      const b = blocks[currentBlockIdx];
+      
+      // Создаем плеер, если его еще нет или если сменился блок
+      if (!currentAudio || currentAudio.src.indexOf(b.audio) === -1) {
+        if (currentAudio) currentAudio.pause();
+        
+        currentAudio = new Audio(b.audio);
+        currentAudio.onended = () => stopAudio(); // Когда трек доиграл
+        currentAudio.onerror = () => {
+          alert("Не удалось загрузить аудио! Проверьте, загрузили ли вы файл " + b.audio + " на GitHub.");
+          stopAudio();
+        };
       }
-      if (currentPhrases.length === 0) return;
-
-      synth.cancel();
-      isSpeaking = true;
+      
+      currentAudio.play();
+      isPlaying = true;
       updateAudioBtn(true);
-      speakPhraseAt(0);
-    }
-
-    function speakPhraseAt(index) {
-      if (!isSpeaking || index >= currentPhrases.length) {
-        stopAudio();
-        return;
-      }
-
-      document.querySelectorAll('.phrase-item').forEach(el => el.classList.remove('active-speaking'));
-      const activeEl = document.getElementById(`phrase-item-${index}`);
-      if (activeEl) {
-        activeEl.classList.add('active-speaking');
-        activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-
-      const phrase = currentPhrases[index];
-      const utterance = new SpeechSynthesisUtterance(phrase.newP);
-      utterance.lang = 'ru-RU';
-      utterance.rate = currentSpeechRate;
-
-      if (selectedVoice) {
-        utterance.voice = selectedVoice;
-      } else if (russianVoices.length > 0) {
-        utterance.voice = russianVoices[0];
-      }
-
-      utterance.onend = () => {
-        if (!isSpeaking) return;
-        setTimeout(() => {
-          if (isSpeaking) {
-            speakPhraseAt(index + 1);
-          }
-        }, 1800);
-      };
-
-      utterance.onerror = () => {
-        if (isSpeaking) speakPhraseAt(index + 1);
-      };
-
-      synth.speak(utterance);
     }
 
     function stopAudio() {
-      if ('speechSynthesis' in window) {
-        synth.cancel();
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0; // Сбрасываем в начало
       }
-      isSpeaking = false;
+      isPlaying = false;
       updateAudioBtn(false);
-      document.querySelectorAll('.phrase-item').forEach(el => el.classList.remove('active-speaking'));
     }
 
     function updateAudioBtn(speaking) {
@@ -521,12 +352,6 @@
       return div.innerHTML;
     }
 
-    if ('speechSynthesis' in window) {
-      populateVoices();
-      window.speechSynthesis.onvoiceschanged = () => {
-        populateVoices();
-      };
-    }
     loadCurrentBlock();
   </script>
 </body>
