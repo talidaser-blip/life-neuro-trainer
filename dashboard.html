@@ -295,6 +295,29 @@
       transition: width 0.3s ease;
     }
 
+    .reset-wrap {
+      text-align: center;
+      margin-top: 18px;
+    }
+
+    .reset-btn {
+      background: transparent;
+      border: 1.5px solid #e0cfc0;
+      color: #8c7b6d;
+      padding: 8px 16px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .reset-btn:hover {
+      border-color: #ff5b79;
+      color: #ff3b65;
+      background: #fff0f3;
+    }
+
     .footer-note {
       text-align: center;
       font-size: 13px;
@@ -360,6 +383,10 @@
       Точный подсчёт выполнений по каждому упражнению и блоку убеждений:
     </p>
     <div id="practiceCountersList"></div>
+
+    <div class="reset-wrap">
+      <button class="reset-btn" onclick="resetDashboardStats()">🔄 Сбросить статистику и начать заново</button>
+    </div>
 
     <div class="footer-note">
       Дашборд автоматически связан с вашим тренажёром на главной странице.
@@ -720,6 +747,21 @@
       const div = document.createElement('div');
       div.innerText = text;
       return div.innerHTML;
+    }
+
+    function resetDashboardStats() {
+      const ok = confirm("Точно сбросить всю статистику (календарь, серию дней и счётчики практик) и начать с нуля?\n\nВаши записи в личных блокнотах при этом сохранятся.");
+      if (!ok) return;
+
+      appState.doneToday = {};
+      appState.beliefDone = {};
+      appState.streakCounts = {};
+      appState.masteredIds = [];
+      appState.currentPhaseIdx = 0;
+
+      saveState();
+      renderDashboard();
+      alert("Статистика очищена! Можно начинать с чистого листа.");
     }
 
     renderDashboard();
