@@ -21,7 +21,7 @@
 
     .card {
       background: #ffffff;
-      max-width: 660px;
+      max-width: 680px;
       width: 100%;
       border-radius: 28px;
       padding: 22px;
@@ -128,7 +128,7 @@
       color: #6e5d4f;
     }
 
-    /* Календарь занятий и пропусков */
+    /* Календарь занятий и запланированных дел */
     .cal-box {
       background: #fffaf4;
       border: 2px solid #f6cf8a;
@@ -139,7 +139,7 @@
 
     .cal-legend {
       display: flex;
-      gap: 14px;
+      gap: 12px;
       flex-wrap: wrap;
       font-size: 12px;
       font-weight: 700;
@@ -187,6 +187,7 @@
       background: #ffffff;
       color: #a89888;
       transition: transform 0.15s ease;
+      position: relative;
     }
 
     .cal-day:hover { transform: scale(1.06); }
@@ -203,12 +204,26 @@
       color: #ffffff;
     }
 
+    .cal-day.has-planned-task {
+      border: 2px solid #ff5b79;
+    }
+
     .cal-day.today-ring { box-shadow: 0 0 0 2.5px #ff5b79; }
     .cal-day.selected-day { box-shadow: 0 0 0 3px #e89500; }
 
     .cal-count-pill {
       font-size: 9px;
       font-weight: 900;
+      margin-top: 1px;
+    }
+
+    .cal-task-badge {
+      font-size: 9px;
+      font-weight: 900;
+      color: #ff3b65;
+      background: #fff0f3;
+      padding: 0 4px;
+      border-radius: 6px;
       margin-top: 1px;
     }
 
@@ -219,6 +234,37 @@
       border-radius: 14px;
       padding: 12px;
       font-size: 13px;
+    }
+
+    .planned-task-box {
+      background: #fff0f3;
+      border: 1.5px solid #ffccd5;
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+    }
+
+    .planned-task-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 0;
+      border-bottom: 1px dashed #ffccd5;
+    }
+
+    .planned-task-row:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .done-task-btn {
+      background: #ff5b79;
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
     }
 
     .chip-btn {
@@ -358,13 +404,13 @@
       </div>
     </div>
 
-    <!-- Календарь активности за последние 35 дней -->
-    <h2>📅 Календарь занятий и пропусков (5 недель)</h2>
+    <!-- Календарь активности и запланированных задач -->
+    <h2>📅 Календарь занятий и дел (5 недель)</h2>
     <div class="cal-box">
       <div class="cal-legend">
         <span><i class="legend-dot" style="background:#38b6ba;"></i>Занималась (2+ дела)</span>
-        <span><i class="legend-dot" style="background:#d8f3f4; border:1px solid #38b6ba;"></i>Занималась (1 дело)</span>
-        <span><i class="legend-dot" style="background:#ffffff; border:1px dashed #d6c5b3;"></i>Не занималась</span>
+        <span><i class="legend-dot" style="background:#d8f3f4; border:1px solid #38b6ba;"></i>1 дело</span>
+        <span><i class="legend-dot" style="background:#fff0f3; border:1.5px solid #ff5b79;"></i>⚡ Дело из дневника</span>
       </div>
 
       <div class="cal-weekdays">
@@ -373,7 +419,7 @@
       <div class="cal-grid" id="calendarGrid"></div>
 
       <div class="day-detail-card" id="selectedDayDetails">
-        Нажмите на любой день в календаре, чтобы посмотреть детали или отметить пропущенный день.
+        Нажмите на любой день в календаре, чтобы посмотреть дела, практики или отметить пропущенный день.
       </div>
     </div>
 
@@ -389,7 +435,7 @@
     </div>
 
     <div class="footer-note">
-      Дашборд автоматически связан с вашим тренажёром на главной странице.
+      Дашборд автоматически связан с вашим тренажёром и голосовыми дневниками.
     </div>
   </div>
 
@@ -462,10 +508,12 @@
       beliefDone: {},
       streakCounts: {},
       notes: {},
+      diaries: { day: [], ideas: [], plots: [], tasks: [] },
       wheel: { passion: 7, talent: 7, values: 8, state: 8 },
       masteredIds: []
     };
     if (!appState.beliefDone) appState.beliefDone = {};
+    if (!appState.diaries) appState.diaries = { day: [], ideas: [], plots: [], tasks: [] };
 
     function saveState() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
@@ -483,6 +531,27 @@
     }
 
     let selectedCalDate = getTodayStr();
+
+    /* Активные (ещё не выполненные) задачи из дневника на конкретную дату */
+    function getPlannedTasksForDate(isoDate) {
+      const tasks = (appState.diaries && appState.diaries.tasks) || [];
+      return tasks.filter(t => {
+        if (t.done) return false;
+        const s = t.startDate || getTodayStr();
+        const e = t.endDate || s;
+        return isoDate >= s && isoDate <= e;
+      });
+    }
+
+    function completePlannedTaskFromDashboard(taskId) {
+      const tasks = (appState.diaries && appState.diaries.tasks) || [];
+      const item = tasks.find(t => t.id === taskId);
+      if (item) {
+        item.done = true;
+        saveState();
+        renderDashboard();
+      }
+    }
 
     function getActivityMapByDate() {
       const map = {};
@@ -523,10 +592,8 @@
       const allActiveDates = Object.keys(activityMap).filter(d => activityMap[d].length > 0).sort();
       const todayStr = getTodayStr();
 
-      // 1. Всего дней занималась
       document.getElementById('kpiTotalActiveDays').innerText = allActiveDates.length;
 
-      // 2. Дней подряд (streak)
       let streak = 0;
       let checkDate = new Date();
       if (!activityMap[formatDateISO(checkDate)]) {
@@ -538,7 +605,6 @@
       }
       document.getElementById('kpiStreakDays').innerText = streak;
 
-      // 3. Дней без практики за 30 дней
       let missed30 = 0;
       for (let i = 0; i < 30; i++) {
         const d = new Date();
@@ -548,7 +614,6 @@
       }
       document.getElementById('kpiMissed30Days').innerText = missed30;
 
-      // 4. Внедрено в голову
       document.getElementById('kpiMasteredTotal').innerText = (appState.masteredIds || []).length;
 
       const todayCount = (activityMap[todayStr] || []).length;
@@ -578,15 +643,17 @@
         cur.setDate(startOfGrid.getDate() + i);
         const iso = formatDateISO(cur);
         const items = activityMap[iso] || [];
+        const plannedTasks = getPlannedTasksForDate(iso);
         const isFuture = cur > now && iso !== todayStr;
 
         const cell = document.createElement('div');
         cell.className = 'cal-day';
         if (items.length === 1) cell.classList.add('active-low');
         if (items.length >= 2) cell.classList.add('active-high');
+        if (plannedTasks.length > 0) cell.classList.add('has-planned-task');
         if (iso === todayStr) cell.classList.add('today-ring');
         if (iso === selectedCalDate) cell.classList.add('selected-day');
-        if (isFuture) cell.style.opacity = '0.35';
+        if (isFuture && plannedTasks.length === 0) cell.style.opacity = '0.45';
 
         const dayLabel = cur.getDate() === 1
           ? `${cur.getDate()} ${monthNames[cur.getMonth()]}`
@@ -595,15 +662,15 @@
         cell.innerHTML = `
           <span>${dayLabel}</span>
           ${items.length > 0 ? `<span class="cal-count-pill">✓ ${items.length}</span>` : ''}
+          ${plannedTasks.length > 0 ? `<span class="cal-task-badge">⚡ ${plannedTasks.length}</span>` : ''}
         `;
 
-        if (!isFuture) {
-          cell.onclick = () => {
-            selectedCalDate = iso;
-            renderCalendarGrid(activityMap, todayStr);
-            renderSelectedDayDetails(iso, activityMap);
-          };
-        }
+        // Теперь можно нажимать и на будущие даты, чтобы посмотреть/выполнить запланированные дела
+        cell.onclick = () => {
+          selectedCalDate = iso;
+          renderCalendarGrid(activityMap, todayStr);
+          renderSelectedDayDetails(iso, activityMap);
+        };
 
         grid.appendChild(cell);
       }
@@ -614,11 +681,29 @@
     function renderSelectedDayDetails(isoDate, activityMap) {
       const box = document.getElementById('selectedDayDetails');
       const items = activityMap[isoDate] || [];
+      const plannedTasks = getPlannedTasksForDate(isoDate);
       const [y, m, d] = isoDate.split('-');
       const prettyDate = `${d}.${m}.${y}`;
 
       const pIdx = appState.currentPhaseIdx || 0;
       const currentPhaseSlots = (appState.phaseSlots && appState.phaseSlots[pIdx]) || defaultPhaseSlots[pIdx];
+
+      let plannedHtml = '';
+      if (plannedTasks.length > 0) {
+        plannedHtml = `
+          <div class="planned-task-box">
+            <div style="font-weight:800; color:#ff3b65; margin-bottom:6px;">
+              ⚡ Запланировано из дневника на ${prettyDate}:
+            </div>
+            ${plannedTasks.map(t => `
+              <div class="planned-task-row">
+                <span style="color:#2b1f14; font-weight:600;">${escapeHtml(t.text)}</span>
+                <button class="done-task-btn" onclick="completePlannedTaskFromDashboard(${t.id})">✅ Выполнить</button>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
 
       let listHtml = '';
       if (items.length > 0) {
@@ -632,11 +717,8 @@
         `;
       } else {
         listHtml = `
-          <div style="font-weight:800; color:#ff3b65; margin-bottom:6px;">
-            ⏸️ ${prettyDate} — В этот день практик не отмечено
-          </div>
-          <div style="font-size:12px; color:#6e5d4f; margin-bottom:8px;">
-            Если вы занимались в этот день, но забыли отметить — нажмите кнопку ниже:
+          <div style="font-weight:800; color:#7c4b00; margin-bottom:6px;">
+            📅 ${prettyDate} — Практик не отмечено
           </div>
         `;
       }
@@ -654,8 +736,9 @@
       }).join('');
 
       box.innerHTML = `
+        ${plannedHtml}
         ${listHtml}
-        <div style="font-size:11px; font-weight:700; color:#7c4b00; margin-bottom:4px;">Отметить / снять за ${prettyDate}:</div>
+        <div style="font-size:11px; font-weight:700; color:#7c4b00; margin-bottom:4px;">Отметить / снять практику за ${prettyDate}:</div>
         <div>${quickBtns}</div>
       `;
     }
@@ -750,7 +833,7 @@
     }
 
     function resetDashboardStats() {
-      const ok = confirm("Точно сбросить всю статистику (календарь, серию дней и счётчики практик) и начать с нуля?\n\nВаши записи в личных блокнотах при этом сохранятся.");
+      const ok = confirm("Точно сбросить всю статистику (календарь, серию дней и счётчики практик) и начать с нуля?\n\nВаши записи в личных блокнотах и дневниках при этом сохранятся.");
       if (!ok) return;
 
       appState.doneToday = {};
