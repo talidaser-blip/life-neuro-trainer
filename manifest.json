@@ -1,0 +1,15 @@
+{
+  "name": "НейроГерой: Практика молодости",
+  "short_name": "НейроГерой",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#e89500",
+  "theme_color": "#e89500",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2917/2917995.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
