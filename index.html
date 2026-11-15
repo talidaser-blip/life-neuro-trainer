@@ -41,7 +41,6 @@
       margin: 6px auto 28px auto;
     }
 
-    /* Закреплённая шапка для планшета */
     .sticky-header {
       position: sticky;
       top: 0;
@@ -102,7 +101,6 @@
       color: #ffffff;
     }
 
-    /* Главные 4 вкладки */
     .main-tabs {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -228,7 +226,6 @@
       color: #9ca3af;
     }
 
-    /* Сетка карточек убеждений */
     .phrase-list {
       display: grid;
       grid-template-columns: 1fr;
@@ -631,7 +628,7 @@
     }
 
     /* =========================================================
-       СТИЛИ ДЛЯ ВКЛАДКИ 3: ГОЛОСОВЫЕ ДНЕВНИКИ + КАЛЕНДАРЬ ЗАДАЧ
+       СТИЛИ ДЛЯ ВКЛАДКИ 3: ГОЛОСОВЫЕ ДНЕВНИКИ + ЦВЕТА ПО ДНЯМ
        ========================================================= */
     .diary-subtabs {
       display: grid;
@@ -741,16 +738,26 @@
     }
 
     .mini-cal-day {
-      background: #ffffff;
-      border: 1.5px solid #e6d6c3;
       border-radius: 12px;
       padding: 6px 2px;
       text-align: center;
       cursor: pointer;
       font-size: 12px;
       font-weight: 800;
-      color: #5c4b3c;
       transition: all 0.15s ease;
+    }
+
+    /* Чередование цветов в мини-календаре по числам */
+    .mini-cal-day.day-odd {
+      background: #fffaf2;
+      border: 1.5px solid #f5cf8e;
+      color: #7c4b00;
+    }
+
+    .mini-cal-day.day-even {
+      background: #f0fbfb;
+      border: 1.5px solid #bce6e8;
+      color: #136f73;
     }
 
     .mini-cal-day.has-task {
@@ -788,18 +795,28 @@
       margin-bottom: 8px;
     }
 
+    /* Чередование цветов карточек по дате (нечётное число / чётное число) */
     .diary-entry-card {
-      background: #fffaf4;
-      border: 1.5px solid #f6cf8a;
       border-radius: 20px;
       padding: 16px 18px;
       margin-bottom: 12px;
+      transition: all 0.2s ease;
+    }
+
+    .diary-entry-card.day-odd {
+      background: #fff9ef;
+      border: 2px solid #f6cf8a;
+    }
+
+    .diary-entry-card.day-even {
+      background: #effbfb;
+      border: 2px solid #bce6e8;
     }
 
     .diary-entry-card.task-completed {
-      background: #f2fbfb;
-      border-color: #38b6ba;
-      opacity: 0.8;
+      background: #f4f6f6;
+      border-color: #cfd8d8;
+      opacity: 0.78;
     }
 
     .diary-entry-card.task-completed .diary-entry-text {
@@ -816,7 +833,23 @@
       margin-bottom: 8px;
       font-size: 12px;
       font-weight: 800;
-      color: #9d8b7a;
+      color: #7c6b5d;
+    }
+
+    .day-color-pill {
+      padding: 2px 9px;
+      border-radius: 10px;
+      font-weight: 800;
+    }
+
+    .day-odd .day-color-pill {
+      background: #ffefd4;
+      color: #b55900;
+    }
+
+    .day-even .day-color-pill {
+      background: #d8f3f4;
+      color: #136f73;
     }
 
     .diary-entry-text {
@@ -897,7 +930,6 @@
       font-weight: 600;
     }
 
-    /* Адаптация специально для экранов планшетов (портрет и альбом) */
     @media (min-width: 768px) {
       body { padding: 24px; }
       .card { padding: 28px 32px; }
@@ -1018,7 +1050,7 @@
     </div>
 
     <!-- =========================================================
-         ВКЛАДКА 3: ГОЛОСОВЫЕ ДНЕВНИКИ (4 РАЗДЕЛА + АВТО-КАЛЕНДАРЬ ЗАДАЧ)
+         ВКЛАДКА 3: ГОЛОСОВЫЕ ДНЕВНИКИ (4 РАЗДЕЛА + ЦВЕТА ПО ДНЯМ)
          ========================================================= -->
     <div class="tab-section" id="tab-diary">
       <div class="header-row">
@@ -1036,7 +1068,6 @@
       </div>
 
       <div class="diary-layout">
-        <!-- Левая колонка: диктовка и очистка -->
         <div class="diary-composer">
           <button class="mic-btn" id="diaryMicBtn" onclick="toggleDiaryMic()">
             <span id="diaryMicIcon">🎙️</span>
@@ -1056,7 +1087,6 @@
           </button>
         </div>
 
-        <!-- Правая колонка: мини-календарь (для задач) и лента записей -->
         <div>
           <div id="taskMiniCalendarWrap" style="display:none;"></div>
           <input type="text" class="search-input" id="diarySearchInput" placeholder="🔍 Поиск по записям в этом дневнике..." oninput="renderDiaryEntries()">
@@ -1779,7 +1809,7 @@
     }
 
     /* =========================================================
-       ГОЛОСОВЫЕ ДНЕВНИКИ + ПАРСЕР ДАТ ДЛЯ КАЛЕНДАРЯ И GOOGLE
+       ГОЛОСОВЫЕ ДНЕВНИКИ + ЦВЕТА ПО ДНЯМ + КАЛЕНДАРЬ ЗАДАЧ
        ========================================================= */
     const diaryMeta = {
       day: { badge: "📅 Дневник дня", title: "Дневник дня (Утро / Вечер)", placeholder: "Надиктуйте, как прошёл день, что сделали, что почувствовали..." },
@@ -1809,13 +1839,12 @@
       return null;
     }
 
-    /* Извлечение дат или диапазона дат из текста задачи */
     function extractDateRangeFromText(text) {
+      if (!text) return null;
       const now = new Date();
       now.setHours(0, 0, 0, 0);
       const year = now.getFullYear();
 
-      // 1. Диапазон вида "с 23 по 28 ноября" или "с 16 по 28"
       const rangeRegex = /с\s+(\d{1,2})(?:\.(\d{1,2}))?\s+по\s+(\d{1,2})(?:\.(\d{1,2}))?(?:\s+([а-яё]+))?/i;
       const mRange = text.match(rangeRegex);
       if (mRange) {
@@ -1835,7 +1864,6 @@
         return { startDate: formatDateISO(startDate), endDate: formatDateISO(endDate) };
       }
 
-      // 2. Одиночная дата вида "21 ноября" или "21.11"
       const singleRegex = /\b(\d{1,2})(?:\.(\d{1,2})|\s+([а-яё]+))\b/i;
       const mSingle = text.match(singleRegex);
       if (mSingle) {
@@ -1848,7 +1876,6 @@
         }
       }
 
-      // 3. Ключевые слова "завтра" / "послезавтра" / "сегодня"
       if (/послезавтра/i.test(text)) {
         const dt = new Date(now);
         dt.setDate(dt.getDate() + 2);
@@ -1875,12 +1902,25 @@
       return `${d}.${m}`;
     }
 
+    /* Определяем число месяца для чередования цветов (15 -> нечётный, 16 -> чётный) */
+    function getEntryDayParityClass(item) {
+      let dayNum = null;
+      if (item.createdISO) {
+        dayNum = parseInt(item.createdISO.split('-')[2], 10);
+      } else if (item.date) {
+        const m = item.date.match(/^(\d{2})\./);
+        if (m) dayNum = parseInt(m[1], 10);
+      }
+      if (!dayNum || isNaN(dayNum)) dayNum = new Date().getDate();
+      return (dayNum % 2 === 1) ? 'day-odd' : 'day-even';
+    }
+
     function buildGoogleCalendarUrl(item) {
       const title = encodeURIComponent(item.text.slice(0, 90));
       const details = encodeURIComponent(item.text + "\n\nСоздано в тренажёре НейроГерой");
       let startStr = (item.startDate || getTodayStr()).replace(/-/g, '');
       let endObj = new Date((item.endDate || item.startDate || getTodayStr()) + "T00:00:00");
-      endObj.setDate(endObj.getDate() + 1); // В Google Calendar дата окончания для событий на весь день не включительная
+      endObj.setDate(endObj.getDate() + 1);
       let endStr = formatDateISO(endObj).replace(/-/g, '');
       return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startStr}/${endStr}&details=${details}`;
     }
@@ -1968,12 +2008,10 @@
       if (status) status.innerText = "Нажмите «✨ Причесать текст», чтобы убрать слова-паразиты";
     }
 
-    /* Локальный скрипт очистки устной речи без API */
     function cleanSpokenRussianText(raw) {
       if (!raw || !raw.trim()) return "";
       let text = " " + raw.trim().replace(/\s+/g, " ") + " ";
 
-      // Исправляем частые оговорки голосового движка
       text = text.replace(/\bнужен он\b/gi, "нужно");
       text = text.replace(/\bнужна он\b/gi, "нужно");
 
@@ -2041,6 +2079,7 @@
       }
 
       const now = new Date();
+      const createdISO = formatDateISO(now);
       const dateLabel = now.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
       const timeLabel = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
 
@@ -2052,11 +2091,12 @@
       if (!appState.diaries[currentDiaryType]) appState.diaries[currentDiaryType] = [];
       appState.diaries[currentDiaryType].unshift({
         id: Date.now(),
+        createdISO: createdISO,
         date: `${dateLabel} • ${timeLabel}`,
         text: text,
         raw: lastRawDraft && lastRawDraft !== text ? lastRawDraft : "",
-        startDate: extractedDates ? extractedDates.startDate : getTodayStr(),
-        endDate: extractedDates ? extractedDates.endDate : getTodayStr(),
+        startDate: extractedDates ? extractedDates.startDate : createdISO,
+        endDate: extractedDates ? extractedDates.endDate : createdISO,
         hasExplicitDate: !!extractedDates,
         done: false
       });
@@ -2115,6 +2155,7 @@
         const d = new Date(today);
         d.setDate(today.getDate() + i);
         const iso = formatDateISO(d);
+        const dayParity = (d.getDate() % 2 === 1) ? 'day-odd' : 'day-even';
         const tasksForDay = activeTasks.filter(t => {
           const s = t.startDate || getTodayStr();
           const e = t.endDate || s;
@@ -2123,7 +2164,7 @@
 
         const isSelected = selectedMiniCalDate === iso;
         cellsHtml += `
-          <div class="mini-cal-day ${tasksForDay.length > 0 ? 'has-task' : ''} ${isSelected ? 'selected' : ''}" onclick="toggleMiniCalDate('${iso}')">
+          <div class="mini-cal-day ${dayParity} ${tasksForDay.length > 0 ? 'has-task' : ''} ${isSelected ? 'selected' : ''}" onclick="toggleMiniCalDate('${iso}')">
             <div class="mini-cal-dow">${dows[d.getDay()]}</div>
             <div>${d.getDate()}.${String(d.getMonth() + 1).padStart(2, '0')}</div>
             <div class="mini-cal-dot">${tasksForDay.length > 0 ? '⚡ ' + tasksForDay.length : '·'}</div>
@@ -2145,7 +2186,6 @@
     function renderDiaryEntries() {
       renderTaskMiniCalendar();
 
-      // Подтягиваем даты для старых задач, сохранённых до обновления
       if (currentDiaryType === 'tasks') {
         (appState.diaries.tasks || []).forEach(item => {
           if (!item.startDate) {
@@ -2183,8 +2223,9 @@
       }
 
       filtered.forEach(item => {
+        const parityClass = getEntryDayParityClass(item);
         const card = document.createElement('div');
-        card.className = 'diary-entry-card' + (item.done ? ' task-completed' : '');
+        card.className = `diary-entry-card ${parityClass}` + (item.done ? ' task-completed' : '');
 
         const dateRangeText = item.startDate
           ? (item.startDate === item.endDate ? `📅 На дату: ${formatShortRuDate(item.startDate)}` : `📅 В календаре: ${formatShortRuDate(item.startDate)} — ${formatShortRuDate(item.endDate)}`)
@@ -2203,7 +2244,7 @@
 
         card.innerHTML = `
           <div class="diary-entry-top">
-            <span>🕒 ${escapeHtml(item.date)}</span>
+            <span class="day-color-pill">🕒 ${escapeHtml(item.date)}</span>
             <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
               ${taskControlsHtml}
               <button style="background:none; border:none; color:#9d8b7a; font-weight:800; cursor:pointer; font-size:14px;" onclick="deleteDiaryEntry(${item.id})" title="Удалить">✕</button>
