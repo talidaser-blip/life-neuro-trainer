@@ -2,17 +2,28 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Дашборд: Мой прогресс • НейроГерой</title>
+  <link rel="manifest" href="./manifest.json">
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js');
+  }
+</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="НейроГерой">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#e89500">
+  <title>НейроГерой: Практика молодости</title>
   <style>
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: #e89500;
       color: #2b1f14;
       margin: 0;
-      padding: 12px;
+      padding: 14px;
       display: flex;
       justify-content: center;
       align-items: flex-start;
@@ -21,32 +32,64 @@
 
     .card {
       background: #ffffff;
-      max-width: 680px;
+      max-width: 1140px;
       width: 100%;
-      border-radius: 28px;
-      padding: 22px;
-      box-shadow: 0 14px 35px rgba(180, 100, 0, 0.28);
+      border-radius: 32px;
+      padding: 20px;
+      box-shadow: 0 16px 40px rgba(180, 100, 0, 0.28);
       border: 3px solid #ffffff;
-      margin: 6px auto 24px auto;
+      margin: 6px auto 28px auto;
+    }
+
+    /* Закреплённая шапка для планшета */
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      padding-top: 4px;
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+      border-bottom: 1.5px solid #f7ebd9;
     }
 
     .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 14px;
+      gap: 12px;
+      margin-bottom: 12px;
     }
 
-    .back-btn {
+    .app-brand {
+      font-size: 18px;
+      font-weight: 900;
+      color: #d66c00;
+      letter-spacing: 0.3px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tablet-pill {
+      font-size: 11px;
+      font-weight: 800;
+      background: #fff6e8;
+      color: #b55900;
+      border: 1px solid #f6cf8a;
+      padding: 3px 9px;
+      border-radius: 10px;
+    }
+
+    .dashboard-link-btn {
       text-decoration: none;
-      background: #fff0f3;
-      color: #ff3b65;
-      border: 2px solid #ff5b79;
-      padding: 8px 16px;
-      border-radius: 16px;
-      font-size: 13px;
+      background: #e8f7f8;
+      color: #198c90;
+      border: 2px solid #38b6ba;
+      padding: 10px 18px;
+      border-radius: 18px;
+      font-size: 14px;
       font-weight: 800;
       display: inline-flex;
       align-items: center;
@@ -54,282 +97,229 @@
       transition: all 0.2s ease;
     }
 
-    .back-btn:hover {
-      background: #ff5b79;
+    .dashboard-link-btn:hover, .dashboard-link-btn:active {
+      background: #38b6ba;
       color: #ffffff;
     }
 
-    .badge-teal {
-      display: inline-block;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 800;
-      background: #e8f7f8;
-      color: #198c90;
-      border: 1.5px solid #bce6e8;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      font-size: 22px;
-      margin: 4px 0 16px 0;
-      color: #2b1f14;
-      font-weight: 800;
-    }
-
-    h2 {
-      font-size: 16px;
-      margin: 20px 0 10px 0;
-      color: #2b1f14;
-      font-weight: 800;
-    }
-
-    /* 4 главных показателя */
-    .kpi-grid {
+    /* Главные 4 вкладки */
+    .main-tabs {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-bottom: 18px;
+      gap: 8px;
+      background: #fff6e8;
+      padding: 7px;
+      border-radius: 22px;
+      border: 1.5px solid #f6cf8a;
     }
 
-    .kpi-card {
-      background: #fffaf4;
-      border: 2px solid #f6cf8a;
-      border-radius: 20px;
-      padding: 14px;
+    .tab-btn {
+      border: none;
+      background: transparent;
+      color: #7c4b00;
+      padding: 11px 8px;
+      border-radius: 16px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s ease;
       text-align: center;
+      line-height: 1.25;
     }
 
-    .kpi-card.teal {
-      background: #f0fbfb;
-      border-color: #bce6e8;
+    .tab-btn.active {
+      background: #ff5b79;
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(255, 91, 121, 0.35);
     }
 
-    .kpi-card.pink {
-      background: #fff2f5;
-      border-color: #ffccd5;
-    }
+    .tab-section { display: none; }
+    .tab-section.active { display: block; }
 
-    .kpi-num {
-      font-size: 30px;
-      font-weight: 900;
-      color: #d66c00;
-      line-height: 1.1;
-      margin-bottom: 4px;
-    }
-
-    .kpi-card.teal .kpi-num { color: #198c90; }
-    .kpi-card.pink .kpi-num { color: #ff3b65; }
-
-    .kpi-label {
-      font-size: 12px;
-      font-weight: 700;
-      color: #6e5d4f;
-    }
-
-    /* Календарь занятий и запланированных дел */
-    .cal-box {
-      background: #fffaf4;
-      border: 2px solid #f6cf8a;
-      border-radius: 20px;
-      padding: 14px;
-      margin-bottom: 18px;
-    }
-
-    .cal-legend {
+    .header-row {
       display: flex;
-      gap: 12px;
+      justify-content: space-between;
+      align-items: center;
       flex-wrap: wrap;
-      font-size: 12px;
-      font-weight: 700;
-      color: #6e5d4f;
+      gap: 12px;
       margin-bottom: 12px;
     }
 
-    .legend-dot {
+    .badge {
       display: inline-block;
-      width: 12px;
-      height: 12px;
-      border-radius: 4px;
-      vertical-align: middle;
-      margin-right: 4px;
-    }
-
-    .cal-weekdays {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-      text-align: center;
-      font-size: 11px;
+      padding: 7px 15px;
+      border-radius: 20px;
+      font-size: 13px;
       font-weight: 800;
-      color: #9d8b7a;
-      margin-bottom: 6px;
+      background: #fff0f3;
+      color: #ff3b65;
+      border: 1.5px solid #ffccd5;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
     }
 
-    .cal-grid {
+    .badge-teal {
+      background: #e8f7f8;
+      color: #198c90;
+      border-color: #bce6e8;
+    }
+
+    .audio-btn {
+      background: #e8f7f8;
+      color: #198c90;
+      border: 2px solid #38b6ba;
+      border-radius: 24px;
+      padding: 11px 20px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .audio-btn:hover { background: #38b6ba; color: #ffffff; }
+    .audio-btn.speaking {
+      background: #ff5b79;
+      border-color: #ff3b65;
+      color: #ffffff;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+
+    h1 {
+      font-size: 23px;
+      margin: 6px 0 16px 0;
+      color: #2b1f14;
+      font-weight: 800;
+    }
+
+    .nav-bar {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .nav-btn {
+      flex: 1;
+      padding: 13px 16px;
+      border: 2px solid #38b6ba;
+      background: #ffffff;
+      color: #198c90;
+      border-radius: 18px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover:not(:disabled) { background: #effafb; }
+    .nav-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      border-color: #d1d5db;
+      color: #9ca3af;
+    }
+
+    /* Сетка карточек убеждений */
+    .phrase-list {
       display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-bottom: 20px;
     }
 
-    .cal-day {
-      aspect-ratio: 1 / 1;
-      border-radius: 12px;
+    .phrase-item {
+      background: #fffaf4;
+      border: 1.5px solid #f6cf8a;
+      border-radius: 20px;
+      padding: 16px 18px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      gap: 7px;
+      transition: all 0.2s ease;
+    }
+
+    .phrase-item.active-speaking {
+      border-color: #ff5b79;
+      background: #fff0f3;
+      box-shadow: 0 4px 16px rgba(255, 91, 121, 0.25);
+    }
+
+    .phrase-item .num-badge {
+      align-self: flex-start;
       font-size: 12px;
       font-weight: 800;
-      cursor: pointer;
-      border: 1.5px dashed #e3d5c3;
-      background: #ffffff;
-      color: #a89888;
-      transition: transform 0.15s ease;
-      position: relative;
-    }
-
-    .cal-day:hover { transform: scale(1.06); }
-
-    .cal-day.active-low {
-      background: #d8f3f4;
-      border: 1.5px solid #38b6ba;
-      color: #136f73;
-    }
-
-    .cal-day.active-high {
-      background: #38b6ba;
-      border: 1.5px solid #198c90;
-      color: #ffffff;
-    }
-
-    .cal-day.has-planned-task {
-      border: 2px solid #ff5b79;
-    }
-
-    .cal-day.today-ring { box-shadow: 0 0 0 2.5px #ff5b79; }
-    .cal-day.selected-day { box-shadow: 0 0 0 3px #e89500; }
-
-    .cal-count-pill {
-      font-size: 9px;
-      font-weight: 900;
-      margin-top: 1px;
-    }
-
-    .cal-task-badge {
-      font-size: 9px;
-      font-weight: 900;
-      color: #ff3b65;
-      background: #fff0f3;
-      padding: 0 4px;
-      border-radius: 6px;
-      margin-top: 1px;
-    }
-
-    .day-detail-card {
-      margin-top: 12px;
-      background: #ffffff;
-      border: 1.5px solid #38b6ba;
-      border-radius: 14px;
-      padding: 12px;
-      font-size: 13px;
-    }
-
-    .planned-task-box {
-      background: #fff0f3;
-      border: 1.5px solid #ffccd5;
-      border-radius: 12px;
-      padding: 10px 12px;
-      margin-bottom: 10px;
-    }
-
-    .planned-task-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 0;
-      border-bottom: 1px dashed #ffccd5;
-    }
-
-    .planned-task-row:last-child { border-bottom: none; padding-bottom: 0; }
-
-    .done-task-btn {
-      background: #ff5b79;
-      color: #ffffff;
-      border: none;
-      border-radius: 10px;
-      padding: 5px 10px;
-      font-size: 11px;
-      font-weight: 800;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .chip-btn {
-      padding: 6px 12px;
-      border-radius: 14px;
-      border: 1.5px solid #f6cf8a;
-      background: #fffaf4;
-      color: #7c4b00;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .chip-btn.active {
-      background: #38b6ba;
-      border-color: #38b6ba;
-      color: #ffffff;
-    }
-
-    /* Счётчик практик */
-    .counter-row {
-      background: #ffffff;
-      border: 1.5px solid #f6cf8a;
-      border-radius: 16px;
-      padding: 12px 14px;
-      margin-bottom: 10px;
-    }
-
-    .counter-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 6px;
-    }
-
-    .counter-name {
-      font-size: 14px;
-      font-weight: 800;
-      color: #2b1f14;
-    }
-
-    .counter-val {
-      font-size: 13px;
-      font-weight: 900;
-      color: #ffffff;
-      background: #ff5b79;
+      color: #198c90;
+      background: #e8f7f8;
       padding: 3px 10px;
-      border-radius: 12px;
-      white-space: nowrap;
+      border-radius: 10px;
     }
 
-    .counter-val.mastered { background: #38b6ba; }
+    .old-phrase {
+      font-size: 14px;
+      color: #9d8b7a;
+      text-decoration: line-through;
+      font-weight: 500;
+    }
 
-    .counter-sub {
-      font-size: 11px;
-      color: #7c4b00;
+    .new-phrase {
+      font-size: 17px;
+      font-weight: 800;
+      color: #d66c00;
+      line-height: 1.45;
+    }
+
+    /* План на 6 месяцев */
+    .phase-box {
+      background: #fff8ee;
+      border: 2px solid #f6cf8a;
+      border-radius: 22px;
+      padding: 18px 20px;
+      margin-bottom: 18px;
+    }
+
+    .phase-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .phase-mode {
+      font-size: 13px;
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 12px;
+      background: #ff5b79;
+      color: #ffffff;
+    }
+
+    .phase-mode.unload { background: #38b6ba; }
+
+    .phase-progress-wrap { margin-top: 10px; }
+    .phase-progress-text {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
       font-weight: 700;
+      color: #7c4b00;
       margin-bottom: 6px;
     }
 
     .progress-bar {
       background: #efe2cf;
-      border-radius: 10px;
-      height: 8px;
+      border-radius: 12px;
+      height: 12px;
       width: 100%;
       overflow: hidden;
     }
@@ -341,169 +331,990 @@
       transition: width 0.3s ease;
     }
 
-    .reset-wrap {
-      text-align: center;
-      margin-top: 18px;
+    .ex-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+      align-items: start;
     }
 
-    .reset-btn {
-      background: transparent;
-      border: 1.5px solid #e0cfc0;
-      color: #8c7b6d;
-      padding: 8px 16px;
-      border-radius: 14px;
+    .ex-card {
+      background: #ffffff;
+      border: 2px solid #f6cf8a;
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: 0 6px 18px rgba(232, 149, 0, 0.08);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ex-card.done-today {
+      border-color: #38b6ba;
+      background: #f4fcfc;
+    }
+
+    .ex-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .ex-tag {
       font-size: 12px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 10px;
+      background: #fff0f3;
+      color: #ff3b65;
+    }
+
+    .ex-streak {
+      font-size: 13px;
+      font-weight: 800;
+      color: #198c90;
+      background: #e8f7f8;
+      padding: 4px 11px;
+      border-radius: 10px;
+    }
+
+    .ex-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #2b1f14;
+      margin: 4px 0 8px 0;
+    }
+
+    .ex-short {
+      font-size: 15px;
+      color: #5c4b3c;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .ex-toggle-btn {
+      background: #fff6e8;
+      border: 1.5px solid #f6cf8a;
+      color: #b55900;
+      font-size: 14px;
+      font-weight: 800;
+      padding: 11px 14px;
+      border-radius: 14px;
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .ex-details {
+      display: none;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1.5px dashed #f0e6da;
+    }
+
+    .ex-details.open { display: block; }
+
+    .steps-list {
+      margin: 0 0 14px 0;
+      padding-left: 20px;
+      font-size: 15px;
+      color: #2b1f14;
+      line-height: 1.55;
+    }
+
+    .steps-list li { margin-bottom: 8px; }
+
+    .tool-box {
+      background: #fffaf4;
+      border: 1.5px solid #38b6ba;
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .tool-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #198c90;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .timer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .timer-display {
+      font-size: 28px;
+      font-weight: 800;
+      color: #ff3b65;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .small-btn {
+      padding: 10px 16px;
+      border-radius: 14px;
+      border: none;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      background: #38b6ba;
+      color: #ffffff;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .small-btn.pink { background: #ff5b79; }
+    .small-btn.gold { background: #e89500; }
+    .small-btn.outline {
+      background: #ffffff;
+      color: #198c90;
+      border: 1.5px solid #38b6ba;
+    }
+
+    .ex-textarea {
+      width: 100%;
+      min-height: 125px;
+      border-radius: 14px;
+      border: 1.5px solid #d6aa65;
+      padding: 12px;
+      font-family: inherit;
+      font-size: 15px;
+      line-height: 1.45;
+      color: #2b1f14;
+      resize: vertical;
+      background: #ffffff;
+    }
+
+    .save-hint {
+      font-size: 12px;
+      color: #198c90;
       font-weight: 700;
+      margin-top: 5px;
+      text-align: right;
+    }
+
+    .wheel-row { margin-bottom: 10px; }
+    .wheel-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .wheel-row input[type="range"] { width: 100%; height: 26px; accent-color: #ff5b79; }
+    .wheel-total {
+      font-size: 15px;
+      font-weight: 800;
+      color: #d66c00;
+      text-align: right;
+      margin-top: 6px;
+    }
+
+    .ex-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn-done {
+      flex: 1;
+      min-width: 150px;
+      padding: 13px 14px;
+      border-radius: 16px;
+      border: none;
+      background: #ff5b79;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(255, 91, 121, 0.3);
+    }
+
+    .btn-done.checked {
+      background: #38b6ba;
+      box-shadow: 0 4px 12px rgba(56, 182, 186, 0.3);
+    }
+
+    .btn-mastered {
+      flex: 1;
+      min-width: 150px;
+      padding: 13px 14px;
+      border-radius: 16px;
+      border: 2px solid #f6cf8a;
+      background: #fffaf4;
+      color: #b55900;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    /* Шпаргалки */
+    .search-input {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 18px;
+      border: 2px solid #38b6ba;
+      font-size: 16px;
+      margin-bottom: 14px;
+      outline: none;
+    }
+
+    .filter-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .chip-btn {
+      padding: 8px 15px;
+      border-radius: 16px;
+      border: 1.5px solid #f6cf8a;
+      background: #fffaf4;
+      color: #7c4b00;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .chip-btn.active {
+      background: #38b6ba;
+      border-color: #38b6ba;
+      color: #ffffff;
+    }
+
+    .tips-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .tip-card {
+      background: #fffaf4;
+      border: 1.5px solid #f6cf8a;
+      border-radius: 20px;
+      padding: 16px 18px;
+    }
+
+    .tip-cat {
+      font-size: 12px;
+      font-weight: 800;
+      color: #ff3b65;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    .tip-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: #2b1f14;
+      margin-bottom: 7px;
+    }
+
+    .tip-body {
+      font-size: 15px;
+      color: #4a3b2c;
+      line-height: 1.5;
+    }
+
+    /* =========================================================
+       СТИЛИ ДЛЯ ВКЛАДКИ 3: ГОЛОСОВЫЕ ДНЕВНИКИ + КАЛЕНДАРЬ ЗАДАЧ
+       ========================================================= */
+    .diary-subtabs {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .diary-sub-btn {
+      padding: 12px 10px;
+      border-radius: 16px;
+      border: 2px solid #f6cf8a;
+      background: #fffaf4;
+      color: #7c4b00;
+      font-size: 14px;
+      font-weight: 800;
       cursor: pointer;
       transition: all 0.2s ease;
     }
 
-    .reset-btn:hover {
+    .diary-sub-btn.active {
+      background: #38b6ba;
+      border-color: #38b6ba;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(56, 182, 186, 0.3);
+    }
+
+    .diary-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .diary-composer {
+      background: #fff8ee;
+      border: 2px solid #f6cf8a;
+      border-radius: 24px;
+      padding: 18px;
+    }
+
+    .mic-btn {
+      width: 100%;
+      padding: 15px;
+      border-radius: 18px;
+      border: none;
+      background: #38b6ba;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 14px rgba(56, 182, 186, 0.35);
+      transition: all 0.2s ease;
+    }
+
+    .mic-btn.recording {
+      background: #ff3b65;
+      box-shadow: 0 4px 16px rgba(255, 59, 101, 0.45);
+      animation: pulse 1.2s infinite;
+    }
+
+    .mic-status {
+      font-size: 13px;
+      font-weight: 700;
+      color: #7c4b00;
+      text-align: center;
+      margin-bottom: 10px;
+      min-height: 18px;
+    }
+
+    .diary-tools-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      margin-bottom: 12px;
+    }
+
+    /* Мини-календарь задач в разделе Надо сделать */
+    .task-mini-cal {
+      background: #fff8ee;
+      border: 2px solid #f6cf8a;
+      border-radius: 20px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    .mini-cal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 800;
+      color: #7c4b00;
+      margin-bottom: 10px;
+    }
+
+    .mini-cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+
+    .mini-cal-day {
+      background: #ffffff;
+      border: 1.5px solid #e6d6c3;
+      border-radius: 12px;
+      padding: 6px 2px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+      color: #5c4b3c;
+      transition: all 0.15s ease;
+    }
+
+    .mini-cal-day.has-task {
+      background: #fff0f3;
       border-color: #ff5b79;
       color: #ff3b65;
+    }
+
+    .mini-cal-day.selected {
+      box-shadow: 0 0 0 2.5px #38b6ba;
+    }
+
+    .mini-cal-dow {
+      font-size: 10px;
+      font-weight: 700;
+      opacity: 0.75;
+    }
+
+    .mini-cal-dot {
+      font-size: 9px;
+      font-weight: 900;
+      margin-top: 2px;
+      color: #ff3b65;
+    }
+
+    .date-range-pill {
+      display: inline-block;
       background: #fff0f3;
+      color: #ff3b65;
+      border: 1px solid #ffccd5;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+    }
+
+    .diary-entry-card {
+      background: #fffaf4;
+      border: 1.5px solid #f6cf8a;
+      border-radius: 20px;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+    }
+
+    .diary-entry-card.task-completed {
+      background: #f2fbfb;
+      border-color: #38b6ba;
+      opacity: 0.8;
+    }
+
+    .diary-entry-card.task-completed .diary-entry-text {
+      text-decoration: line-through;
+      color: #6e8586;
+    }
+
+    .diary-entry-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #9d8b7a;
+    }
+
+    .diary-entry-text {
+      font-size: 16px;
+      color: #2b1f14;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      margin-bottom: 10px;
+    }
+
+    .raw-toggle {
+      font-size: 12px;
+      font-weight: 700;
+      color: #198c90;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .raw-box {
+      display: none;
+      margin-top: 8px;
+      padding: 10px;
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px dashed #d6aa65;
+      font-size: 13px;
+      color: #7c6b5d;
+    }
+
+    .raw-box.open { display: block; }
+
+    /* Модальное окно замены упражнения */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(43, 31, 20, 0.65);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal-card {
+      background: #ffffff;
+      max-width: 720px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      border-radius: 28px;
+      padding: 24px;
+      border: 3px solid #f6cf8a;
+    }
+
+    .catalog-item {
+      border: 1.5px solid #f6cf8a;
+      background: #fffaf4;
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
     }
 
     .footer-note {
       text-align: center;
-      font-size: 13px;
+      font-size: 14px;
       color: #8c7b6d;
       border-top: 2px dashed #f0e6da;
-      padding-top: 14px;
-      margin-top: 16px;
+      padding-top: 16px;
       font-weight: 600;
+    }
+
+    /* Адаптация специально для экранов планшетов (портрет и альбом) */
+    @media (min-width: 768px) {
+      body { padding: 24px; }
+      .card { padding: 28px 32px; }
+      .main-tabs { grid-template-columns: repeat(4, 1fr); }
+      .tab-btn { font-size: 14px; padding: 13px 10px; }
+      h1 { font-size: 26px; }
+      .phrase-list { grid-template-columns: repeat(2, 1fr); }
+      .ex-list { grid-template-columns: repeat(2, 1fr); }
+      .tips-grid { grid-template-columns: repeat(2, 1fr); }
+      .diary-subtabs { grid-template-columns: repeat(4, 1fr); }
+      .diary-layout { grid-template-columns: 1fr 1.25fr; }
     }
   </style>
 </head>
 <body>
   <div class="card">
-    <div class="top-bar">
-      <a href="index.html" class="back-btn">← К практикам</a>
-      <span class="badge-teal" id="cabinetTodayStatus">Сегодня: ждёт практики</span>
-    </div>
+    <div class="sticky-header">
+      <div class="top-bar">
+        <div class="app-brand">
+          <span>🌟 НейроГерой</span>
+          <span class="tablet-pill">Планшет</span>
+        </div>
+        <a href="dashboard.html" class="dashboard-link-btn">📊 Дашборд →</a>
+      </div>
 
-    <h1>📊 Дашборд: Мой ритм и счётчик</h1>
-
-    <!-- 4 главные карточки-показателя -->
-    <div class="kpi-grid">
-      <div class="kpi-card teal">
-        <div class="kpi-num" id="kpiTotalActiveDays">0</div>
-        <div class="kpi-label">Всего дней занималась</div>
-      </div>
-      <div class="kpi-card pink">
-        <div class="kpi-num" id="kpiStreakDays">0</div>
-        <div class="kpi-label">Дней подряд сейчас</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-num" id="kpiMissed30Days">0</div>
-        <div class="kpi-label">Дней без практики (из 30)</div>
-      </div>
-      <div class="kpi-card teal">
-        <div class="kpi-num" id="kpiMasteredTotal">0</div>
-        <div class="kpi-label">🏆 Внедрено в голову</div>
+      <div class="main-tabs">
+        <button class="tab-btn active" id="tabBtn-audio" onclick="switchTab('audio')">🎧 Убеждения<br><small>(8 блоков)</small></button>
+        <button class="tab-btn" id="tabBtn-plan" onclick="switchTab('plan')">🎯 План 6 мес.<br><small>(12 фаз)</small></button>
+        <button class="tab-btn" id="tabBtn-diary" onclick="switchTab('diary')">🎙 Дневники<br><small>(4 ленты)</small></button>
+        <button class="tab-btn" id="tabBtn-tips" onclick="switchTab('tips')">💡 Шпаргалки<br><small>(Законы)</small></button>
       </div>
     </div>
 
-    <!-- Календарь активности и запланированных задач -->
-    <h2>📅 Календарь занятий и дел (5 недель)</h2>
-    <div class="cal-box">
-      <div class="cal-legend">
-        <span><i class="legend-dot" style="background:#38b6ba;"></i>Занималась (2+ дела)</span>
-        <span><i class="legend-dot" style="background:#d8f3f4; border:1px solid #38b6ba;"></i>1 дело</span>
-        <span><i class="legend-dot" style="background:#fff0f3; border:1.5px solid #ff5b79;"></i>⚡ Дело из дневника</span>
+    <!-- =========================================================
+         ВКЛАДКА 1: УБЕЖДЕНИЯ И ЗАКОНЫ (MP3 + ТЕКСТ)
+         ========================================================= -->
+    <div class="tab-section active" id="tab-audio">
+      <div class="header-row">
+        <span class="badge" id="blockBadge">Уровень 1 • Блок 1</span>
+        <button class="audio-btn" id="audioToggleBtn" onclick="toggleAudio()">
+          <span id="audioIcon">🎧</span>
+          <span id="audioLabel">Озвучить блок</span>
+        </button>
       </div>
 
-      <div class="cal-weekdays">
-        <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div>Сб</div><div>Вс</div>
-      </div>
-      <div class="cal-grid" id="calendarGrid"></div>
+      <h1 id="blockTitle">Загрузка...</h1>
 
-      <div class="day-detail-card" id="selectedDayDetails">
-        Нажмите на любой день в календаре, чтобы посмотреть дела, практики или отметить пропущенный день.
+      <div class="nav-bar">
+        <button class="nav-btn" id="prevBtn" onclick="prevBlock()">← Назад</button>
+        <button class="nav-btn" id="nextBtn" onclick="nextBlock()">Следующий блок →</button>
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <button class="btn-done" id="beliefDoneBtn" style="width:100%;" onclick="markBeliefDoneToday()">
+          ✅ Прослушала / прочитала этот блок сегодня
+        </button>
+      </div>
+
+      <div class="phrase-list" id="phraseList">
+        <div style="text-align: center; padding: 20px; color: #8c7b6d;">Загрузка списка фраз...</div>
+      </div>
+
+      <div class="nav-bar">
+        <button class="nav-btn" id="prevBtnBottom" onclick="prevBlock()">← Назад</button>
+        <button class="nav-btn" id="nextBtnBottom" onclick="nextBlock()">Следующий блок →</button>
+      </div>
+
+      <div class="footer-note" id="blockSummary">
+        Наденьте наушники, включите аудио или читайте карточки прямо с планшета.
       </div>
     </div>
 
-    <!-- Счётчик того, чем занимаюсь -->
-    <h2>🔢 Счётчик того, чем я занимаюсь</h2>
-    <p style="font-size: 13px; color: #6e5d4f; margin-top: -4px; margin-bottom: 12px;">
-      Точный подсчёт выполнений по каждому упражнению и блоку убеждений:
-    </p>
-    <div id="practiceCountersList"></div>
+    <!-- =========================================================
+         ВКЛАДКА 2: ПЛАН НА 6 МЕСЯЦЕВ (ФАЗЫ ПО 14 ДНЕЙ)
+         ========================================================= -->
+    <div class="tab-section" id="tab-plan">
+      <div class="header-row">
+        <span class="badge" id="phaseMonthBadge">Месяц 1 • Недели 1–2</span>
+        <span class="badge badge-teal" id="masteredCountBadge">🏆 Освоено: 0</span>
+      </div>
 
-    <div class="reset-wrap">
-      <button class="reset-btn" onclick="resetDashboardStats()">🔄 Сбросить статистику и начать заново</button>
+      <h1 id="phaseTitle">Фаза 1: Очистка головы, тела и лени</h1>
+
+      <div class="nav-bar">
+        <button class="nav-btn" id="prevPhaseBtn" onclick="prevPhase()">← Пред. фаза</button>
+        <button class="nav-btn" id="nextPhaseBtn" onclick="nextPhase()">След. фаза →</button>
+      </div>
+
+      <div class="phase-box">
+        <div class="phase-meta">
+          <span class="phase-mode" id="phaseModeBadge">🔥 Интенсив • 4 практики</span>
+          <span style="font-size: 14px; font-weight: 800; color: #7c4b00;" id="phaseDaysLabel">Цикл: 14 дней</span>
+        </div>
+        <div style="font-size: 14px; color: #5c4b3c; line-height: 1.45;" id="phaseDesc">
+          Входим в ритм: мягко разгружаем голову и убираем утечки энергии.
+        </div>
+        <div class="phase-progress-wrap">
+          <div class="phase-progress-text">
+            <span>Прогресс 14-дневной фазы</span>
+            <span id="phaseProgressVal">0 / 14 дн.</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="phaseProgressFill"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex-list" id="exerciseList"></div>
+
+      <div class="nav-bar">
+        <button class="nav-btn" id="prevPhaseBtnBottom" onclick="prevPhase()">← Пред. фаза</button>
+        <button class="nav-btn" id="nextPhaseBtnBottom" onclick="nextPhase()">След. фаза →</button>
+      </div>
+
+      <div class="footer-note">
+        Нажмите «🏆 Внедрено в голову» на любом упражнении, чтобы заменить его на новое из каталога.
+      </div>
     </div>
 
-    <div class="footer-note">
-      Дашборд автоматически связан с вашим тренажёром и голосовыми дневниками.
+    <!-- =========================================================
+         ВКЛАДКА 3: ГОЛОСОВЫЕ ДНЕВНИКИ (4 РАЗДЕЛА + АВТО-КАЛЕНДАРЬ ЗАДАЧ)
+         ========================================================= -->
+    <div class="tab-section" id="tab-diary">
+      <div class="header-row">
+        <span class="badge" id="diaryTypeBadge">📅 Дневник дня</span>
+        <span class="badge badge-teal" id="diaryCountBadge">Записей: 0</span>
+      </div>
+
+      <h1 id="diaryHeading">Дневник дня (Утро / Вечер)</h1>
+
+      <div class="diary-subtabs">
+        <button class="diary-sub-btn active" id="dSub-day" onclick="selectDiaryType('day')">📅 Дневник дня</button>
+        <button class="diary-sub-btn" id="dSub-ideas" onclick="selectDiaryType('ideas')">💡 Мои идеи</button>
+        <button class="diary-sub-btn" id="dSub-plots" onclick="selectDiaryType('plots')">📖 Сюжеты для книг</button>
+        <button class="diary-sub-btn" id="dSub-tasks" onclick="selectDiaryType('tasks')">⚡ Надо сделать</button>
+      </div>
+
+      <div class="diary-layout">
+        <!-- Левая колонка: диктовка и очистка -->
+        <div class="diary-composer">
+          <button class="mic-btn" id="diaryMicBtn" onclick="toggleDiaryMic()">
+            <span id="diaryMicIcon">🎙️</span>
+            <span id="diaryMicLabel">Включить микрофон</span>
+          </button>
+          <div class="mic-status" id="diaryMicStatus">Нажмите на кнопку и говорите свободно — текст появится ниже</div>
+
+          <textarea class="ex-textarea" id="diaryInputText" style="min-height: 165px;" placeholder="Надиктуйте голосом или напишите сюда..."></textarea>
+
+          <div class="diary-tools-row">
+            <button class="small-btn gold" style="flex:1;" onclick="polishDiaryDraft()">✨ Причесать текст</button>
+            <button class="small-btn" style="background:#9d8b7a;" onclick="clearDiaryDraft()">Очистить</button>
+          </div>
+
+          <button class="btn-done" style="width:100%; font-size:15px;" onclick="saveDiaryEntry()">
+            💾 Сохранить в дневник
+          </button>
+        </div>
+
+        <!-- Правая колонка: мини-календарь (для задач) и лента записей -->
+        <div>
+          <div id="taskMiniCalendarWrap" style="display:none;"></div>
+          <input type="text" class="search-input" id="diarySearchInput" placeholder="🔍 Поиск по записям в этом дневнике..." oninput="renderDiaryEntries()">
+          <div id="diaryEntriesList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         ВКЛАДКА 4: КОПИЛКА ПРАВИЛ, ЗАКОНОВ И ШПАРГАЛОК
+         ========================================================= -->
+    <div class="tab-section" id="tab-tips">
+      <div class="header-row">
+        <span class="badge">Быстрые фильтры и законы</span>
+        <span class="badge badge-teal" id="tipsCountBadge">Все советы</span>
+      </div>
+
+      <h1>Копилка правил на каждый день</h1>
+
+      <input type="text" class="search-input" id="tipSearchInput" placeholder="🔍 Поиск по шпаргалкам (например: 48 часов, Poh, 90, грабли)..." oninput="renderTips()">
+
+      <div class="filter-chips" id="tipFilters">
+        <button class="chip-btn active" onclick="setTipFilter('all', this)">Все</button>
+        <button class="chip-btn" onclick="setTipFilter('focus', this)">🎯 Фокус и дела</button>
+        <button class="chip-btn" onclick="setTipFilter('boundaries', this)">🛡️ Границы и эмоции</button>
+        <button class="chip-btn" onclick="setTipFilter('people', this)">🤝 Окружение</button>
+        <button class="chip-btn" onclick="setTipFilter('action', this)">🚀 Как начать</button>
+        <button class="chip-btn" onclick="setTipFilter('laws', this)">🔮 12 законов шарика</button>
+      </div>
+
+      <div class="tips-grid" id="tipsContainer"></div>
+    </div>
+  </div>
+
+  <!-- Модальное окно для замены упражнения -->
+  <div class="modal-backdrop" id="replaceModal">
+    <div class="modal-card">
+      <div class="header-row">
+        <span class="badge">🏆 Привычка внедрена!</span>
+        <button class="small-btn pink" onclick="closeReplaceModal()">✕ Закрыть</button>
+      </div>
+      <h1 style="font-size: 20px; margin-top: 4px;">Выберите новое упражнение в этот слот:</h1>
+      <p style="font-size: 14px; color: #6e5d4f; margin-top: 0;">
+        Вы можете поставить любую практику из полного каталога.
+      </p>
+      <div id="catalogList"></div>
     </div>
   </div>
 
   <script>
-    const blockTitles = [
-      "Замена слов-разрушителей",
-      "Молодость и сияние кожи",
-      "Ясность ума и энергия",
-      "Золотые афоризмы мудрости",
-      "Личная сила и смелость действий",
-      "Масштаб, мечты и разрешение себе",
-      "Законы жизни и трезвого мышления",
-      "Разрешалки («Мне с собой хорошо»)"
+    const blocks = [
+      {
+        file: "levels/level_1_block_1.txt",
+        audio: "audio/block_1.mp3",
+        badge: "Уровень 1 • Блок 1",
+        title: "Замена слов-разрушителей",
+        fallback: [
+          { oldP: "Я древняя", newP: "Я опытная и мудрая" },
+          { oldP: "Я совершенно истощена", newP: "Я слегка утомлена, мне нужен хороший отдых" },
+          { oldP: "Я слишком стара для этого", newP: "Я выбираю то, что радует меня сегодня" },
+          { oldP: "Все мое тело в ужасных морщинах", newP: "Это едва заметные следы смеха и улыбок" },
+          { oldP: "Я выгляжу старо", newP: "Моя кожа слегка обезвожена, я выпью чистой воды" },
+          { oldP: "У меня гусиные лапки", newP: "Мои глаза излучают тепло, смех и доброту" },
+          { oldP: "Я чувствую себя разбитой", newP: "Моя энергия временно восстанавливается" },
+          { oldP: "Моя память как решето", newP: "Моя память острая, я просто держала в голове много дел" },
+          { oldP: "Я слишком немощная", newP: "Я внимательна и бережна к своему телу" },
+          { oldP: "Я устарела и вышла в тираж", newP: "Я постоянно учусь, обновляюсь и развиваюсь" }
+        ]
+      },
+      {
+        file: "levels/level_1_block_2.txt",
+        audio: "audio/block_2.mp3",
+        badge: "Уровень 1 • Блок 2",
+        title: "Молодость и сияние кожи",
+        fallback: [
+          { oldP: "Установка красоты", newP: "Я красивая, сияющая и вне возраста" },
+          { oldP: "Установка кожи", newP: "Моя кожа гладкая, напитанная и глубоко увлажненная" },
+          { oldP: "Клеточное обновление", newP: "Мое тело регенерирует и обновляется каждый день" },
+          { oldP: "Осанка и легкость", newP: "Моя осанка прямая, легкая и уверенная" },
+          { oldP: "Свежесть лица", newP: "Мое лицо отражает радость, покой и внутреннее сияние" },
+          { oldP: "Сила клеток", newP: "Мои клетки функционируют как молодые, здоровые клетки" },
+          { oldP: "Любовь к себе", newP: "Я люблю, уважаю и ценю свое физическое тело" },
+          { oldP: "Свобода от цифр", newP: "Возраст — это просто цифра, мой дух вечно молод" }
+        ]
+      },
+      {
+        file: "levels/level_1_block_3.txt",
+        audio: "audio/block_3.mp3",
+        badge: "Уровень 1 • Блок 3",
+        title: "Ясность ума и энергия",
+        fallback: [
+          { oldP: "Острота ума", newP: "Мой ум острый, любознательный и ясный" },
+          { oldP: "Хозяйка мыслей", newP: "Я полная хозяйка своих собственных мыслей" },
+          { oldP: "Крепкая память", newP: "Моя память служит мне легко, четко и точно" },
+          { oldP: "Смелость решений", newP: "Я выбираю смелость вместо страха и действие вместо сомнений" },
+          { oldP: "Нейропластичность", newP: "Каждый день создает новые нейронные связи в моем мозге" },
+          { oldP: "Источник энергии", newP: "Я наполнена живой, неудержимой жизненной энергией" },
+          { oldP: "Свобода от обид", newP: "Я легко отпускаю прошлые обиды и возвращаю свою силу" },
+          { oldP: "Сила настоящего", newP: "Я живу в настоящем моменте с миром в душе и ясным смыслом" }
+        ]
+      },
+      {
+        file: "levels/level_1_block_4.txt",
+        audio: "audio/block_4.mp3",
+        badge: "Уровень 1 • Блок 4",
+        title: "Золотые афоризмы мудрости",
+        fallback: [
+          { oldP: "Джордж Бернс", newP: "Нельзя не становиться старше, но можно сказать «нет» старению" },
+          { oldP: "Джордж Эдейр", newP: "Всё, о чем вы мечтаете, находится на другой стороне вашего страха" },
+          { oldP: "Альберт Эйнштейн", newP: "Воображение гораздо сильнее обычного знания" },
+          { oldP: "Лао-цзы", newP: "Путь в тысячу миль всегда начинается с первого шага" },
+          { oldP: "Джилл Болти Тейлор", newP: "Лишь одна спокойная мысль отделяет нас от душевного покоя" },
+          { oldP: "Вадим Зеланд", newP: "Когда душа говорит «да», нет никакой нужды себя уговаривать" },
+          { oldP: "Антон Чехов", newP: "Кто испытал радость чистого творчества, нашел высшее наслаждение" }
+        ]
+      },
+      {
+        file: "levels/level_1_block_5.txt",
+        audio: "audio/block_5.mp3",
+        badge: "Уровень 2 • Блок 5",
+        title: "Личная сила и смелость действий",
+        fallback: [
+          { oldP: "Мне нужно дождаться идеального момента", newP: "Я начинаю с малого прямо сейчас и корректирую курс в пути" },
+          { oldP: "У меня нет врождённого таланта", newP: "Талант создаётся моей дисциплиной и осознанной практикой" },
+          { oldP: "Я боюсь ошибиться и выглядеть глупо", newP: "Каждая ошибка — это мой опыт, и я говорю себе: «Как интересно получилось!»" },
+          { oldP: "Сомнения останавливают меня", newP: "Моё усердие и конкретные шаги всегда сильнее любых сомнений" },
+          { oldP: "Это невозможно", newP: "Это всего лишь временная трудность на пути к моей цели" },
+          { oldP: "У меня опускаются руки", newP: "Я праздную момент отчаяния — именно здесь рождаются настоящие лидеры" },
+          { oldP: "Я не знаю своего предназначения", newP: "Моё предназначение — делать то, что зажигает меня и даёт энергию" },
+          { oldP: "Я обязана быть удобной для всех", newP: "Каждое «нет» чужому в ущерб себе — это громкое «да» моей жизни" }
+        ]
+      },
+      {
+        file: "levels/level_1_block_6.txt",
+        audio: "audio/block_6.mp3",
+        badge: "Уровень 2 • Блок 6",
+        title: "Масштаб, мечты и разрешение себе",
+        fallback: [
+          { oldP: "Надо довольствоваться малым", newP: "Я повышаю свой уровень нормы и выбираю только прекрасное" },
+          { oldP: "Деньги достаются только тяжёлой каторгой", newP: "Деньги — это энергия, и я зарабатываю на том, что меня наполняет" },
+          { oldP: "Мне стыдно хотеть большего", newP: "Я разрешаю себе целиться в Луну и мечтать без границ" },
+          { oldP: "Я должна терпеть то, что мне не нравится", newP: "Я убираю из жизни мелкие камушки в ботинке и разрушающие компромиссы" },
+          { oldP: "Мне нужно заслужить отдых", newP: "Я разрешаю себе тишину, прогулки и заботу о себе просто по праву рождения" },
+          { oldP: "У меня за спиной никого нет", newP: "За моей спиной сила 128 предков, и их стойкость живёт во мне" },
+          { oldP: "Мир ко мне враждебен", newP: "Вселенная постоянно разговаривает со мной и подбрасывает подарки" }
+        ]
+      },
+      {
+        file: "levels/level_1_block_7.txt",
+        audio: "audio/block_7.mp3",
+        badge: "Уровень 2 • Блок 7",
+        title: "Законы жизни и трезвого мышления",
+        fallback: [
+          { oldP: "Я смотрю на чужой успех и завидую", newP: "Я помню об ошибке выжившего и спокойно строю свой собственный путь" },
+          { oldP: "Я справлюсь за счёт одной силы воли", newP: "Среда сильнее силы воли, поэтому я осознанно выбираю свою стаю" },
+          { oldP: "Мне нужно набрать побольше курсов и планов", newP: "Мои глаза не больше рта: я беру ровно столько, сколько внедряю в жизнь" },
+          { oldP: "Я буду просто надеяться на лучшее", newP: "Надежда — хороший завтрак, но плохой ужин; я подкрепляю её действиями" },
+          { oldP: "Почему эта ситуация снова повторяется?", newP: "Жизнь бережно распрямляет мои вмятины, и я с благодарностью прохожу этот урок" },
+          { oldP: "Я сопротивляюсь и боюсь перемен", newP: "То, чему я сопротивляюсь, усиливается — я отпускаю Страх и выбираю Любовь" },
+          { oldP: "Я привязана к своим старым привычкам", newP: "Сегодня я уже новая, и я выбираю только то, что радует меня сегодняшнюю" }
+        ]
+      },
+      {
+        file: "levels/level_1_block_8.txt",
+        audio: "audio/block_8.mp3",
+        badge: "Уровень 2 • Блок 8",
+        title: "Разрешалки («Мне с собой хорошо»)",
+        fallback: [
+          { oldP: "Я должна всё контролировать", newP: "Я разрешаю себе расслабиться и довериться потоку жизни" },
+          { oldP: "Нельзя быть эгоисткой", newP: "Психологический комфорт — главный фундамент любых моих отношений" },
+          { oldP: "Я должна оправдываться за отказ", newP: "Я имею право сказать спокойное «нет» без объяснения причин" },
+          { oldP: "Сначала дела, потом радость", newP: "Каждый день я выделяю созидательный час на то, от чего поёт душа" },
+          { oldP: "Я обязана дочитывать скучные книги и терпеть скучных людей", newP: "Я легко закрываю то, что не набирает 90 баллов из 100 по моему внутреннему отклику" },
+          { oldP: "Мне с собой скучно и тревожно", newP: "Мне с собой хорошо, интересно, спокойно и тепло" }
+        ]
+      }
     ];
 
-    const exerciseNames = {
-      "nihuane": { tag: "🌅 Утро • Тишина", title: "Утренний ритуал «Нихуанеделания»" },
-      "freewriting": { tag: "✍️ Письменная • 15 мин", title: "Утренний фрирайтинг (Утренние страницы)" },
-      "three_wins": { tag: "🌙 Вечер • Самооценка", title: "Вечерние 3 победы + Досье успеха" },
-      "declutter_joy": { tag: "🧹 Пространство • Энергия", title: "«Кто украл мою радость?» + Правило 49 свечей" },
-      "antiseal": { tag: "🛋️ Анти-лень • Перезагрузка", title: "Упражнение-антиТЮлень" },
-      "compromises_rakes": { tag: "🔍 Ревизия • Границы", title: "Ревизия компромиссов + «Любимые грабли»" },
-      "killer_forgiveness": { tag: "🔥 Очистка прошлого", title: "«Профессиональный убийца» + 5 шагов прощения" },
-      "larcido_code": { tag: "📜 Правила • Границы", title: "Личный кодекс Ларсидо (15 заповедей)" },
-      "good_girl_list": { tag: "🏅 Самооценка • Опора", title: "Список молодца (Похвальная грамота)" },
-      "creative_hour": { tag: "🎨 Душа • Призвание", title: "Один созидательный час в день" },
-      "black_dot_breath": { tag: "👁️ Фокус • Концентрация", title: "«Чёрная точка» + Дыхание по квадрату" },
-      "micro_decisions": { tag: "👣 Анти-прокрастинация", title: "Техника микрорешений и «Только сегодня»" },
-      "vocation_wheel": { tag: "🧭 Призвание • 4 оси", title: "Колесо призвания + «Техника 5 жизней»" },
-      "five_year_pauk": { tag: "🕸️ Стратегия • ПАУК", title: "Пятилетний анализ + Система «ПАУК»" },
-      "raise_stakes": { tag: "⏳ Отрезвление • Приоритеты", title: "«Повышение ставок» / Мотивация смертью" },
-      "small_bets_new": { tag: "🌱 Гибкость • Обновление", title: "Способ мелких ставок + «Я уже новый»" },
-      "dialogue_ro": { tag: "🧘 Интуиция • Наставник", title: "Диалог с Ро (внутренним наставником)" },
-      "greatness_list": { tag: "🚀 Масштаб • Мечты", title: "Список Величия («Целься в Луну»)" },
-      "ancestors_128": { tag: "🌳 Сила рода • Опора", title: "Доска предков (Сила 128 человек за спиной)" },
-      "heritage_chest": { tag: "💎 Дар рода + Энергия", title: "Сундук наследства + Энергоаудит («+» и «–»)" },
-      "power_hour": { tag: "⚡ Утро • Драйв", title: "«Час силы» (по Тони Роббинсу)" },
-      "goals_to_feelings": { tag: "💖 Состояние • Смысл", title: "Перевод целей в чувства" },
-      "barter_7": { tag: "💡 Креативность • Ресурсы", title: "7 идей бартера (Упражнение на смекалку)" },
-      "five_points_map": { tag: "🗺️ Биография • Путь", title: "Система 5 точек (Карта Пути)" },
-      "pyramid_relations": { tag: "❤️ Отношения • Комфорт", title: "Перепросмотр пирамиды отношений" },
-      "spontaneity_challenge": { tag: "🎲 Смелость • Вызов", title: "Микровызов зоне комфорта / Спонтанность" },
-      "non_dominant_hand": { tag: "🧠 Нейробика • Мариса Пир", title: "Неведущая рука и бытовая нейробика" },
-      "bucket_balloon": { tag: "🎈 Гипно-тест • Мариса Пир", title: "Ведро и воздушный шарик (Сила мысли)" },
-      "young_dance": { tag: "💃 Лимфа • Плейлист Young", title: "10 минут танцев под плейлист «Young»" },
-      "horizon_20": { tag: "🌅 Созерцание • Тишина", title: "Созерцание горизонта (20 минут)" }
+    const exercisesCatalog = {
+      "nihuane": { id: "nihuane", tag: "🌅 Утро • Тишина", title: "Утренний ритуал «Нихуанеделания»", short: "Первые 20 минут после пробуждения без телефона, новостей и суеты.", steps: ["Проснувшись, не берите телефон и планшет в руки минимум 20 минут.", "Медленно потянитесь, выпейте стакан чистой воды, посмотрите в окно.", "Побудьте в тишине правого полушария: почувствуйте тело и спокойный старт дня."], tool: "timer", timerMinutes: 20 },
+      "freewriting": { id: "freewriting", tag: "✍️ Письменная • 15 мин", title: "Утренний фрирайтинг (Утренние страницы)", short: "15 минут непрерывного письма без остановки, чтобы отключить внутреннего критика.", steps: ["Запустите встроенный таймер на 15 минут.", "Пишите всё, что приходит в голову, не останавливаясь и не исправляя ошибки.", "Если мыслей нет — пишите «я не знаю, о чём писать», пока не пойдёт поток истинных желаний."], tool: "timer_note", timerMinutes: 15, placeholder: "Пишите сюда поток мыслей без критики и остановок..." },
+      "three_wins": { id: "three_wins", tag: "🌙 Вечер • Самооценка", title: "Вечерние 3 победы + Досье успеха", short: "Каждый вечер записываем минимум 3 свои победы дня, приучая мозг быть победителем.", steps: ["Перед сном вспомните прожитый день.", "Запишите 3 конкретные победы или приятных шага (даже самых маленьких).", "Перечитайте список с улыбкой — мозг запоминает, что вы молодец."], tool: "note", placeholder: "Мои 3 победы сегодня:\n1. \n2. \n3. " },
+      "declutter_joy": { id: "declutter_joy", tag: "🧹 Пространство • Энергия", title: "«Кто украл мою радость?» + Правило 49 свечей", short: "Находим утечки энергии и каждый день выбрасываем 1–3 лишние вещи.", steps: ["Оглянитесь вокруг: какая вещь, незавершённое дело или подписка забирает радость?", "Уберите или выбросьте от 1 до 3 ненужных вещей прямо сегодня.", "Освободите место для новой энергии и свежего воздуха."], tool: "note", placeholder: "Что я убрала/выбросила сегодня и где вернула себе радость:" },
+      "antiseal": { id: "antiseal", tag: "🛋️ Анти-лень • Перезагрузка", title: "Упражнение-антиТЮлень", short: "Если одолела лень — лечь и действительно ничего не делать (без телефона, ТВ и книг).", steps: ["Если напала апатия — не ругайте себя и не залипайте в ленту новостей.", "Лягте на диван в полной тишине: без смартфона, планшета, телевизора, музыки и книг.", "Просто лежите и смотрите в потолок — через 30–60 минут мозг сам соскучится и попросит дела."], tool: "timer", timerMinutes: 30 },
+      "compromises_rakes": { id: "compromises_rakes", tag: "🔍 Ревизия • Границы", title: "Ревизия компромиссов + «Любимые грабли»", short: "Выписываем «камушки в ботинке» и повторяющиеся ситуации: чему мир пытается научить?", steps: ["Запишите ситуацию или мелкий компромисс, который повторяется из года в год.", "Задайте честный вопрос: «Чему эта ситуация пытается меня научить? Как мир пытается меня распрямить?»", "Сделайте один маленький шаг, чтобы убрать этот «камушек из ботинка»."], tool: "note", placeholder: "Мои грабли / компромисс → Чему это меня учит:" },
+      "killer_forgiveness": { id: "killer_forgiveness", tag: "🔥 Очистка прошлого", title: "«Профессиональный убийца» + 5 шагов прощения", short: "Выписываем ограничивающие установки семьи и пишем терапевтические письма обидчикам.", steps: ["Выпишите 10 навязанных установок из детства и физически сожгите/порвите лист.", "Для прощения обиды напишите письмо по 5 шагам: 1) Обвинение, 2) Ожидание, 3) Объяснение (из его травмы), 4) Чувства, 5) Ответственность 50/50.", "Письмо отправлять не нужно — уничтожьте его, освободив себя."], tool: "note", placeholder: "Установки для проработки или черновик 5 шагов прощения:" },
+      "larcido_code": { id: "larcido_code", tag: "📜 Правила • Границы", title: "Личный кодекс Ларсидо (15 заповедей)", short: "Создаём и держим перед глазами свои 15 железных правил обращения с собой.", steps: ["Сформулируйте свои личные заповеди (например: «Со мной нельзя разговаривать на повышенных тонах», «Я не извиняюсь, если не виновата»).", "Дописывайте и перечитывайте свой Кодекс каждый день.", "Сверяйте с ним свои решения при общении с людьми."], tool: "note", placeholder: "Мои личные заповеди (1–15):\n1. \n2. \n3. " },
+      "good_girl_list": { id: "good_girl_list", tag: "🏅 Самооценка • Опора", title: "Список молодца (Похвальная грамота)", short: "Минимум 20 реальных достижений с детства + по 1 новому пункту каждый день.", steps: ["Вспомните и запишите минимум 10–20 своих достижений за всю жизнь.", "Каждый день дописывайте сюда минимум 1 новый пункт, за который вы молодец.", "Перечитывайте грамоту в моменты сомнений."], tool: "note", placeholder: "Я молодец, потому что:\n1. \n2. \n3. " },
+      "creative_hour": { id: "creative_hour", tag: "🎨 Душа • Призвание", title: "Один созидательный час в день", short: "Ровно 1 час в день на дело, которое вас волнует, без оглядки на деньги или результат.", steps: ["Выделите 30–60 минут чистого времени только для себя.", "Займитесь тем, что искренне волнует: чтение, прогулка в тишине, рисование, размышления, идеи.", "Главное правило: никакой оценки «полезно/выгодно» — только чистый интерес."], tool: "timer", timerMinutes: 60 },
+      "black_dot_breath": { id: "black_dot_breath", tag: "👁️ Фокус • Концентрация", title: "«Чёрная точка» + Дыхание по квадрату", short: "Тренируем железную концентрацию на точке и быструю фокусировку взглядом.", steps: ["Дыхание по квадрату (1 мин): вдох 4 сек (взгляд в правый верхний угол) → выдох 4 сек (в правый нижний) → вдох 4 сек (в левый верхний) → выдох 4 сек (в левый нижний).", "Смотрите на чёрную точку на экране планшета (или на листе бумаги) 5–15 минут, не отводя взгляд.", "Каждый раз, когда мысль убегает, мягко возвращайте взгляд в центр точки."], tool: "timer", timerMinutes: 15 },
+      "micro_decisions": { id: "micro_decisions", tag: "👣 Анти-прокрастинация", title: "Техника микрорешений и «Только сегодня»", short: "Дробим большую цель на крошечные шаги и держим слово «только сегодня».", steps: ["Разбейте большую задачу на смехотворно маленький шаг (не «навести порядок», а «разобрать одну полку»).", "Если хочется сорваться или бросить дело, скажите: «Я могу сорваться завтра. Но сегодня я продержусь».", "Отметьте выполненный микрошаг."], tool: "note", placeholder: "Мой микрошаг на сегодня:" },
+      "vocation_wheel": { id: "vocation_wheel", tag: "🧭 Призвание • 4 оси", title: "Колесо призвания + «Техника 5 жизней»", short: "Оцениваем дело по 4 осям (от 1 до 10) и придумываем 5 профессий для 5 жизней.", steps: ["Оцените выбранное дело по 4 ползункам ниже (идеально — от 32 баллов и выше).", "Запишите в заметки: кем бы вы стали, если бы у вас было 5 разных жизней? Как объединить эти интересы в одной?"], tool: "wheel_note", placeholder: "Мои 5 жизней (кем бы я стала в каждой из 5 жизней):\n1. \n2. \n3. \n4. \n5. " },
+      "five_year_pauk": { id: "five_year_pauk", tag: "🕸️ Стратегия • ПАУК", title: "Пятилетний анализ + Система «ПАУК»", short: "Проверяем, где мы «притворялись активными», и сортируем направления по системе ПАУК.", steps: ["Сравните: что волновало вас 1–5 лет назад и что реально сделано для решения?", "Выпишите 6–10 своих направлений/дел и промаркируйте каждое буквой ПАУК: П — Продолжаю, А — Аткладываю, У — Убираю в долгий ящик, К — Корректирую."], tool: "note", placeholder: "Мои направления по системе ПАУК (П / А / У / К):" },
+      "raise_stakes": { id: "raise_stakes", tag: "⏳ Отрезвление • Приоритеты", title: "«Повышение ставок» / Мотивация смертью", short: "Убираем всё лишнее и наносное через осознание ценности времени.", steps: ["Представьте, что вам осталось всего 2 недели или загляните в рейтинг сожалений в конце жизни.", "Честно ответьте: чем бы вы точно перестали заниматься прямо сегодня, а на что направили бы всё внимание?", "Сделайте одно действие в пользу по-настоящему важного."], tool: "note", placeholder: "Что лишнее я убираю и что делаю в первую очередь:" },
+      "small_bets_new": { id: "small_bets_new", tag: "🌱 Гибкость • Обновление", title: "Способ мелких ставок + «Я уже новый»", short: "Не ждём гениальной идеи — делаем маленькие пробы и проверяем отклик себя сегодняшней.", steps: ["Утром спросите себя: «А мне сегодняшней действительно нравится делать то, что я делала по привычке?»", "Сделайте одну «мелкую ставку» — попробуйте новое действие без ожидания идеального результата."], tool: "note", placeholder: "Моя мелкая ставка / что нового я попробовала сегодня:" },
+      "dialogue_ro": { id: "dialogue_ro", tag: "🧘 Интуиция • Наставник", title: "Диалог с Ро (внутренним наставником)", short: "Разговор со своим мудрым бессознательным в тишине.", steps: ["Сядьте в тишине на 10 минут, закройте глаза и сделайте 3 глубоких вдоха.", "Обратитесь к своему внутреннему мудрому наставнику (Ро) с главным вопросом дня.", "Запишите первый спокойный, добрый ответ, который придёт без суеты."], tool: "timer_note", timerMinutes: 10, placeholder: "Мой вопрос к Ро и ответ из глубины:" },
+      "greatness_list": { id: "greatness_list", tag: "🚀 Масштаб • Мечты", title: "Список Величия («Целься в Луну»)", short: "Выписываем дерзкие, масштабные мечты без скромности, стыда и оглядки на «реалистичность».", steps: ["Отключите внутреннего бухгалтера и напишите мечты масштаба «Целься в Луну».", "Не думайте о том, «как» это сделать — разрешите себе захотеть по-крупному."], tool: "note", placeholder: "Мой Список Величия (дерзкие мечты):" },
+      "ancestors_128": { id: "ancestors_128", tag: "🌳 Сила рода • Опора", title: "Доска предков (Сила 128 человек за спиной)", short: "Опираемся на примеры стойкости, таланта и выживания в своём роду.", steps: ["Вспомните, что за вашей спиной стоят 128 предков в 7 поколениях — и каждый из них выжил и передал жизнь вам.", "Запишите 3 реальные истории силы, юмора или стойкости ваших бабушек, дедушек и родных."], tool: "note", placeholder: "3 опоры и силы моего рода:" },
+      "heritage_chest": { id: "heritage_chest", tag: "💎 Дар рода + Энергия", title: "Сундук наследства + Энергоаудит («+» и «–»)", short: "Забираем лучшие качества родителей и отмечаем, что даёт и забирает энергию за день.", steps: ["Снимите «старые халаты» (негативные сценарии семьи) и запишите «бриллианты» — лучшие качества, которые вы берёте с собой.", "Вечером пробегитесь по делам дня и поставьте «+» (дало энергию) или «–» (высосало силы)."], tool: "note", placeholder: "Мои бриллианты наследства и энергоаудит дня (+/-):" },
+      "power_hour": { id: "power_hour", tag: "⚡ Утро • Драйв", title: "«Час силы» (по Тони Роббинсу)", short: "15 мин настройка на цели + 15 мин аффирмации + 15 мин визуализация + 15 мин план дня.", steps: ["15 минут: благодарность и настройка на главные цели.", "15 минут: проговаривание/прослушивание сильных установок.", "15 минут: яркая визуализация пройденного пути и результата.", "15 минут: выбор 3 главных задач дня."], tool: "timer", timerMinutes: 60 },
+      "goals_to_feelings": { id: "goals_to_feelings", tag: "💖 Состояние • Смысл", title: "Перевод целей в чувства", short: "Переписываем сухие цели и цифры в те живые эмоции и состояния, ради которых мы их хотим.", steps: ["Возьмите любую сухую цель (например, «заработать сумму» или «сделать ремонт»).", "Спросите себя: «Что я буду чувствовать, когда это случится?» (свободу, лёгкость, гордость, тепло).", "Проживите это состояние прямо сейчас."], tool: "note", placeholder: "Сухая цель → Какое чувство я на самом деле хочу испытать:" },
+      "barter_7": { id: "barter_7", tag: "💡 Креативность • Ресурсы", title: "7 идей бартера (Упражнение на смекалку)", short: "Превращаем «у меня нет денег/связей» в творческую задачку: 7 способов быть полезной.", steps: ["Выберите ресурс, обучение или вещь, которую вы хотите получить.", "Придумайте минимум 7 способов получить это без денег — через ваши навыки, время, обмен или помощь."], tool: "note", placeholder: "Цель → 7 идей бартера и обмена:" },
+      "five_points_map": { id: "five_points_map", tag: "🗺️ Биография • Путь", title: "Система 5 точек (Карта Пути)", short: "Описываем свой путь: Рассвет, Эра накапливания, 1-й прорыв, 2-й прорыв и Кульминация.", steps: ["Распишите этапы своей жизни как захватывающую книгу: где был Рассвет, где шла Эра накапливания опыта, где случились прорывы.", "Увидьте, на какой точке вы находитесь сейчас и куда ведёт следующая глава."], tool: "note", placeholder: "Мои 5 точек пути:" },
+      "pyramid_relations": { id: "pyramid_relations", tag: "❤️ Отношения • Комфорт", title: "Перепросмотр пирамиды отношений", short: "Ставим психологический комфорт и безопасность в фундамент любого общения.", steps: ["Оцените своё ближайшее окружение: с кем вам легко, спокойно и тепло, а с кем приходится «заслуживать» любовь?", "Перестройте пирамиду: на первом месте — ваш душевный покой."], tool: "note", placeholder: "Мои выводы по пирамиде отношений:" },
+      "spontaneity_challenge": { id: "spontaneity_challenge", tag: "🎲 Смелость • Вызов", title: "Микровызов зоне комфорта / Спонтанность", short: "Раз в 2–3 дня делаем нелогичное доброе действие по первому импульсу сердца.", steps: ["Пойти домой незнакомой дорогой, заговорить с интересным человеком, заказать непривычное блюдо или сделать комплимент незнакомке.", "Раскачиваем мозг и ловим подсказки Вселенной."], tool: "note", placeholder: "Мой спонтанный вызов сегодня:" },
+      "non_dominant_hand": { id: "non_dominant_hand", tag: "🧠 Нейробика • Мариса Пир", title: "Неведущая рука и бытовая нейробика", short: "Чистим зубы, держим кружку и листаем планшет другой рукой для новых нейронных связей.", steps: ["Сегодня выполняйте привычные бытовые действия левой рукой (или правой, если вы левша).", "Начинайте подъём или спуск по лестнице с другой ноги."], tool: "note", placeholder: "Какие действия сегодня сделала другой рукой:" },
+      "bucket_balloon": { id: "bucket_balloon", tag: "🎈 Гипно-тест • Мариса Пир", title: "Ведро и воздушный шарик (Сила мысли)", short: "2-минутная практика, доказывающая, как воображение мгновенно управляет телом.", steps: ["Встаньте, вытяните обе руки вперёд и закройте глаза.", "Представьте, что к левой руке привязали тяжёлое ведро с песком, а к правой — огромный воздушный шарик с гелием.", "Почувствуйте через 1 минуту, как руки сами разошлись на разную высоту."], tool: "timer", timerMinutes: 2 },
+      "young_dance": { id: "young_dance", tag: "💃 Лимфа • Плейлист Young", title: "10 минут танцев под плейлист «Young»", short: "Включаем треки со словом Young (Sinatra, Forever Young) и свободно двигаемся.", steps: ["Включите любимую ритмичную песню со словом «Young».", "Потанцуйте, попрыгайте и подпевайте вслух 10 минут, разгоняя лимфу и омолаживая подсознание."], tool: "timer", timerMinutes: 10 },
+      "horizon_20": { id: "horizon_20", tag: "🌅 Созерцание • Тишина", title: "Созерцание горизонта (20 минут)", short: "Смотрим вдаль без гаджетов, возвращая зрению и мозгу глубину и покой.", steps: ["Выйдите на улицу или подойдите к окну с дальним видом.", "20 минут смотрите на линию горизонта, облака или деревья без планшета и телефона."], tool: "timer", timerMinutes: 20 }
     };
 
-    const defaultPhaseSlots = [
-      ["nihuane", "freewriting", "three_wins", "declutter_joy"],
-      ["antiseal"],
-      ["freewriting", "three_wins", "compromises_rakes", "killer_forgiveness"],
-      ["antiseal", "nihuane"],
-      ["larcido_code", "good_girl_list", "creative_hour", "black_dot_breath"],
-      ["micro_decisions"],
-      ["larcido_code", "good_girl_list", "vocation_wheel", "five_year_pauk"],
-      ["micro_decisions", "creative_hour"],
-      ["dialogue_ro", "greatness_list", "raise_stakes", "ancestors_128"],
-      ["small_bets_new"],
-      ["dialogue_ro", "greatness_list", "heritage_chest", "power_hour"],
-      ["small_bets_new", "goals_to_feelings"]
+    const defaultPhases = [
+      { month: "Месяц 1 • Недели 1–2", title: "Фаза 1: Очистка головы, тела и лени", mode: "🔥 Интенсив • 4 практики", isUnload: false, desc: "Входим в ритм: мягко разгружаем голову с утра, фиксируем победы вечером и убираем хлам.", slots: ["nihuane", "freewriting", "three_wins", "declutter_joy"] },
+      { month: "Месяц 1 • Недели 3–4", title: "Фаза 2: Перезагрузка через тишину", mode: "🌿 Разгрузка • 1 практика", isUnload: true, desc: "Недели отдыха: первые 4 навыка укладываются в голове, а мы осваиваем честный отдых без гаджетов.", slots: ["antiseal"] },
+      { month: "Месяц 2 • Недели 5–6", title: "Фаза 3: Закрепление базы и ревизия граблей", mode: "🔄 Повтор + Новое • 4 практики", isUnload: false, desc: "Закрепляем фрирайтинг и 3 победы, а также разбираем повторяющиеся ситуации и старые обиды.", slots: ["freewriting", "three_wins", "compromises_rakes", "killer_forgiveness"] },
+      { month: "Месяц 2 • Недели 7–8", title: "Фаза 4: Разгрузка + утренний хвост", mode: "🌿 Разгрузка + Хвост • 2 практики", isUnload: true, desc: "Закрепляем антиТЮлень и возвращаем утренние 20 минут без экрана.", slots: ["antiseal", "nihuane"] },
+      { month: "Месяц 3 • Недели 9–12", title: "Фаза 5: Личный Кодекс, самооценка и фокус", mode: "🔥 Интенсив • 4 практики", isUnload: false, desc: "Выстраиваем личные правила границ, собираем похвальную грамоту и тренируем концентрацию.", slots: ["larcido_code", "good_girl_list", "creative_hour", "black_dot_breath"] },
+      { month: "Месяц 3 • Недели 11–12", title: "Фаза 6: Искусство маленьких шагов", mode: "🌿 Разгрузка • 1 практика", isUnload: true, desc: "Отдыхаем от нагрузки и оттачиваем мягкую дисциплину «Только сегодня».", slots: ["micro_decisions"] },
+      { month: "Месяц 4 • Недели 13–14", title: "Фаза 7: Границы и Карта призвания", mode: "🔄 Повтор + Новое • 4 практики", isUnload: false, desc: "Сверяем жизнь с Кодексом и оцениваем свои интересы по Колесу призвания и системе ПАУК.", slots: ["larcido_code", "good_girl_list", "vocation_wheel", "five_year_pauk"] },
+      { month: "Месяц 4 • Недели 15–16", title: "Фаза 8: Разгрузка + созидательный час", mode: "🌿 Разгрузка + Хвост • 2 практики", isUnload: true, desc: "Закрепляем микрорешения и возвращаем созидательный час для души.", slots: ["micro_decisions", "creative_hour"] },
+      { month: "Месяц 5 • Недели 17–18", title: "Фаза 9: Масштаб, наставник и сила рода", mode: "🔥 Интенсив • 4 практики", isUnload: false, desc: "Выходим на крупный масштаб: диалог с внутренним наставником Ро, дерзкие мечты и опора на 128 предков.", slots: ["dialogue_ro", "greatness_list", "raise_stakes", "ancestors_128"] },
+      { month: "Месяц 5 • Недели 19–20", title: "Фаза 10: Лёгкость и мелкие ставки", mode: "🌿 Разгрузка • 1 практика", isUnload: true, desc: "Сбрасываем важность и играем в мелкие ставки с вопросом «А мне сегодняшней это нравится?».", slots: ["small_bets_new"] },
+      { month: "Месяц 6 • Недели 21–22", title: "Фаза 11: Смелость, бриллианты рода и Час силы", mode: "🔄 Повтор + Новое • 4 практики", isUnload: false, desc: "Закрепляем диалог с Ро и Список Величия, забираем лучшие качества рода и собираем утренний Час силы.", slots: ["dialogue_ro", "greatness_list", "heritage_chest", "power_hour"] },
+      { month: "Месяц 6 • Недели 23–24", title: "Фаза 12: Финальная интеграция состояния", mode: "🌿 Разгрузка + Хвост • 2 практики", isUnload: true, desc: "Завершаем полугодие в состоянии лёгкости: мелкие ставки и перевод всех целей в живые чувства.", slots: ["small_bets_new", "goals_to_feelings"] }
     ];
 
+    const tipsData = [
+      { cat: "focus", catLabel: "🎯 Фокус и дела", title: "Правило 90", body: "Если возможность, проект, книга или вещь не набирают 90 баллов из 100 по вашему главному критерию — смело отказывайтесь. Выбирайте только прекрасное, а не просто «хорошее»." },
+      { cat: "focus", catLabel: "🎯 Фокус и дела", title: "Правило трёх задач", body: "Каждое утро выделяйте только 3 самые важные задачи дня и делайте их в первую очередь, пока мозг свежий." },
+      { cat: "focus", catLabel: "🎯 Фокус и дела", title: "Техника 4Д для приоритетов", body: "Любое дело пропускайте через 4 фильтра: 1) Долой (отказаться), 2) Делегировать, 3) До лучших времен (отложить), 4) Давай (сделать прямо сейчас)." },
+      { cat: "focus", catLabel: "🎯 Фокус и дела", title: "90% времени в талантах и запрет на многозадачность", body: "Многозадачность — иллюзия, которая замедляет мозг. Делайте дела последовательно и стремитесь 90% времени заниматься тем, что получается блестяще." },
+      { cat: "focus", catLabel: "🎯 Фокус и дела", title: "Остановись! День размышлений в тишине", body: "Возьмите за правило устраивать себе «Неделю размышлений» (или хотя бы 1 день без гаджетов), чтобы свериться с внутренним компасом, а не бежать по часам." },
+      { cat: "focus", catLabel: "🎯 Фокус и дела", title: "Принцип 4 конфорок", body: "Жизнь — плита с 4 конфорками (Работа, Семья, Друзья, Здоровье). Чтобы добиться прорыва в чём-то одном, временно прикрутите одну конфорку, но никогда не выключайте Здоровье." },
+      { cat: "boundaries", catLabel: "🛡️ Границы и эмоции", title: "Диета от «информационного фастфуда»", body: "Жёстко ограничивайте сплетни, нытьё знакомых (не позволяйте бесплатно использовать себя как жилетку), депрессивную музыку и бессмысленный скроллинг." },
+      { cat: "boundaries", catLabel: "🛡️ Границы и эмоции", title: "Техника «Заезженной пластинки» (Как говорить НЕТ)", body: "Каждое «да» другому в ущерб себе — это «нет» себе. Отказывайте спокойно, без оправданий, повторяя одну мягкую фразу, или предлагайте жёсткий компромисс, удобный именно вам." },
+      { cat: "boundaries", catLabel: "🛡️ Границы и эмоции", title: "Правило 48 часов", body: "Любой сильной эмоции или обиде дайте ровно 48 часов на проживание. После этого принимайте трезвое решение, не застревая в драме на годы." },
+      { cat: "boundaries", catLabel: "🛡️ Границы и эмоции", title: "Празднуйте «момент отчаяния»", body: "На пути к любой цели всегда бывает «яма» (спад мотивации). Это норма! Лидеры отличаются от остальных только тем, что не сдаются именно в этой яме." },
+      { cat: "boundaries", catLabel: "🛡️ Границы и эмоции", title: "Стратегии Poh и Nah", body: "Poh (пофигизм к чужому мнению и мелочам, на которые вы не влияете) и Nah (твёрдое «нет» всему, что разрушает ваш покой)." },
+      { cat: "boundaries", catLabel: "🛡️ Границы и эмоции", title: "Никогда не извиняться, если не виновата", body: "Перестаньте говорить «извините, что отвлекаю» или «простите за беспокойство» там, где вы имеете полное право задать вопрос или заявить о себе." },
+      { cat: "people", catLabel: "🤝 Окружение", title: "Три сита для окружения", body: "Оценивайте людей по 3 фильтрам: 1) Наличие высшей цели, 2) Верность своей мечте (не сдаются ли они), 3) Стоимость встречи (окупает ли она ваше время и энергию)." },
+      { cat: "people", catLabel: "🤝 Окружение", title: "Найдите свою «стаю» и повышайте уровень нормы", body: "Если вы самый умный человек в комнате — смените комнату. Общайтесь с теми, для кого ваши мечты и большие достижения — это обычная норма." },
+      { cat: "people", catLabel: "🤝 Окружение", title: "Как найти ментора (Правило 20 писем)", body: "Выберите 10–20 человек, которыми восхищаетесь, и напишите им короткое вежливое письмо с просьбой о 10 минутах разговора в месяц. Один из двадцати точно согласится." },
+      { cat: "action", catLabel: "🚀 Как начать", title: "Бросьте себе абсурдный вызов", body: "Если жизнь зашла в тупик — не пишите списки целей. Сделайте что-то необычное (новая дорога, выступление, творческий челлендж), чтобы «раскачать» мозг." },
+      { cat: "action", catLabel: "🚀 Как начать", title: "Используйте «добрую злость» и «Как интересно получилось!»", body: "Вспомните скептиков и используйте желание доказать обратное как топливо (но ради СВОЕЙ цели). А при любой ошибке говорите: «Как интересно получилось!» и ищите выгоду." },
+      { cat: "action", catLabel: "🚀 Как начать", title: "Всегда говорите «ДА» случайностям", body: "Будьте открыты миру: случайный разговор в очереди, книга или неожиданное приглашение — так Вселенная передаёт нам подсказки." },
+      { cat: "action", catLabel: "🚀 Как начать", title: "Глаза больше, чем рот", body: "Не покупайте и не скачивайте больше курсов, книг и планов, чем можете переварить — непрожитая информация крадёт вашу ментальную энергию." },
+      { cat: "action", catLabel: "🚀 Как начать", title: "Формула счастья из 7 ежедневных дел", body: "Каждый день встраивайте в расписание хотя бы по 10 минут: движение, обучение, творчество, тишина, общение со своими, забота о теле и маленькая победа." },
+      { cat: "laws", catLabel: "🔮 12 законов шарика", title: "Законы 1–4: Шарик из пластилина и «вмятины»", body: "1) Человек рождается идеальным шариком, но жизнь наносит ему «вмятины» (травмы). 2) Вселенная стремится выпрямить нас через людей и ситуации. 3) Мы копируем перекосы родителей и притягиваем партнёров, которые их подсвечивают. 4) Чем сильнее сопротивляемся уроку (например, боимся просить о помощи), тем чаще попадаем в ситуации, где просить придётся." },
+      { cat: "laws", catLabel: "🔮 12 законов шарика", title: "Законы 5–8: Повторение уроков и эффект бабочки", body: "5) Непройденный урок повторяется снова и снова. 6) Самые большие проблемы таят в себе самые большие подарки. 7) Мы не видим всей картины целиком (опоздание на рейс может спасти жизнь). 8) Всё в мире взаимосвязано — каждое действие возвращается." },
+      { cat: "laws", catLabel: "🔮 12 законов шарика", title: "Законы 9–12: Взросление, Любовь и Страх", body: "9) Метафорически «убить родителей» — значит освободиться от навязанных страхов и стать взрослым. 10) То, чему сопротивляешься, усиливается. 11) Темную сторону (злость, зависть) нельзя подавлять — её нужно направлять в мирное русло. 12) Во Вселенной есть только два базовых чувства: Любовь и Страх." }
+    ];
+
+    /* Общая память с dashboard.html */
     const STORAGE_KEY = "neurohero_app_state_v2";
     let appState = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null") || {
       currentBlockIdx: 0,
       currentPhaseIdx: 0,
-      phaseSlots: defaultPhaseSlots,
+      phaseSlots: defaultPhases.map(p => [...p.slots]),
       doneToday: {},
       beliefDone: {},
       streakCounts: {},
@@ -530,299 +1341,915 @@
       return formatDateISO(new Date());
     }
 
-    let selectedCalDate = getTodayStr();
-
-    /* Активные (ещё не выполненные) задачи из дневника на конкретную дату */
-    function getPlannedTasksForDate(isoDate) {
-      const tasks = (appState.diaries && appState.diaries.tasks) || [];
-      return tasks.filter(t => {
-        if (t.done) return false;
-        const s = t.startDate || getTodayStr();
-        const e = t.endDate || s;
-        return isoDate >= s && isoDate <= e;
-      });
+    function switchTab(tabName) {
+      stopAudio();
+      stopDiaryMic();
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+      document.getElementById('tabBtn-' + tabName).classList.add('active');
+      document.getElementById('tab-' + tabName).classList.add('active');
+      if (tabName === 'plan') renderPhase();
+      if (tabName === 'diary') renderDiaryEntries();
+      if (tabName === 'tips') renderTips();
     }
 
-    function completePlannedTaskFromDashboard(taskId) {
-      const tasks = (appState.diaries && appState.diaries.tasks) || [];
-      const item = tasks.find(t => t.id === taskId);
-      if (item) {
-        item.done = true;
-        saveState();
-        renderDashboard();
-      }
-    }
+    let currentPhrases = [];
+    let currentAudio = null;
+    let isPlaying = false;
+    let isFallbackSpeaking = false;
 
-    function getActivityMapByDate() {
-      const map = {};
+    async function loadCurrentBlock() {
+      stopAudio();
+      const idx = appState.currentBlockIdx;
+      const b = blocks[idx];
 
-      Object.keys(appState.doneToday || {}).forEach(key => {
-        if (!appState.doneToday[key]) return;
-        const parts = key.split('_');
-        const dateStr = parts[parts.length - 1];
-        const exId = parts.slice(1, parts.length - 1).join('_');
-        const ex = exerciseNames[exId];
-        if (!map[dateStr]) map[dateStr] = [];
-        map[dateStr].push({
-          type: 'ex',
-          id: exId,
-          title: ex ? ex.title : exId
+      document.getElementById('blockBadge').innerText = b.badge;
+      document.getElementById('blockTitle').innerText = b.title;
+      document.getElementById('prevBtn').disabled = (idx === 0);
+      document.getElementById('prevBtnBottom').disabled = (idx === 0);
+      document.getElementById('nextBtn').disabled = (idx === blocks.length - 1);
+      document.getElementById('nextBtnBottom').disabled = (idx === blocks.length - 1);
+
+      updateBeliefDoneButton();
+
+      try {
+        const response = await fetch(b.file);
+        if (!response.ok) throw new Error("Файл не найден");
+        const text = await response.text();
+        currentPhrases = text.trim().split("\n").filter(l => l.includes("//")).map(line => {
+          const parts = line.split("//");
+          return { oldP: parts[0].trim(), newP: parts[1].trim() };
         });
-      });
+        if (currentPhrases.length === 0) throw new Error("Пустой блок");
+      } catch (e) {
+        currentPhrases = b.fallback;
+      }
 
-      Object.keys(appState.beliefDone || {}).forEach(key => {
-        if (!appState.beliefDone[key]) return;
-        const parts = key.split('_');
-        const dateStr = parts[parts.length - 1];
-        const blockIdx = parseInt(parts[0], 10);
-        const title = blockTitles[blockIdx];
-        if (!map[dateStr]) map[dateStr] = [];
-        map[dateStr].push({
-          type: 'belief',
-          id: `block_${blockIdx}`,
-          title: title ? `🎧 Убеждения: ${title}` : `Блок ${blockIdx + 1}`
-        });
-      });
-
-      return map;
+      renderPhrases();
     }
 
-    function renderDashboard() {
-      const activityMap = getActivityMapByDate();
-      const allActiveDates = Object.keys(activityMap).filter(d => activityMap[d].length > 0).sort();
-      const todayStr = getTodayStr();
-
-      document.getElementById('kpiTotalActiveDays').innerText = allActiveDates.length;
-
-      let streak = 0;
-      let checkDate = new Date();
-      if (!activityMap[formatDateISO(checkDate)]) {
-        checkDate.setDate(checkDate.getDate() - 1);
-      }
-      while (activityMap[formatDateISO(checkDate)] && activityMap[formatDateISO(checkDate)].length > 0) {
-        streak++;
-        checkDate.setDate(checkDate.getDate() - 1);
-      }
-      document.getElementById('kpiStreakDays').innerText = streak;
-
-      let missed30 = 0;
-      for (let i = 0; i < 30; i++) {
-        const d = new Date();
-        d.setDate(d.getDate() - i);
-        const iso = formatDateISO(d);
-        if (!activityMap[iso] || activityMap[iso].length === 0) missed30++;
-      }
-      document.getElementById('kpiMissed30Days').innerText = missed30;
-
-      document.getElementById('kpiMasteredTotal').innerText = (appState.masteredIds || []).length;
-
-      const todayCount = (activityMap[todayStr] || []).length;
-      document.getElementById('cabinetTodayStatus').innerText =
-        todayCount > 0 ? `Сегодня: выполнено ${todayCount} 🎉` : `Сегодня: ждёт практики`;
-
-      renderCalendarGrid(activityMap, todayStr);
-      renderPracticeCounters(activityMap);
-    }
-
-    function renderCalendarGrid(activityMap, todayStr) {
-      const grid = document.getElementById('calendarGrid');
-      grid.innerHTML = "";
-
-      const now = new Date();
-      const dayOfWeek = (now.getDay() + 6) % 7;
-      const endOfGrid = new Date(now);
-      endOfGrid.setDate(now.getDate() + (6 - dayOfWeek));
-
-      const startOfGrid = new Date(endOfGrid);
-      startOfGrid.setDate(endOfGrid.getDate() - 34);
-
-      const monthNames = ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"];
-
-      for (let i = 0; i < 35; i++) {
-        const cur = new Date(startOfGrid);
-        cur.setDate(startOfGrid.getDate() + i);
-        const iso = formatDateISO(cur);
-        const items = activityMap[iso] || [];
-        const plannedTasks = getPlannedTasksForDate(iso);
-        const isFuture = cur > now && iso !== todayStr;
-
-        const cell = document.createElement('div');
-        cell.className = 'cal-day';
-        if (items.length === 1) cell.classList.add('active-low');
-        if (items.length >= 2) cell.classList.add('active-high');
-        if (plannedTasks.length > 0) cell.classList.add('has-planned-task');
-        if (iso === todayStr) cell.classList.add('today-ring');
-        if (iso === selectedCalDate) cell.classList.add('selected-day');
-        if (isFuture && plannedTasks.length === 0) cell.style.opacity = '0.45';
-
-        const dayLabel = cur.getDate() === 1
-          ? `${cur.getDate()} ${monthNames[cur.getMonth()]}`
-          : `${cur.getDate()}`;
-
-        cell.innerHTML = `
-          <span>${dayLabel}</span>
-          ${items.length > 0 ? `<span class="cal-count-pill">✓ ${items.length}</span>` : ''}
-          ${plannedTasks.length > 0 ? `<span class="cal-task-badge">⚡ ${plannedTasks.length}</span>` : ''}
-        `;
-
-        // Теперь можно нажимать и на будущие даты, чтобы посмотреть/выполнить запланированные дела
-        cell.onclick = () => {
-          selectedCalDate = iso;
-          renderCalendarGrid(activityMap, todayStr);
-          renderSelectedDayDetails(iso, activityMap);
-        };
-
-        grid.appendChild(cell);
-      }
-
-      renderSelectedDayDetails(selectedCalDate, activityMap);
-    }
-
-    function renderSelectedDayDetails(isoDate, activityMap) {
-      const box = document.getElementById('selectedDayDetails');
-      const items = activityMap[isoDate] || [];
-      const plannedTasks = getPlannedTasksForDate(isoDate);
-      const [y, m, d] = isoDate.split('-');
-      const prettyDate = `${d}.${m}.${y}`;
-
-      const pIdx = appState.currentPhaseIdx || 0;
-      const currentPhaseSlots = (appState.phaseSlots && appState.phaseSlots[pIdx]) || defaultPhaseSlots[pIdx];
-
-      let plannedHtml = '';
-      if (plannedTasks.length > 0) {
-        plannedHtml = `
-          <div class="planned-task-box">
-            <div style="font-weight:800; color:#ff3b65; margin-bottom:6px;">
-              ⚡ Запланировано из дневника на ${prettyDate}:
-            </div>
-            ${plannedTasks.map(t => `
-              <div class="planned-task-row">
-                <span style="color:#2b1f14; font-weight:600;">${escapeHtml(t.text)}</span>
-                <button class="done-task-btn" onclick="completePlannedTaskFromDashboard(${t.id})">✅ Выполнить</button>
-              </div>
-            `).join('')}
-          </div>
-        `;
-      }
-
-      let listHtml = '';
-      if (items.length > 0) {
-        listHtml = `
-          <div style="font-weight:800; color:#198c90; margin-bottom:6px;">
-            ✅ ${prettyDate} — День практики (выполнено: ${items.length}):
-          </div>
-          <ul style="margin:0 0 10px 0; padding-left:18px; color:#2b1f14;">
-            ${items.map(it => `<li>${escapeHtml(it.title)}</li>`).join('')}
-          </ul>
-        `;
+    function updateBeliefDoneButton() {
+      const idx = appState.currentBlockIdx;
+      const key = `${idx}_${getTodayStr()}`;
+      const btn = document.getElementById('beliefDoneBtn');
+      if (appState.beliefDone[key]) {
+        btn.classList.add('checked');
+        btn.innerText = '✅ Прослушано сегодня! (Засчитано в Дашборд)';
       } else {
-        listHtml = `
-          <div style="font-weight:800; color:#7c4b00; margin-bottom:6px;">
-            📅 ${prettyDate} — Практик не отмечено
-          </div>
-        `;
+        btn.classList.remove('checked');
+        btn.innerText = '✅ Прослушала / прочитала этот блок сегодня';
       }
-
-      const quickBtns = currentPhaseSlots.map(exId => {
-        const ex = exerciseNames[exId];
-        if (!ex) return '';
-        const key = `${pIdx}_${exId}_${isoDate}`;
-        const isDone = !!appState.doneToday[key];
-        return `
-          <button class="chip-btn ${isDone ? 'active' : ''}" style="margin:2px;" onclick="toggleRetroDate('${exId}', '${isoDate}')">
-            ${isDone ? '✓' : '+'} ${escapeHtml(ex.title)}
-          </button>
-        `;
-      }).join('');
-
-      box.innerHTML = `
-        ${plannedHtml}
-        ${listHtml}
-        <div style="font-size:11px; font-weight:700; color:#7c4b00; margin-bottom:4px;">Отметить / снять практику за ${prettyDate}:</div>
-        <div>${quickBtns}</div>
-      `;
     }
 
-    function toggleRetroDate(exId, isoDate) {
-      const pIdx = appState.currentPhaseIdx || 0;
-      const streakKey = `${pIdx}_${exId}`;
-      const dateKey = `${pIdx}_${exId}_${isoDate}`;
+    function markBeliefDoneToday() {
+      const idx = appState.currentBlockIdx;
+      const key = `${idx}_${getTodayStr()}`;
+      if (appState.beliefDone[key]) delete appState.beliefDone[key];
+      else appState.beliefDone[key] = true;
+      saveState();
+      updateBeliefDoneButton();
+    }
 
-      if (!appState.doneToday[dateKey]) {
-        appState.doneToday[dateKey] = true;
+    function renderPhrases() {
+      const container = document.getElementById('phraseList');
+      container.innerHTML = "";
+      currentPhrases.forEach((p, idx) => {
+        const item = document.createElement('div');
+        item.className = 'phrase-item';
+        item.id = `phrase-item-${idx}`;
+        item.innerHTML = `
+          <div class="num-badge">#${idx + 1}</div>
+          <div class="old-phrase">${escapeHtml(p.oldP)}</div>
+          <div class="new-phrase">${escapeHtml(p.newP)}</div>
+        `;
+        container.appendChild(item);
+      });
+      document.getElementById('blockSummary').innerText =
+        `Блок ${appState.currentBlockIdx + 1} из ${blocks.length} • Выражений: ${currentPhrases.length}.`;
+    }
+
+    function prevBlock() {
+      if (appState.currentBlockIdx > 0) {
+        appState.currentBlockIdx--;
+        saveState();
+        loadCurrentBlock();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function nextBlock() {
+      if (appState.currentBlockIdx < blocks.length - 1) {
+        appState.currentBlockIdx++;
+        saveState();
+        loadCurrentBlock();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function toggleAudio() {
+      if (isPlaying) stopAudio();
+      else playAudio();
+    }
+
+    function playAudio() {
+      const b = blocks[appState.currentBlockIdx];
+      if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+      currentAudio = new Audio(b.audio);
+      currentAudio.onended = () => stopAudio();
+      currentAudio.onerror = () => { currentAudio = null; startFallbackSpeech(); };
+      currentAudio.play().then(() => {
+        isPlaying = true;
+        updateAudioBtn(true);
+      }).catch(() => startFallbackSpeech());
+    }
+
+    function startFallbackSpeech() {
+      if (!('speechSynthesis' in window)) {
+        alert("Загрузите файл " + blocks[appState.currentBlockIdx].audio + " в папку audio на GitHub.");
+        stopAudio();
+        return;
+      }
+      window.speechSynthesis.cancel();
+      isPlaying = true;
+      isFallbackSpeaking = true;
+      updateAudioBtn(true);
+      speakPhraseStep(0);
+    }
+
+    function speakPhraseStep(index) {
+      if (!isPlaying || !isFallbackSpeaking || index >= currentPhrases.length) {
+        stopAudio();
+        return;
+      }
+      document.querySelectorAll('.phrase-item').forEach(el => el.classList.remove('active-speaking'));
+      const activeEl = document.getElementById(`phrase-item-${index}`);
+      if (activeEl) activeEl.classList.add('active-speaking');
+
+      const utter = new SpeechSynthesisUtterance(currentPhrases[index].newP);
+      utter.lang = 'ru-RU';
+      utter.rate = 0.92;
+      utter.onend = () => {
+        setTimeout(() => { if (isPlaying && isFallbackSpeaking) speakPhraseStep(index + 1); }, 1500);
+      };
+      utter.onerror = () => { if (isPlaying && isFallbackSpeaking) speakPhraseStep(index + 1); };
+      window.speechSynthesis.speak(utter);
+    }
+
+    function stopAudio() {
+      if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      isPlaying = false;
+      isFallbackSpeaking = false;
+      updateAudioBtn(false);
+      document.querySelectorAll('.phrase-item').forEach(el => el.classList.remove('active-speaking'));
+    }
+
+    function updateAudioBtn(speaking) {
+      const btn = document.getElementById('audioToggleBtn');
+      const icon = document.getElementById('audioIcon');
+      const label = document.getElementById('audioLabel');
+      if (speaking) {
+        btn.classList.add('speaking');
+        icon.innerText = "⏹️";
+        label.innerText = "Остановить";
+      } else {
+        btn.classList.remove('speaking');
+        icon.innerText = "🎧";
+        label.innerText = "Озвучить блок";
+      }
+    }
+
+    /* План на 6 месяцев */
+    let activeTimers = {};
+    let replacingSlotIndex = null;
+
+    function prevPhase() {
+      if (appState.currentPhaseIdx > 0) {
+        appState.currentPhaseIdx--;
+        saveState();
+        renderPhase();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function nextPhase() {
+      if (appState.currentPhaseIdx < defaultPhases.length - 1) {
+        appState.currentPhaseIdx++;
+        saveState();
+        renderPhase();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function renderPhase() {
+      const pIdx = appState.currentPhaseIdx;
+      const phase = defaultPhases[pIdx];
+      const slots = appState.phaseSlots[pIdx] || phase.slots;
+
+      document.getElementById('phaseMonthBadge').innerText = phase.month;
+      document.getElementById('masteredCountBadge').innerText = `🏆 Освоено: ${appState.masteredIds.length}`;
+      document.getElementById('phaseTitle').innerText = phase.title;
+      document.getElementById('phaseDesc').innerText = phase.desc;
+
+      const modeBadge = document.getElementById('phaseModeBadge');
+      modeBadge.innerText = phase.mode;
+      modeBadge.className = phase.isUnload ? 'phase-mode unload' : 'phase-mode';
+
+      document.getElementById('prevPhaseBtn').disabled = (pIdx === 0);
+      document.getElementById('prevPhaseBtnBottom').disabled = (pIdx === 0);
+      document.getElementById('nextPhaseBtn').disabled = (pIdx === defaultPhases.length - 1);
+      document.getElementById('nextPhaseBtnBottom').disabled = (pIdx === defaultPhases.length - 1);
+
+      let totalDays = 0;
+      slots.forEach(exId => {
+        const key = `${pIdx}_${exId}`;
+        totalDays += Math.min(14, appState.streakCounts[key] || 0);
+      });
+      const avgDays = slots.length ? Math.round(totalDays / slots.length) : 0;
+      document.getElementById('phaseProgressVal').innerText = `${avgDays} / 14 дн.`;
+      document.getElementById('phaseProgressFill').style.width = `${Math.min(100, (avgDays / 14) * 100)}%`;
+
+      const container = document.getElementById('exerciseList');
+      container.innerHTML = "";
+      const today = getTodayStr();
+
+      slots.forEach((exId, slotIdx) => {
+        const ex = exercisesCatalog[exId];
+        if (!ex) return;
+
+        const streakKey = `${pIdx}_${exId}`;
+        const todayKey = `${pIdx}_${exId}_${today}`;
+        const daysDone = appState.streakCounts[streakKey] || 0;
+        const isDoneToday = !!appState.doneToday[todayKey];
+
+        const card = document.createElement('div');
+        card.className = 'ex-card' + (isDoneToday ? ' done-today' : '');
+
+        let toolHtml = '';
+        if (ex.tool === 'timer' || ex.tool === 'timer_note') {
+          const mins = ex.timerMinutes || 15;
+          toolHtml += `
+            <div class="tool-box">
+              <div class="tool-title">⏱️ Таймер практики (${mins} мин)</div>
+              <div class="timer-row">
+                <div class="timer-display" id="timer-disp-${slotIdx}">${String(mins).padStart(2, '0')}:00</div>
+                <div style="display:flex; gap:8px;">
+                  <button class="small-btn" onclick="toggleTimer(${slotIdx}, ${mins})">Старт / Пауза</button>
+                  <button class="small-btn pink" onclick="resetTimer(${slotIdx}, ${mins})">Сброс</button>
+                </div>
+              </div>
+              ${ex.id === 'black_dot_breath' ? '<div style="text-align:center; font-size:54px; margin-top:12px; color:#000;">●</div>' : ''}
+            </div>
+          `;
+        }
+
+        if (ex.tool === 'wheel_note') {
+          const w = appState.wheel;
+          const sum = w.passion + w.talent + w.values + w.state;
+          toolHtml += `
+            <div class="tool-box">
+              <div class="tool-title">🧭 Колесо призвания (Оценка от 1 до 10)</div>
+              <div class="wheel-row">
+                <div class="wheel-label"><span>🔥 Одержимость (страсть/боль)</span><b id="wVal-passion">${w.passion}</b></div>
+                <input type="range" min="1" max="10" value="${w.passion}" oninput="updateWheel('passion', this.value)">
+              </div>
+              <div class="wheel-row">
+                <div class="wheel-label"><span>✨ Таланты (или желание развить)</span><b id="wVal-talent">${w.talent}</b></div>
+                <input type="range" min="1" max="10" value="${w.talent}" oninput="updateWheel('talent', this.value)">
+              </div>
+              <div class="wheel-row">
+                <div class="wheel-label"><span>🌟 Ценности и Высшая цель</span><b id="wVal-values">${w.values}</b></div>
+                <input type="range" min="1" max="10" value="${w.values}" oninput="updateWheel('values', this.value)">
+              </div>
+              <div class="wheel-row">
+                <div class="wheel-label"><span>💖 Состояние (какие эмоции даёт)</span><b id="wVal-state">${w.state}</b></div>
+                <input type="range" min="1" max="10" value="${w.state}" oninput="updateWheel('state', this.value)">
+              </div>
+              <div class="wheel-total" id="wheelTotalScore">Итого: ${sum} / 40 баллов</div>
+            </div>
+          `;
+        }
+
+        if (ex.tool === 'note' || ex.tool === 'timer_note' || ex.tool === 'wheel_note') {
+          const savedText = appState.notes[exId] || "";
+          toolHtml += `
+            <div class="tool-box">
+              <div class="tool-title">📝 Личный блокнот (сохраняется автоматически)</div>
+              <textarea class="ex-textarea" placeholder="${escapeHtml(ex.placeholder || 'Ваши записи...')}" oninput="saveNote('${exId}', this.value)">${escapeHtml(savedText)}</textarea>
+              <div class="save-hint">✓ Сохранено на планшете</div>
+            </div>
+          `;
+        }
+
+        card.innerHTML = `
+          <div class="ex-top">
+            <span class="ex-tag">${ex.tag}</span>
+            <span class="ex-streak">Дней: ${daysDone} / 14</span>
+          </div>
+          <div class="ex-title">${slotIdx + 1}. ${ex.title}</div>
+          <div class="ex-short">${ex.short}</div>
+
+          <button class="ex-toggle-btn" onclick="toggleExDetails(${slotIdx})">
+            <span>📖 Инструкция и инструмент выполнения</span>
+            <span id="arrow-${slotIdx}">▼</span>
+          </button>
+
+          <div class="ex-details" id="details-${slotIdx}">
+            <ol class="steps-list">
+              ${ex.steps.map(s => `<li>${escapeHtml(s)}</li>`).join('')}
+            </ol>
+            ${toolHtml}
+          </div>
+
+          <div class="ex-actions">
+            <button class="btn-done ${isDoneToday ? 'checked' : ''}" onclick="markDoneToday('${exId}')">
+              ${isDoneToday ? '✅ Выполнено сегодня!' : '✅ Сделала сегодня'}
+            </button>
+            <button class="btn-mastered" onclick="openReplaceModal(${slotIdx}, '${exId}')">
+              🏆 Внедрено в голову
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function toggleExDetails(slotIdx) {
+      const el = document.getElementById(`details-${slotIdx}`);
+      const arr = document.getElementById(`arrow-${slotIdx}`);
+      const isOpen = el.classList.toggle('open');
+      arr.innerText = isOpen ? '▲' : '▼';
+    }
+
+    function saveNote(exId, val) {
+      appState.notes[exId] = val;
+      saveState();
+    }
+
+    function updateWheel(axis, val) {
+      appState.wheel[axis] = parseInt(val, 10);
+      saveState();
+      document.getElementById('wVal-' + axis).innerText = val;
+      const w = appState.wheel;
+      document.getElementById('wheelTotalScore').innerText = `Итого: ${w.passion + w.talent + w.values + w.state} / 40 баллов`;
+    }
+
+    function markDoneToday(exId) {
+      const pIdx = appState.currentPhaseIdx;
+      const today = getTodayStr();
+      const streakKey = `${pIdx}_${exId}`;
+      const todayKey = `${pIdx}_${exId}_${today}`;
+
+      if (!appState.doneToday[todayKey]) {
+        appState.doneToday[todayKey] = true;
         appState.streakCounts[streakKey] = (appState.streakCounts[streakKey] || 0) + 1;
       } else {
-        delete appState.doneToday[dateKey];
+        delete appState.doneToday[todayKey];
         appState.streakCounts[streakKey] = Math.max(0, (appState.streakCounts[streakKey] || 1) - 1);
       }
       saveState();
-      renderDashboard();
+      renderPhase();
     }
 
-    function renderPracticeCounters(activityMap) {
-      const container = document.getElementById('practiceCountersList');
-      container.innerHTML = "";
-
-      const countsById = {};
-      Object.values(activityMap).forEach(dayItems => {
-        dayItems.forEach(it => {
-          countsById[it.id] = (countsById[it.id] || 0) + 1;
-        });
-      });
-
-      const pIdx = appState.currentPhaseIdx || 0;
-      const activeSlots = (appState.phaseSlots && appState.phaseSlots[pIdx]) || defaultPhaseSlots[pIdx];
-      activeSlots.forEach(exId => {
-        if (!(exId in countsById)) countsById[exId] = 0;
-      });
-
-      const entries = Object.keys(countsById).map(id => {
-        const count = countsById[id];
-        if (id.startsWith('block_')) {
-          const bIdx = parseInt(id.replace('block_', ''), 10);
-          const title = blockTitles[bIdx];
-          return {
-            id,
-            title: title ? `🎧 Убеждения: ${title}` : id,
-            sub: `Блок ${bIdx + 1} • Аудио / Чтение`,
-            count,
-            isMastered: false,
-            isActiveNow: false
-          };
-        } else {
-          const ex = exerciseNames[id];
-          return {
-            id,
-            title: ex ? ex.title : id,
-            sub: ex ? ex.tag : "Практика",
-            count,
-            isMastered: (appState.masteredIds || []).includes(id),
-            isActiveNow: activeSlots.includes(id)
-          };
+    function toggleTimer(slotIdx, defaultMins) {
+      if (activeTimers[slotIdx] && activeTimers[slotIdx].interval) {
+        clearInterval(activeTimers[slotIdx].interval);
+        activeTimers[slotIdx].interval = null;
+        return;
+      }
+      if (!activeTimers[slotIdx]) activeTimers[slotIdx] = { remaining: defaultMins * 60, interval: null };
+      activeTimers[slotIdx].interval = setInterval(() => {
+        activeTimers[slotIdx].remaining--;
+        const rem = activeTimers[slotIdx].remaining;
+        const disp = document.getElementById(`timer-disp-${slotIdx}`);
+        if (rem <= 0) {
+          clearInterval(activeTimers[slotIdx].interval);
+          activeTimers[slotIdx] = null;
+          if (disp) disp.innerText = "00:00 🎉";
+          alert("Время практики вышло! Вы молодец!");
+          return;
         }
+        if (disp) disp.innerText = `${String(Math.floor(rem / 60)).padStart(2, '0')}:${String(rem % 60).padStart(2, '0')}`;
+      }, 1000);
+    }
+
+    function resetTimer(slotIdx, defaultMins) {
+      if (activeTimers[slotIdx] && activeTimers[slotIdx].interval) clearInterval(activeTimers[slotIdx].interval);
+      activeTimers[slotIdx] = { remaining: defaultMins * 60, interval: null };
+      const disp = document.getElementById(`timer-disp-${slotIdx}`);
+      if (disp) disp.innerText = `${String(defaultMins).padStart(2, '0')}:00`;
+    }
+
+    function openReplaceModal(slotIdx, currentExId) {
+      replacingSlotIndex = slotIdx;
+      if (!appState.masteredIds.includes(currentExId)) {
+        appState.masteredIds.push(currentExId);
+        saveState();
+      }
+      const list = document.getElementById('catalogList');
+      list.innerHTML = "";
+      Object.values(exercisesCatalog).forEach(ex => {
+        const isMastered = appState.masteredIds.includes(ex.id);
+        const item = document.createElement('div');
+        item.className = 'catalog-item';
+        item.innerHTML = `
+          <div>
+            <div style="font-size:12px; font-weight:800; color:#ff3b65;">${ex.tag} ${isMastered ? '• 🏆 Освоено' : ''}</div>
+            <div style="font-size:15px; font-weight:800; color:#2b1f14;">${ex.title}</div>
+            <div style="font-size:13px; color:#6e5d4f;">${ex.short}</div>
+          </div>
+          <button class="small-btn" onclick="selectReplacement('${ex.id}')">Выбрать</button>
+        `;
+        list.appendChild(item);
+      });
+      document.getElementById('replaceModal').classList.add('open');
+    }
+
+    function closeReplaceModal() {
+      document.getElementById('replaceModal').classList.remove('open');
+      renderPhase();
+    }
+
+    function selectReplacement(newExId) {
+      if (replacingSlotIndex !== null) {
+        appState.phaseSlots[appState.currentPhaseIdx][replacingSlotIndex] = newExId;
+        saveState();
+      }
+      closeReplaceModal();
+    }
+
+    /* =========================================================
+       ГОЛОСОВЫЕ ДНЕВНИКИ + ПАРСЕР ДАТ ДЛЯ КАЛЕНДАРЯ И GOOGLE
+       ========================================================= */
+    const diaryMeta = {
+      day: { badge: "📅 Дневник дня", title: "Дневник дня (Утро / Вечер)", placeholder: "Надиктуйте, как прошёл день, что сделали, что почувствовали..." },
+      ideas: { badge: "💡 Мои идеи", title: "Копилка идей и озарений", placeholder: "Надиктуйте идею для проекта, жизни или творчества..." },
+      plots: { badge: "📖 Сюжеты для книг", title: "Сюжеты, сцены и герои для книг", placeholder: "Надиктуйте сюжетный поворот, образ героя или сцену..." },
+      tasks: { badge: "⚡ Надо сделать", title: "Быстрые дела и задачи на ходу", placeholder: "Например: «Написать Наталье с 23 по 28 ноября» — даты сами попадут в календарь!" }
+    };
+
+    let currentDiaryType = 'day';
+    let lastRawDraft = "";
+    let recognition = null;
+    let isRecording = false;
+    let baseTextBeforeMic = "";
+    let selectedMiniCalDate = null;
+
+    const ruMonthsMap = {
+      "январ": 0, "феврал": 1, "март": 2, "апрел": 3, "ма": 4, "июн": 5,
+      "июл": 6, "август": 7, "сентябр": 8, "октябр": 9, "ноябр": 10, "декабр": 11
+    };
+
+    function detectMonthIndex(word) {
+      if (!word) return null;
+      const w = word.toLowerCase();
+      for (const prefix in ruMonthsMap) {
+        if (w.startsWith(prefix)) return ruMonthsMap[prefix];
+      }
+      return null;
+    }
+
+    /* Извлечение дат или диапазона дат из текста задачи */
+    function extractDateRangeFromText(text) {
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+      const year = now.getFullYear();
+
+      // 1. Диапазон вида "с 23 по 28 ноября" или "с 16 по 28"
+      const rangeRegex = /с\s+(\d{1,2})(?:\.(\d{1,2}))?\s+по\s+(\d{1,2})(?:\.(\d{1,2}))?(?:\s+([а-яё]+))?/i;
+      const mRange = text.match(rangeRegex);
+      if (mRange) {
+        const d1 = parseInt(mRange[1], 10);
+        const m1Num = mRange[2] ? parseInt(mRange[2], 10) - 1 : null;
+        const d2 = parseInt(mRange[3], 10);
+        const m2Num = mRange[4] ? parseInt(mRange[4], 10) - 1 : null;
+        const wordMonth = detectMonthIndex(mRange[5]);
+
+        const endMonth = m2Num !== null ? m2Num : (wordMonth !== null ? wordMonth : now.getMonth());
+        const startMonth = m1Num !== null ? m1Num : endMonth;
+
+        let startDate = new Date(year, startMonth, d1);
+        let endDate = new Date(year, endMonth, d2);
+        if (endDate < startDate) endDate.setFullYear(year + 1);
+
+        return { startDate: formatDateISO(startDate), endDate: formatDateISO(endDate) };
+      }
+
+      // 2. Одиночная дата вида "21 ноября" или "21.11"
+      const singleRegex = /\b(\d{1,2})(?:\.(\d{1,2})|\s+([а-яё]+))\b/i;
+      const mSingle = text.match(singleRegex);
+      if (mSingle) {
+        const d = parseInt(mSingle[1], 10);
+        const mNum = mSingle[2] ? parseInt(mSingle[2], 10) - 1 : detectMonthIndex(mSingle[3]);
+        if (mNum !== null && d >= 1 && d <= 31) {
+          const dt = new Date(year, mNum, d);
+          const iso = formatDateISO(dt);
+          return { startDate: iso, endDate: iso };
+        }
+      }
+
+      // 3. Ключевые слова "завтра" / "послезавтра" / "сегодня"
+      if (/послезавтра/i.test(text)) {
+        const dt = new Date(now);
+        dt.setDate(dt.getDate() + 2);
+        const iso = formatDateISO(dt);
+        return { startDate: iso, endDate: iso };
+      }
+      if (/завтра/i.test(text)) {
+        const dt = new Date(now);
+        dt.setDate(dt.getDate() + 1);
+        const iso = formatDateISO(dt);
+        return { startDate: iso, endDate: iso };
+      }
+      if (/сегодня/i.test(text)) {
+        const iso = formatDateISO(now);
+        return { startDate: iso, endDate: iso };
+      }
+
+      return null;
+    }
+
+    function formatShortRuDate(iso) {
+      if (!iso) return "";
+      const [y, m, d] = iso.split('-');
+      return `${d}.${m}`;
+    }
+
+    function buildGoogleCalendarUrl(item) {
+      const title = encodeURIComponent(item.text.slice(0, 90));
+      const details = encodeURIComponent(item.text + "\n\nСоздано в тренажёре НейроГерой");
+      let startStr = (item.startDate || getTodayStr()).replace(/-/g, '');
+      let endObj = new Date((item.endDate || item.startDate || getTodayStr()) + "T00:00:00");
+      endObj.setDate(endObj.getDate() + 1); // В Google Calendar дата окончания для событий на весь день не включительная
+      let endStr = formatDateISO(endObj).replace(/-/g, '');
+      return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startStr}/${endStr}&details=${details}`;
+    }
+
+    function selectDiaryType(type) {
+      currentDiaryType = type;
+      selectedMiniCalDate = null;
+      document.querySelectorAll('.diary-sub-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('dSub-' + type).classList.add('active');
+      document.getElementById('diaryTypeBadge').innerText = diaryMeta[type].badge;
+      document.getElementById('diaryHeading').innerText = diaryMeta[type].title;
+      document.getElementById('diaryInputText').placeholder = diaryMeta[type].placeholder;
+      renderDiaryEntries();
+    }
+
+    function toggleDiaryMic() {
+      if (isRecording) stopDiaryMic();
+      else startDiaryMic();
+    }
+
+    function startDiaryMic() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert("В этом браузере микрофон через сайт не поддерживается — используйте кнопку микрофона прямо на клавиатуре планшета!");
+        return;
+      }
+
+      recognition = new SpeechRecognition();
+      recognition.lang = 'ru-RU';
+      recognition.continuous = true;
+      recognition.interimResults = true;
+
+      const inputEl = document.getElementById('diaryInputText');
+      baseTextBeforeMic = inputEl.value.trim();
+      if (baseTextBeforeMic) baseTextBeforeMic += " ";
+
+      recognition.onstart = () => {
+        isRecording = true;
+        document.getElementById('diaryMicBtn').classList.add('recording');
+        document.getElementById('diaryMicIcon').innerText = "⏹️";
+        document.getElementById('diaryMicLabel').innerText = "Остановить запись";
+        document.getElementById('diaryMicStatus').innerText = "🔴 Идёт запись... Говорите спокойно в своём темпе";
+      };
+
+      recognition.onresult = (event) => {
+        let sessionTranscript = "";
+        for (let i = 0; i < event.results.length; i++) {
+          sessionTranscript += event.results[i][0].transcript;
+        }
+        inputEl.value = baseTextBeforeMic + sessionTranscript;
+      };
+
+      recognition.onerror = (event) => {
+        document.getElementById('diaryMicStatus').innerText = "Пауза микрофона (" + event.error + "). Нажмите снова, чтобы продолжить.";
+        stopDiaryMicUI();
+      };
+
+      recognition.onend = () => {
+        stopDiaryMicUI();
+      };
+
+      try {
+        recognition.start();
+      } catch (e) {
+        stopDiaryMicUI();
+      }
+    }
+
+    function stopDiaryMic() {
+      if (recognition) {
+        try { recognition.stop(); } catch (e) {}
+      }
+      stopDiaryMicUI();
+    }
+
+    function stopDiaryMicUI() {
+      isRecording = false;
+      const btn = document.getElementById('diaryMicBtn');
+      if (btn) btn.classList.remove('recording');
+      const icon = document.getElementById('diaryMicIcon');
+      if (icon) icon.innerText = "🎙️";
+      const label = document.getElementById('diaryMicLabel');
+      if (label) label.innerText = "Включить микрофон";
+      const status = document.getElementById('diaryMicStatus');
+      if (status) status.innerText = "Нажмите «✨ Причесать текст», чтобы убрать слова-паразиты";
+    }
+
+    /* Локальный скрипт очистки устной речи без API */
+    function cleanSpokenRussianText(raw) {
+      if (!raw || !raw.trim()) return "";
+      let text = " " + raw.trim().replace(/\s+/g, " ") + " ";
+
+      // Исправляем частые оговорки голосового движка
+      text = text.replace(/\bнужен он\b/gi, "нужно");
+      text = text.replace(/\bнужна он\b/gi, "нужно");
+
+      const fillerPhrases = [
+        "ну вот как-то так", "как-то так", "вот так вот", "ну вот", "ну короче",
+        "короче говоря", "в общем-то", "в общем", "так сказать", "как говорится",
+        "грубо говоря", "честно говоря", "на самом деле", "понимаешь", "знаешь",
+        "слушай", "смотри", "значит так", "то есть да", "да вот"
+      ];
+      fillerPhrases.forEach(phrase => {
+        const re = new RegExp("(^|[\\s,.;!?])" + phrase + "(?=[\\s,.;!?]|$)", "gi");
+        text = text.replace(re, "$1");
       });
 
-      entries.sort((a, b) => b.count - a.count || (b.isActiveNow - a.isActiveNow));
+      const fillerWords = [
+        "ну", "короче", "типа", "как бы", "вот", "блин", "эээ", "эм", "ммм", "ага", "угу", "получается", "значит"
+      ];
+      fillerWords.forEach(word => {
+        const re = new RegExp("(^|[\\s,.;!?])" + word + "(?=[\\s,.;!?]|$)", "gi");
+        text = text.replace(re, "$1");
+      });
 
-      entries.forEach(item => {
-        const pct = Math.min(100, Math.round((item.count / 14) * 100));
-        let statusText = item.sub;
-        if (item.isMastered) statusText += " • 🏆 Внедрено в голову";
-        else if (item.isActiveNow) statusText += " • 🔥 Сейчас в работе";
+      text = text.replace(/\b([а-яёa-z]+)\s+\1\b/gi, "$1");
+      text = text.replace(/\s+(а ещё|и ещё|а потом|потом|затем|кроме того|кстати|а также)\s+/gi, ". $1 ");
+      text = text.replace(/\s+(что|чтобы|потому что|так как|который|которая|которое|которые|но|однако|если|когда)\s+/gi, ", $1 ");
 
-        const row = document.createElement('div');
-        row.className = 'counter-row';
-        row.innerHTML = `
-          <div class="counter-top">
-            <div class="counter-name">${escapeHtml(item.title)}</div>
-            <div class="counter-val ${item.isMastered ? 'mastered' : ''}">${item.count} дн. / раз</div>
-          </div>
-          <div class="counter-sub">${statusText}</div>
-          <div class="progress-bar">
-            <div class="progress-fill" style="width:${pct}%;"></div>
+      text = text.replace(/\s+/g, " ").trim();
+      text = text.replace(/\s+([,.;!?])/g, "$1");
+      text = text.replace(/([,.;!?]){2,}/g, "$1");
+      text = text.replace(/^[,.;!?\s]+/, "");
+
+      text = text.replace(/(^|[.!?]\s+)([а-яёa-z])/g, (m, p1, p2) => p1 + p2.toUpperCase());
+
+      if (text && !/[.!?]$/.test(text)) {
+        text += ".";
+      }
+
+      return text;
+    }
+
+    function polishDiaryDraft() {
+      stopDiaryMic();
+      const inputEl = document.getElementById('diaryInputText');
+      const current = inputEl.value.trim();
+      if (!current) return;
+      if (!lastRawDraft) lastRawDraft = current;
+      inputEl.value = cleanSpokenRussianText(current);
+      document.getElementById('diaryMicStatus').innerText = "✨ Текст причёсан! Можно подправить или сразу сохранить.";
+    }
+
+    function clearDiaryDraft() {
+      stopDiaryMic();
+      document.getElementById('diaryInputText').value = "";
+      lastRawDraft = "";
+      document.getElementById('diaryMicStatus').innerText = "Поле очищено";
+    }
+
+    function saveDiaryEntry() {
+      stopDiaryMic();
+      const inputEl = document.getElementById('diaryInputText');
+      const text = inputEl.value.trim();
+      if (!text) {
+        alert("Сначала надиктуйте или напишите текст записи.");
+        return;
+      }
+
+      const now = new Date();
+      const dateLabel = now.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      const timeLabel = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+
+      let extractedDates = null;
+      if (currentDiaryType === 'tasks') {
+        extractedDates = extractDateRangeFromText(text) || extractDateRangeFromText(lastRawDraft);
+      }
+
+      if (!appState.diaries[currentDiaryType]) appState.diaries[currentDiaryType] = [];
+      appState.diaries[currentDiaryType].unshift({
+        id: Date.now(),
+        date: `${dateLabel} • ${timeLabel}`,
+        text: text,
+        raw: lastRawDraft && lastRawDraft !== text ? lastRawDraft : "",
+        startDate: extractedDates ? extractedDates.startDate : getTodayStr(),
+        endDate: extractedDates ? extractedDates.endDate : getTodayStr(),
+        hasExplicitDate: !!extractedDates,
+        done: false
+      });
+
+      saveState();
+      inputEl.value = "";
+      lastRawDraft = "";
+      document.getElementById('diaryMicStatus').innerText = extractedDates
+        ? `✅ Сохранено и добавлено в календарь (${formatShortRuDate(extractedDates.startDate)} — ${formatShortRuDate(extractedDates.endDate)})!`
+        : "✅ Запись сохранена!";
+      renderDiaryEntries();
+    }
+
+    function toggleDiaryTaskDone(entryId) {
+      const list = appState.diaries['tasks'] || [];
+      const item = list.find(e => e.id === entryId);
+      if (item) {
+        item.done = !item.done;
+        saveState();
+        renderDiaryEntries();
+      }
+    }
+
+    function deleteDiaryEntry(entryId) {
+      if (!confirm("Удалить эту запись из дневника?")) return;
+      appState.diaries[currentDiaryType] = (appState.diaries[currentDiaryType] || []).filter(e => e.id !== entryId);
+      saveState();
+      renderDiaryEntries();
+    }
+
+    function toggleRawBox(entryId) {
+      const el = document.getElementById('raw-' + entryId);
+      if (el) el.classList.toggle('open');
+    }
+
+    function toggleMiniCalDate(iso) {
+      selectedMiniCalDate = (selectedMiniCalDate === iso) ? null : iso;
+      renderDiaryEntries();
+    }
+
+    function renderTaskMiniCalendar() {
+      const wrap = document.getElementById('taskMiniCalendarWrap');
+      if (currentDiaryType !== 'tasks') {
+        wrap.style.display = 'none';
+        return;
+      }
+      wrap.style.display = 'block';
+
+      const activeTasks = (appState.diaries.tasks || []).filter(t => !t.done);
+      const dows = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      let cellsHtml = "";
+      for (let i = 0; i < 14; i++) {
+        const d = new Date(today);
+        d.setDate(today.getDate() + i);
+        const iso = formatDateISO(d);
+        const tasksForDay = activeTasks.filter(t => {
+          const s = t.startDate || getTodayStr();
+          const e = t.endDate || s;
+          return iso >= s && iso <= e;
+        });
+
+        const isSelected = selectedMiniCalDate === iso;
+        cellsHtml += `
+          <div class="mini-cal-day ${tasksForDay.length > 0 ? 'has-task' : ''} ${isSelected ? 'selected' : ''}" onclick="toggleMiniCalDate('${iso}')">
+            <div class="mini-cal-dow">${dows[d.getDay()]}</div>
+            <div>${d.getDate()}.${String(d.getMonth() + 1).padStart(2, '0')}</div>
+            <div class="mini-cal-dot">${tasksForDay.length > 0 ? '⚡ ' + tasksForDay.length : '·'}</div>
           </div>
         `;
-        container.appendChild(row);
+      }
+
+      wrap.innerHTML = `
+        <div class="task-mini-cal">
+          <div class="mini-cal-header">
+            <span>📅 Календарь активных дел (14 дней)</span>
+            ${selectedMiniCalDate ? `<button class="raw-toggle" onclick="toggleMiniCalDate('${selectedMiniCalDate}')">Показать все</button>` : '<span style="font-size:11px; color:#9d8b7a;">Нажмите дату для фильтра</span>'}
+          </div>
+          <div class="mini-cal-grid">${cellsHtml}</div>
+        </div>
+      `;
+    }
+
+    function renderDiaryEntries() {
+      renderTaskMiniCalendar();
+
+      // Подтягиваем даты для старых задач, сохранённых до обновления
+      if (currentDiaryType === 'tasks') {
+        (appState.diaries.tasks || []).forEach(item => {
+          if (!item.startDate) {
+            const parsed = extractDateRangeFromText(item.text) || extractDateRangeFromText(item.raw);
+            if (parsed) {
+              item.startDate = parsed.startDate;
+              item.endDate = parsed.endDate;
+              item.hasExplicitDate = true;
+            }
+          }
+        });
+      }
+
+      const list = appState.diaries[currentDiaryType] || [];
+      const q = (document.getElementById('diarySearchInput').value || "").toLowerCase().trim();
+      const filtered = list.filter(item => {
+        const matchText = !q || item.text.toLowerCase().includes(q) || (item.raw && item.raw.toLowerCase().includes(q));
+        if (!matchText) return false;
+        if (currentDiaryType === 'tasks' && selectedMiniCalDate) {
+          if (item.done) return false;
+          const s = item.startDate || getTodayStr();
+          const e = item.endDate || s;
+          return selectedMiniCalDate >= s && selectedMiniCalDate <= e;
+        }
+        return true;
+      });
+
+      document.getElementById('diaryCountBadge').innerText = `Записей: ${list.length}`;
+      const container = document.getElementById('diaryEntriesList');
+      container.innerHTML = "";
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="tip-card" style="text-align:center; color:#8c7b6d;">${selectedMiniCalDate ? 'На выбранную дату активных задач нет.' : 'В этом дневнике пока нет записей. Нажмите «🎙️ Включить микрофон» слева, чтобы сделать первую!'}</div>`;
+        return;
+      }
+
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'diary-entry-card' + (item.done ? ' task-completed' : '');
+
+        const dateRangeText = item.startDate
+          ? (item.startDate === item.endDate ? `📅 На дату: ${formatShortRuDate(item.startDate)}` : `📅 В календаре: ${formatShortRuDate(item.startDate)} — ${formatShortRuDate(item.endDate)}`)
+          : '';
+
+        const taskControlsHtml = currentDiaryType === 'tasks'
+          ? `
+            <a href="${buildGoogleCalendarUrl(item)}" target="_blank" rel="noopener" class="small-btn outline" style="padding:5px 10px; font-size:12px;" title="Добавить в Google Календарь">📅 В Google</a>
+            <button class="small-btn ${item.done ? '' : 'pink'}" style="padding:5px 10px; font-size:12px;" onclick="toggleDiaryTaskDone(${item.id})">${item.done ? '✅ Сделано' : '⬜ Выполнить'}</button>
+          `
+          : '';
+
+        const rawHtml = item.raw
+          ? `<div style="margin-top:6px;"><button class="raw-toggle" onclick="toggleRawBox(${item.id})">Показать оригинал диктовки</button><div class="raw-box" id="raw-${item.id}">${escapeHtml(item.raw)}</div></div>`
+          : '';
+
+        card.innerHTML = `
+          <div class="diary-entry-top">
+            <span>🕒 ${escapeHtml(item.date)}</span>
+            <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+              ${taskControlsHtml}
+              <button style="background:none; border:none; color:#9d8b7a; font-weight:800; cursor:pointer; font-size:14px;" onclick="deleteDiaryEntry(${item.id})" title="Удалить">✕</button>
+            </div>
+          </div>
+          ${currentDiaryType === 'tasks' && !item.done && dateRangeText ? `<div class="date-range-pill">${dateRangeText}</div>` : ''}
+          <div class="diary-entry-text">${escapeHtml(item.text)}</div>
+          ${rawHtml}
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    /* Шпаргалки */
+    let currentTipCat = 'all';
+
+    function setTipFilter(cat, btn) {
+      currentTipCat = cat;
+      document.querySelectorAll('.chip-btn').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      renderTips();
+    }
+
+    function renderTips() {
+      const q = (document.getElementById('tipSearchInput').value || "").toLowerCase().trim();
+      const container = document.getElementById('tipsContainer');
+      container.innerHTML = "";
+      const filtered = tipsData.filter(t => {
+        const matchCat = (currentTipCat === 'all' || t.cat === currentTipCat);
+        const matchText = !q || t.title.toLowerCase().includes(q) || t.body.toLowerCase().includes(q);
+        return matchCat && matchText;
+      });
+      document.getElementById('tipsCountBadge').innerText = `Найдено: ${filtered.length}`;
+      if (filtered.length === 0) {
+        container.innerHTML = `<div style="text-align:center; padding:20px; color:#8c7b6d;">По вашему запросу ничего не найдено.</div>`;
+        return;
+      }
+      filtered.forEach(t => {
+        const card = document.createElement('div');
+        card.className = 'tip-card';
+        card.innerHTML = `
+          <div class="tip-cat">${t.catLabel}</div>
+          <div class="tip-title">${escapeHtml(t.title)}</div>
+          <div class="tip-body">${escapeHtml(t.body)}</div>
+        `;
+        container.appendChild(card);
       });
     }
 
@@ -832,22 +2259,8 @@
       return div.innerHTML;
     }
 
-    function resetDashboardStats() {
-      const ok = confirm("Точно сбросить всю статистику (календарь, серию дней и счётчики практик) и начать с нуля?\n\nВаши записи в личных блокнотах и дневниках при этом сохранятся.");
-      if (!ok) return;
-
-      appState.doneToday = {};
-      appState.beliefDone = {};
-      appState.streakCounts = {};
-      appState.masteredIds = [];
-      appState.currentPhaseIdx = 0;
-
-      saveState();
-      renderDashboard();
-      alert("Статистика очищена! Можно начинать с чистого листа.");
-    }
-
-    renderDashboard();
+    loadCurrentBlock();
+    renderTips();
   </script>
 </body>
 </html>
