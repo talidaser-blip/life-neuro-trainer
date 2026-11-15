@@ -2,17 +2,22 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="НейроГерой">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#e89500">
   <title>НейроГерой: Практика молодости</title>
   <style>
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: #e89500;
       color: #2b1f14;
       margin: 0;
-      padding: 12px;
+      padding: 14px;
       display: flex;
       justify-content: center;
       align-items: flex-start;
@@ -21,29 +26,54 @@
 
     .card {
       background: #ffffff;
-      max-width: 650px;
+      max-width: 1140px;
       width: 100%;
-      border-radius: 28px;
+      border-radius: 32px;
       padding: 20px;
-      box-shadow: 0 14px 35px rgba(180, 100, 0, 0.28);
+      box-shadow: 0 16px 40px rgba(180, 100, 0, 0.28);
       border: 3px solid #ffffff;
-      margin: 6px auto 24px auto;
+      margin: 6px auto 28px auto;
     }
 
-    /* Верхняя шапка с переходом в Дашборд */
+    /* Закреплённая шапка для планшета */
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      padding-top: 4px;
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+      border-bottom: 1.5px solid #f7ebd9;
+    }
+
     .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       margin-bottom: 12px;
     }
 
     .app-brand {
-      font-size: 14px;
+      font-size: 18px;
       font-weight: 900;
       color: #d66c00;
       letter-spacing: 0.3px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tablet-pill {
+      font-size: 11px;
+      font-weight: 800;
+      background: #fff6e8;
+      color: #b55900;
+      border: 1px solid #f6cf8a;
+      padding: 3px 9px;
+      border-radius: 10px;
     }
 
     .dashboard-link-btn {
@@ -51,9 +81,9 @@
       background: #e8f7f8;
       color: #198c90;
       border: 2px solid #38b6ba;
-      padding: 7px 14px;
-      border-radius: 16px;
-      font-size: 13px;
+      padding: 10px 18px;
+      border-radius: 18px;
+      font-size: 14px;
       font-weight: 800;
       display: inline-flex;
       align-items: center;
@@ -61,7 +91,7 @@
       transition: all 0.2s ease;
     }
 
-    .dashboard-link-btn:hover {
+    .dashboard-link-btn:hover, .dashboard-link-btn:active {
       background: #38b6ba;
       color: #ffffff;
     }
@@ -70,32 +100,31 @@
     .main-tabs {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
+      gap: 10px;
       background: #fff6e8;
-      padding: 6px;
-      border-radius: 20px;
+      padding: 7px;
+      border-radius: 22px;
       border: 1.5px solid #f6cf8a;
-      margin-bottom: 18px;
     }
 
     .tab-btn {
       border: none;
       background: transparent;
       color: #7c4b00;
-      padding: 10px 6px;
-      border-radius: 15px;
-      font-size: 13px;
+      padding: 12px 10px;
+      border-radius: 16px;
+      font-size: 14px;
       font-weight: 800;
       cursor: pointer;
       transition: all 0.2s ease;
       text-align: center;
-      line-height: 1.25;
+      line-height: 1.3;
     }
 
     .tab-btn.active {
       background: #ff5b79;
       color: #ffffff;
-      box-shadow: 0 4px 12px rgba(255, 91, 121, 0.35);
+      box-shadow: 0 4px 14px rgba(255, 91, 121, 0.35);
     }
 
     .tab-section { display: none; }
@@ -106,15 +135,15 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 12px;
       margin-bottom: 12px;
     }
 
     .badge {
       display: inline-block;
-      padding: 6px 14px;
+      padding: 7px 15px;
       border-radius: 20px;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 800;
       background: #fff0f3;
       color: #ff3b65;
@@ -132,11 +161,11 @@
     .audio-btn {
       background: #e8f7f8;
       color: #198c90;
-      border: 1.5px solid #38b6ba;
-      border-radius: 22px;
-      padding: 8px 16px;
-      font-size: 14px;
-      font-weight: 700;
+      border: 2px solid #38b6ba;
+      border-radius: 24px;
+      padding: 11px 20px;
+      font-size: 15px;
+      font-weight: 800;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -159,8 +188,8 @@
     }
 
     h1 {
-      font-size: 21px;
-      margin: 6px 0 14px 0;
+      font-size: 23px;
+      margin: 6px 0 16px 0;
       color: #2b1f14;
       font-weight: 800;
     }
@@ -168,18 +197,18 @@
     .nav-bar {
       display: flex;
       justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 16px;
+      gap: 12px;
+      margin-bottom: 18px;
     }
 
     .nav-btn {
       flex: 1;
-      padding: 11px 12px;
+      padding: 13px 16px;
       border: 2px solid #38b6ba;
       background: #ffffff;
       color: #198c90;
-      border-radius: 16px;
-      font-size: 14px;
+      border-radius: 18px;
+      font-size: 15px;
       font-weight: 800;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -193,60 +222,62 @@
       color: #9ca3af;
     }
 
+    /* Сетка карточек убеждений (на планшете 2 колонки) */
     .phrase-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 18px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-bottom: 20px;
     }
 
     .phrase-item {
       background: #fffaf4;
       border: 1.5px solid #f6cf8a;
-      border-radius: 18px;
-      padding: 14px 16px;
+      border-radius: 20px;
+      padding: 16px 18px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 7px;
+      transition: all 0.2s ease;
     }
 
     .phrase-item.active-speaking {
       border-color: #ff5b79;
       background: #fff0f3;
-      box-shadow: 0 4px 14px rgba(255, 91, 121, 0.22);
+      box-shadow: 0 4px 16px rgba(255, 91, 121, 0.25);
     }
 
     .phrase-item .num-badge {
       align-self: flex-start;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 800;
       color: #198c90;
       background: #e8f7f8;
-      padding: 2px 8px;
+      padding: 3px 10px;
       border-radius: 10px;
     }
 
     .old-phrase {
-      font-size: 13px;
+      font-size: 14px;
       color: #9d8b7a;
       text-decoration: line-through;
       font-weight: 500;
     }
 
     .new-phrase {
-      font-size: 16px;
+      font-size: 17px;
       font-weight: 800;
       color: #d66c00;
-      line-height: 1.4;
+      line-height: 1.45;
     }
 
     /* План на 6 месяцев */
     .phase-box {
       background: #fff8ee;
       border: 2px solid #f6cf8a;
-      border-radius: 20px;
-      padding: 14px 16px;
-      margin-bottom: 16px;
+      border-radius: 22px;
+      padding: 18px 20px;
+      margin-bottom: 18px;
     }
 
     .phase-meta {
@@ -254,14 +285,14 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 8px;
+      gap: 10px;
+      margin-bottom: 10px;
     }
 
     .phase-mode {
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 800;
-      padding: 4px 10px;
+      padding: 5px 12px;
       border-radius: 12px;
       background: #ff5b79;
       color: #ffffff;
@@ -269,20 +300,20 @@
 
     .phase-mode.unload { background: #38b6ba; }
 
-    .phase-progress-wrap { margin-top: 8px; }
+    .phase-progress-wrap { margin-top: 10px; }
     .phase-progress-text {
       display: flex;
       justify-content: space-between;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
       color: #7c4b00;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
     }
 
     .progress-bar {
       background: #efe2cf;
-      border-radius: 10px;
-      height: 10px;
+      border-radius: 12px;
+      height: 12px;
       width: 100%;
       overflow: hidden;
     }
@@ -294,19 +325,23 @@
       transition: width 0.3s ease;
     }
 
+    /* Сетка упражнений (на планшете 2 колонки) */
     .ex-list {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      margin-bottom: 18px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+      align-items: start;
     }
 
     .ex-card {
       background: #ffffff;
       border: 2px solid #f6cf8a;
-      border-radius: 20px;
-      padding: 16px;
-      box-shadow: 0 4px 14px rgba(232, 149, 0, 0.08);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: 0 6px 18px rgba(232, 149, 0, 0.08);
+      display: flex;
+      flex-direction: column;
     }
 
     .ex-card.done-today {
@@ -323,45 +358,45 @@
     }
 
     .ex-tag {
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 800;
-      padding: 3px 9px;
+      padding: 4px 10px;
       border-radius: 10px;
       background: #fff0f3;
       color: #ff3b65;
     }
 
     .ex-streak {
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 800;
       color: #198c90;
       background: #e8f7f8;
-      padding: 3px 10px;
+      padding: 4px 11px;
       border-radius: 10px;
     }
 
     .ex-title {
-      font-size: 17px;
+      font-size: 18px;
       font-weight: 800;
       color: #2b1f14;
-      margin: 4px 0 6px 0;
+      margin: 4px 0 8px 0;
     }
 
     .ex-short {
-      font-size: 14px;
+      font-size: 15px;
       color: #5c4b3c;
-      line-height: 1.45;
-      margin-bottom: 10px;
+      line-height: 1.5;
+      margin-bottom: 12px;
     }
 
     .ex-toggle-btn {
       background: #fff6e8;
       border: 1.5px solid #f6cf8a;
       color: #b55900;
-      font-size: 13px;
-      font-weight: 700;
-      padding: 8px 12px;
-      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 800;
+      padding: 11px 14px;
+      border-radius: 14px;
       cursor: pointer;
       width: 100%;
       text-align: left;
@@ -372,28 +407,28 @@
 
     .ex-details {
       display: none;
-      margin-top: 12px;
-      padding-top: 12px;
+      margin-top: 14px;
+      padding-top: 14px;
       border-top: 1.5px dashed #f0e6da;
     }
 
     .ex-details.open { display: block; }
 
     .steps-list {
-      margin: 0 0 12px 0;
-      padding-left: 18px;
-      font-size: 14px;
+      margin: 0 0 14px 0;
+      padding-left: 20px;
+      font-size: 15px;
       color: #2b1f14;
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
-    .steps-list li { margin-bottom: 6px; }
+    .steps-list li { margin-bottom: 8px; }
 
     .tool-box {
       background: #fffaf4;
       border: 1.5px solid #38b6ba;
-      border-radius: 14px;
-      padding: 12px;
+      border-radius: 16px;
+      padding: 14px;
       margin-bottom: 12px;
     }
 
@@ -402,7 +437,7 @@
       font-weight: 800;
       color: #198c90;
       text-transform: uppercase;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     .timer-row {
@@ -413,17 +448,17 @@
     }
 
     .timer-display {
-      font-size: 24px;
+      font-size: 28px;
       font-weight: 800;
       color: #ff3b65;
       font-variant-numeric: tabular-nums;
     }
 
     .small-btn {
-      padding: 8px 14px;
-      border-radius: 12px;
+      padding: 10px 16px;
+      border-radius: 14px;
       border: none;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 800;
       cursor: pointer;
       background: #38b6ba;
@@ -434,36 +469,37 @@
 
     .ex-textarea {
       width: 100%;
-      min-height: 95px;
-      border-radius: 12px;
+      min-height: 125px;
+      border-radius: 14px;
       border: 1.5px solid #d6aa65;
-      padding: 10px;
+      padding: 12px;
       font-family: inherit;
-      font-size: 14px;
+      font-size: 15px;
+      line-height: 1.45;
       color: #2b1f14;
       resize: vertical;
       background: #ffffff;
     }
 
     .save-hint {
-      font-size: 11px;
+      font-size: 12px;
       color: #198c90;
       font-weight: 700;
-      margin-top: 4px;
+      margin-top: 5px;
       text-align: right;
     }
 
-    .wheel-row { margin-bottom: 8px; }
+    .wheel-row { margin-bottom: 10px; }
     .wheel-label {
       display: flex;
       justify-content: space-between;
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 2px;
-    }
-    .wheel-row input[type="range"] { width: 100%; accent-color: #ff5b79; }
-    .wheel-total {
       font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .wheel-row input[type="range"] { width: 100%; height: 26px; accent-color: #ff5b79; }
+    .wheel-total {
+      font-size: 15px;
       font-weight: 800;
       color: #d66c00;
       text-align: right;
@@ -472,20 +508,20 @@
 
     .ex-actions {
       display: flex;
-      gap: 8px;
-      margin-top: 12px;
+      gap: 10px;
+      margin-top: 14px;
       flex-wrap: wrap;
     }
 
     .btn-done {
       flex: 1;
-      min-width: 140px;
-      padding: 11px 12px;
-      border-radius: 14px;
+      min-width: 150px;
+      padding: 13px 14px;
+      border-radius: 16px;
       border: none;
       background: #ff5b79;
       color: #ffffff;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 800;
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(255, 91, 121, 0.3);
@@ -498,13 +534,13 @@
 
     .btn-mastered {
       flex: 1;
-      min-width: 140px;
-      padding: 11px 12px;
-      border-radius: 14px;
+      min-width: 150px;
+      padding: 13px 14px;
+      border-radius: 16px;
       border: 2px solid #f6cf8a;
       background: #fffaf4;
       color: #b55900;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 800;
       cursor: pointer;
     }
@@ -512,29 +548,29 @@
     /* Шпаргалки */
     .search-input {
       width: 100%;
-      padding: 12px 16px;
-      border-radius: 16px;
+      padding: 14px 18px;
+      border-radius: 18px;
       border: 2px solid #38b6ba;
-      font-size: 14px;
-      margin-bottom: 12px;
+      font-size: 16px;
+      margin-bottom: 14px;
       outline: none;
     }
 
     .filter-chips {
       display: flex;
-      gap: 6px;
+      gap: 8px;
       flex-wrap: wrap;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
     }
 
     .chip-btn {
-      padding: 6px 12px;
-      border-radius: 14px;
+      padding: 8px 15px;
+      border-radius: 16px;
       border: 1.5px solid #f6cf8a;
       background: #fffaf4;
       color: #7c4b00;
-      font-size: 12px;
-      font-weight: 700;
+      font-size: 13px;
+      font-weight: 800;
       cursor: pointer;
     }
 
@@ -544,33 +580,38 @@
       color: #ffffff;
     }
 
+    .tips-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
     .tip-card {
       background: #fffaf4;
       border: 1.5px solid #f6cf8a;
-      border-radius: 18px;
-      padding: 14px 16px;
-      margin-bottom: 10px;
+      border-radius: 20px;
+      padding: 16px 18px;
     }
 
     .tip-cat {
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 800;
       color: #ff3b65;
       text-transform: uppercase;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
     }
 
     .tip-title {
-      font-size: 16px;
+      font-size: 17px;
       font-weight: 800;
       color: #2b1f14;
-      margin-bottom: 6px;
+      margin-bottom: 7px;
     }
 
     .tip-body {
-      font-size: 14px;
+      font-size: 15px;
       color: #4a3b2c;
-      line-height: 1.45;
+      line-height: 1.5;
     }
 
     /* Модальное окно замены упражнения */
@@ -582,57 +623,71 @@
       z-index: 1000;
       justify-content: center;
       align-items: center;
-      padding: 16px;
+      padding: 20px;
     }
 
     .modal-backdrop.open { display: flex; }
 
     .modal-card {
       background: #ffffff;
-      max-width: 540px;
+      max-width: 720px;
       width: 100%;
       max-height: 85vh;
       overflow-y: auto;
-      border-radius: 24px;
-      padding: 20px;
+      border-radius: 28px;
+      padding: 24px;
       border: 3px solid #f6cf8a;
     }
 
     .catalog-item {
       border: 1.5px solid #f6cf8a;
       background: #fffaf4;
-      border-radius: 14px;
-      padding: 12px;
+      border-radius: 16px;
+      padding: 14px;
       margin-bottom: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
 
     .footer-note {
       text-align: center;
-      font-size: 13px;
+      font-size: 14px;
       color: #8c7b6d;
       border-top: 2px dashed #f0e6da;
-      padding-top: 14px;
+      padding-top: 16px;
       font-weight: 600;
+    }
+
+    /* Адаптация специально для экранов планшетов (портрет и альбом) */
+    @media (min-width: 768px) {
+      body { padding: 24px; }
+      .card { padding: 28px 32px; }
+      .tab-btn { font-size: 15px; padding: 14px 12px; }
+      h1 { font-size: 26px; }
+      .phrase-list { grid-template-columns: repeat(2, 1fr); }
+      .ex-list { grid-template-columns: repeat(2, 1fr); }
+      .tips-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
 <body>
   <div class="card">
-    <!-- Верхняя панель с переходом в отдельный Дашборд -->
-    <div class="top-bar">
-      <div class="app-brand">🌟 НейроГерой</div>
-      <a href="dashboard.html" class="dashboard-link-btn">📊 Дашборд →</a>
-    </div>
+    <div class="sticky-header">
+      <div class="top-bar">
+        <div class="app-brand">
+          <span>🌟 НейроГерой</span>
+          <span class="tablet-pill">Планшет</span>
+        </div>
+        <a href="dashboard.html" class="dashboard-link-btn">📊 Дашборд →</a>
+      </div>
 
-    <!-- Главные 3 вкладки приложения -->
-    <div class="main-tabs">
-      <button class="tab-btn active" id="tabBtn-audio" onclick="switchTab('audio')">🎧 Убеждения<br><small>(8 блоков)</small></button>
-      <button class="tab-btn" id="tabBtn-plan" onclick="switchTab('plan')">🎯 План 6 мес.<br><small>(12 фаз)</small></button>
-      <button class="tab-btn" id="tabBtn-tips" onclick="switchTab('tips')">💡 Шпаргалки<br><small>(Законы)</small></button>
+      <div class="main-tabs">
+        <button class="tab-btn active" id="tabBtn-audio" onclick="switchTab('audio')">🎧 Убеждения<br><small>(8 блоков)</small></button>
+        <button class="tab-btn" id="tabBtn-plan" onclick="switchTab('plan')">🎯 План 6 мес.<br><small>(12 фаз)</small></button>
+        <button class="tab-btn" id="tabBtn-tips" onclick="switchTab('tips')">💡 Шпаргалки<br><small>(Законы)</small></button>
+      </div>
     </div>
 
     <!-- =========================================================
@@ -654,7 +709,7 @@
         <button class="nav-btn" id="nextBtn" onclick="nextBlock()">Следующий блок →</button>
       </div>
 
-      <div style="margin-bottom: 14px;">
+      <div style="margin-bottom: 16px;">
         <button class="btn-done" id="beliefDoneBtn" style="width:100%;" onclick="markBeliefDoneToday()">
           ✅ Прослушала / прочитала этот блок сегодня
         </button>
@@ -670,7 +725,7 @@
       </div>
 
       <div class="footer-note" id="blockSummary">
-        Наденьте наушники, включите аудио и можете убрать телефон в карман.
+        Наденьте наушники, включите аудио или читайте карточки прямо с планшета.
       </div>
     </div>
 
@@ -693,9 +748,9 @@
       <div class="phase-box">
         <div class="phase-meta">
           <span class="phase-mode" id="phaseModeBadge">🔥 Интенсив • 4 практики</span>
-          <span style="font-size: 13px; font-weight: 800; color: #7c4b00;" id="phaseDaysLabel">Цикл: 14 дней</span>
+          <span style="font-size: 14px; font-weight: 800; color: #7c4b00;" id="phaseDaysLabel">Цикл: 14 дней</span>
         </div>
-        <div style="font-size: 13px; color: #5c4b3c; line-height: 1.4;" id="phaseDesc">
+        <div style="font-size: 14px; color: #5c4b3c; line-height: 1.45;" id="phaseDesc">
           Входим в ритм: мягко разгружаем голову и убираем утечки энергии.
         </div>
         <div class="phase-progress-wrap">
@@ -743,7 +798,7 @@
         <button class="chip-btn" onclick="setTipFilter('laws', this)">🔮 12 законов шарика</button>
       </div>
 
-      <div id="tipsContainer"></div>
+      <div class="tips-grid" id="tipsContainer"></div>
     </div>
   </div>
 
@@ -754,8 +809,8 @@
         <span class="badge">🏆 Привычка внедрена!</span>
         <button class="small-btn pink" onclick="closeReplaceModal()">✕ Закрыть</button>
       </div>
-      <h1 style="font-size: 18px; margin-top: 4px;">Выберите новое упражнение в этот слот:</h1>
-      <p style="font-size: 13px; color: #6e5d4f; margin-top: 0;">
+      <h1 style="font-size: 20px; margin-top: 4px;">Выберите новое упражнение в этот слот:</h1>
+      <p style="font-size: 14px; color: #6e5d4f; margin-top: 0;">
         Вы можете поставить любую практику из полного каталога.
       </p>
       <div id="catalogList"></div>
@@ -892,17 +947,17 @@
     ];
 
     const exercisesCatalog = {
-      "nihuane": { id: "nihuane", tag: "🌅 Утро • Тишина", title: "Утренний ритуал «Нихуанеделания»", short: "Первые 20 минут после пробуждения без телефона, новостей и суеты.", steps: ["Проснувшись, не берите телефон в руки минимум 20 минут.", "Медленно потянитесь, выпейте стакан чистой воды, посмотрите в окно.", "Побудьте в тишине правого полушария: почувствуйте тело и спокойный старт дня."], tool: "timer", timerMinutes: 20 },
+      "nihuane": { id: "nihuane", tag: "🌅 Утро • Тишина", title: "Утренний ритуал «Нихуанеделания»", short: "Первые 20 минут после пробуждения без телефона, новостей и суеты.", steps: ["Проснувшись, не берите телефон и планшет в руки минимум 20 минут.", "Медленно потянитесь, выпейте стакан чистой воды, посмотрите в окно.", "Побудьте в тишине правого полушария: почувствуйте тело и спокойный старт дня."], tool: "timer", timerMinutes: 20 },
       "freewriting": { id: "freewriting", tag: "✍️ Письменная • 15 мин", title: "Утренний фрирайтинг (Утренние страницы)", short: "15 минут непрерывного письма без остановки, чтобы отключить внутреннего критика.", steps: ["Запустите встроенный таймер на 15 минут.", "Пишите всё, что приходит в голову, не останавливаясь и не исправляя ошибки.", "Если мыслей нет — пишите «я не знаю, о чём писать», пока не пойдёт поток истинных желаний."], tool: "timer_note", timerMinutes: 15, placeholder: "Пишите сюда поток мыслей без критики и остановок..." },
       "three_wins": { id: "three_wins", tag: "🌙 Вечер • Самооценка", title: "Вечерние 3 победы + Досье успеха", short: "Каждый вечер записываем минимум 3 свои победы дня, приучая мозг быть победителем.", steps: ["Перед сном вспомните прожитый день.", "Запишите 3 конкретные победы или приятных шага (даже самых маленьких).", "Перечитайте список с улыбкой — мозг запоминает, что вы молодец."], tool: "note", placeholder: "Мои 3 победы сегодня:\n1. \n2. \n3. " },
       "declutter_joy": { id: "declutter_joy", tag: "🧹 Пространство • Энергия", title: "«Кто украл мою радость?» + Правило 49 свечей", short: "Находим утечки энергии и каждый день выбрасываем 1–3 лишние вещи.", steps: ["Оглянитесь вокруг: какая вещь, незавершённое дело или подписка забирает радость?", "Уберите или выбросьте от 1 до 3 ненужных вещей прямо сегодня.", "Освободите место для новой энергии и свежего воздуха."], tool: "note", placeholder: "Что я убрала/выбросила сегодня и где вернула себе радость:" },
-      "antiseal": { id: "antiseal", tag: "🛋️ Анти-лень • Перезагрузка", title: "Упражнение-антиТЮлень", short: "Если одолела лень — лечь и действительно ничего не делать (без телефона, ТВ и книг).", steps: ["Если напала апатия — не ругайте себя и не залипайте в ленту новостей.", "Лягте на диван в полной тишине: без смартфона, телевизора, музыки и книг.", "Просто лежите и смотрите в потолок — через 30–60 минут мозг сам соскучится и попросит дела."], tool: "timer", timerMinutes: 30 },
+      "antiseal": { id: "antiseal", tag: "🛋️ Анти-лень • Перезагрузка", title: "Упражнение-антиТЮлень", short: "Если одолела лень — лечь и действительно ничего не делать (без телефона, ТВ и книг).", steps: ["Если напала апатия — не ругайте себя и не залипайте в ленту новостей.", "Лягте на диван в полной тишине: без смартфона, планшета, телевизора, музыки и книг.", "Просто лежите и смотрите в потолок — через 30–60 минут мозг сам соскучится и попросит дела."], tool: "timer", timerMinutes: 30 },
       "compromises_rakes": { id: "compromises_rakes", tag: "🔍 Ревизия • Границы", title: "Ревизия компромиссов + «Любимые грабли»", short: "Выписываем «камушки в ботинке» и повторяющиеся ситуации: чему мир пытается научить?", steps: ["Запишите ситуацию или мелкий компромисс, который повторяется из года в год.", "Задайте честный вопрос: «Чему эта ситуация пытается меня научить? Как мир пытается меня распрямить?»", "Сделайте один маленький шаг, чтобы убрать этот «камушек из ботинка»."], tool: "note", placeholder: "Мои грабли / компромисс → Чему это меня учит:" },
       "killer_forgiveness": { id: "killer_forgiveness", tag: "🔥 Очистка прошлого", title: "«Профессиональный убийца» + 5 шагов прощения", short: "Выписываем ограничивающие установки семьи и пишем терапевтические письма обидчикам.", steps: ["Выпишите 10 навязанных установок из детства и физически сожгите/порвите лист.", "Для прощения обиды напишите письмо по 5 шагам: 1) Обвинение, 2) Ожидание, 3) Объяснение (из его травмы), 4) Чувства, 5) Ответственность 50/50.", "Письмо отправлять не нужно — уничтожьте его, освободив себя."], tool: "note", placeholder: "Установки для проработки или черновик 5 шагов прощения:" },
       "larcido_code": { id: "larcido_code", tag: "📜 Правила • Границы", title: "Личный кодекс Ларсидо (15 заповедей)", short: "Создаём и держим перед глазами свои 15 железных правил обращения с собой.", steps: ["Сформулируйте свои личные заповеди (например: «Со мной нельзя разговаривать на повышенных тонах», «Я не извиняюсь, если не виновата»).", "Дописывайте и перечитывайте свой Кодекс каждый день.", "Сверяйте с ним свои решения при общении с людьми."], tool: "note", placeholder: "Мои личные заповеди (1–15):\n1. \n2. \n3. " },
       "good_girl_list": { id: "good_girl_list", tag: "🏅 Самооценка • Опора", title: "Список молодца (Похвальная грамота)", short: "Минимум 20 реальных достижений с детства + по 1 новому пункту каждый день.", steps: ["Вспомните и запишите минимум 10–20 своих достижений за всю жизнь.", "Каждый день дописывайте сюда минимум 1 новый пункт, за который вы молодец.", "Перечитывайте грамоту в моменты сомнений."], tool: "note", placeholder: "Я молодец, потому что:\n1. \n2. \n3. " },
       "creative_hour": { id: "creative_hour", tag: "🎨 Душа • Призвание", title: "Один созидательный час в день", short: "Ровно 1 час в день на дело, которое вас волнует, без оглядки на деньги или результат.", steps: ["Выделите 30–60 минут чистого времени только для себя.", "Займитесь тем, что искренне волнует: чтение, прогулка в тишине, рисование, размышления, идеи.", "Главное правило: никакой оценки «полезно/выгодно» — только чистый интерес."], tool: "timer", timerMinutes: 60 },
-      "black_dot_breath": { id: "black_dot_breath", tag: "👁️ Фокус • Концентрация", title: "«Чёрная точка» + Дыхание по квадрату", short: "Тренируем железную концентрацию на точке и быструю фокусировку взглядом.", steps: ["Дыхание по квадрату (1 мин): вдох 4 сек (взгляд в правый верхний угол) → выдох 4 сек (в правый нижний) → вдох 4 сек (в левый верхний) → выдох 4 сек (в левый нижний).", "Поставьте точку на листе бумаги (или смотрите на символ ● ниже) 5–15 минут, не отводя взгляд.", "Каждый раз, когда мысль убегает, мягко возвращайте взгляд в центр точки."], tool: "timer", timerMinutes: 15 },
+      "black_dot_breath": { id: "black_dot_breath", tag: "👁️ Фокус • Концентрация", title: "«Чёрная точка» + Дыхание по квадрату", short: "Тренируем железную концентрацию на точке и быструю фокусировку взглядом.", steps: ["Дыхание по квадрату (1 мин): вдох 4 сек (взгляд в правый верхний угол) → выдох 4 сек (в правый нижний) → вдох 4 сек (в левый верхний) → выдох 4 сек (в левый нижний).", "Смотрите на чёрную точку на экране планшета (или на листе бумаги) 5–15 минут, не отводя взгляд.", "Каждый раз, когда мысль убегает, мягко возвращайте взгляд в центр точки."], tool: "timer", timerMinutes: 15 },
       "micro_decisions": { id: "micro_decisions", tag: "👣 Анти-прокрастинация", title: "Техника микрорешений и «Только сегодня»", short: "Дробим большую цель на крошечные шаги и держим слово «только сегодня».", steps: ["Разбейте большую задачу на смехотворно маленький шаг (не «навести порядок», а «разобрать одну полку»).", "Если хочется сорваться или бросить дело, скажите: «Я могу сорваться завтра. Но сегодня я продержусь».", "Отметьте выполненный микрошаг."], tool: "note", placeholder: "Мой микрошаг на сегодня:" },
       "vocation_wheel": { id: "vocation_wheel", tag: "🧭 Призвание • 4 оси", title: "Колесо призвания + «Техника 5 жизней»", short: "Оцениваем дело по 4 осям (от 1 до 10) и придумываем 5 профессий для 5 жизней.", steps: ["Оцените выбранное дело по 4 ползункам ниже (идеально — от 32 баллов и выше).", "Запишите в заметки: кем бы вы стали, если бы у вас было 5 разных жизней? Как объединить эти интересы в одной?"], tool: "wheel_note", placeholder: "Мои 5 жизней (кем бы я стала в каждой из 5 жизней):\n1. \n2. \n3. \n4. \n5. " },
       "five_year_pauk": { id: "five_year_pauk", tag: "🕸️ Стратегия • ПАУК", title: "Пятилетний анализ + Система «ПАУК»", short: "Проверяем, где мы «притворялись активными», и сортируем направления по системе ПАУК.", steps: ["Сравните: что волновало вас 1–5 лет назад и что реально сделано для решения?", "Выпишите 6–10 своих направлений/дел и промаркируйте каждое буквой ПАУК: П — Продолжаю, А — Аткладываю, У — Убираю в долгий ящик, К — Корректирую."], tool: "note", placeholder: "Мои направления по системе ПАУК (П / А / У / К):" },
@@ -918,17 +973,17 @@
       "five_points_map": { id: "five_points_map", tag: "🗺️ Биография • Путь", title: "Система 5 точек (Карта Пути)", short: "Описываем свой путь: Рассвет, Эра накапливания, 1-й прорыв, 2-й прорыв и Кульминация.", steps: ["Распишите этапы своей жизни как захватывающую книгу: где был Рассвет, где шла Эра накапливания опыта, где случились прорывы.", "Увидьте, на какой точке вы находитесь сейчас и куда ведёт следующая глава."], tool: "note", placeholder: "Мои 5 точек пути:" },
       "pyramid_relations": { id: "pyramid_relations", tag: "❤️ Отношения • Комфорт", title: "Перепросмотр пирамиды отношений", short: "Ставим психологический комфорт и безопасность в фундамент любого общения.", steps: ["Оцените своё ближайшее окружение: с кем вам легко, спокойно и тепло, а с кем приходится «заслуживать» любовь?", "Перестройте пирамиду: на первом месте — ваш душевный покой."], tool: "note", placeholder: "Мои выводы по пирамиде отношений:" },
       "spontaneity_challenge": { id: "spontaneity_challenge", tag: "🎲 Смелость • Вызов", title: "Микровызов зоне комфорта / Спонтанность", short: "Раз в 2–3 дня делаем нелогичное доброе действие по первому импульсу сердца.", steps: ["Пойти домой незнакомой дорогой, заговорить с интересным человеком, заказать непривычное блюдо или сделать комплимент незнакомке.", "Раскачиваем мозг и ловим подсказки Вселенной."], tool: "note", placeholder: "Мой спонтанный вызов сегодня:" },
-      "non_dominant_hand": { id: "non_dominant_hand", tag: "🧠 Нейробика • Мариса Пир", title: "Неведущая рука и бытовая нейробика", short: "Чистим зубы, держим кружку и листаем телефон другой рукой для новых нейронных связей.", steps: ["Сегодня выполняйте привычные бытовые действия левой рукой (или правой, если вы левша).", "Начинайте подъём или спуск по лестнице с другой ноги."], tool: "note", placeholder: "Какие действия сегодня сделала другой рукой:" },
+      "non_dominant_hand": { id: "non_dominant_hand", tag: "🧠 Нейробика • Мариса Пир", title: "Неведущая рука и бытовая нейробика", short: "Чистим зубы, держим кружку и листаем планшет другой рукой для новых нейронных связей.", steps: ["Сегодня выполняйте привычные бытовые действия левой рукой (или правой, если вы левша).", "Начинайте подъём или спуск по лестнице с другой ноги."], tool: "note", placeholder: "Какие действия сегодня сделала другой рукой:" },
       "bucket_balloon": { id: "bucket_balloon", tag: "🎈 Гипно-тест • Мариса Пир", title: "Ведро и воздушный шарик (Сила мысли)", short: "2-минутная практика, доказывающая, как воображение мгновенно управляет телом.", steps: ["Встаньте, вытяните обе руки вперёд и закройте глаза.", "Представьте, что к левой руке привязали тяжёлое ведро с песком, а к правой — огромный воздушный шарик с гелием.", "Почувствуйте через 1 минуту, как руки сами разошлись на разную высоту."], tool: "timer", timerMinutes: 2 },
       "young_dance": { id: "young_dance", tag: "💃 Лимфа • Плейлист Young", title: "10 минут танцев под плейлист «Young»", short: "Включаем треки со словом Young (Sinatra, Forever Young) и свободно двигаемся.", steps: ["Включите любимую ритмичную песню со словом «Young».", "Потанцуйте, попрыгайте и подпевайте вслух 10 минут, разгоняя лимфу и омолаживая подсознание."], tool: "timer", timerMinutes: 10 },
-      "horizon_20": { id: "horizon_20", tag: "🌅 Созерцание • Тишина", title: "Созерцание горизонта (20 минут)", short: "Смотрим вдаль без гаджетов, возвращая зрению и мозгу глубину и покой.", steps: ["Выйдите на улицу или подойдите к окну с дальним видом.", "20 минут смотрите на линию горизонта, облака или деревья без телефона."], tool: "timer", timerMinutes: 20 }
+      "horizon_20": { id: "horizon_20", tag: "🌅 Созерцание • Тишина", title: "Созерцание горизонта (20 минут)", short: "Смотрим вдаль без гаджетов, возвращая зрению и мозгу глубину и покой.", steps: ["Выйдите на улицу или подойдите к окну с дальним видом.", "20 минут смотрите на линию горизонта, облака или деревья без планшета и телефона."], tool: "timer", timerMinutes: 20 }
     };
 
     const defaultPhases = [
       { month: "Месяц 1 • Недели 1–2", title: "Фаза 1: Очистка головы, тела и лени", mode: "🔥 Интенсив • 4 практики", isUnload: false, desc: "Входим в ритм: мягко разгружаем голову с утра, фиксируем победы вечером и убираем хлам.", slots: ["nihuane", "freewriting", "three_wins", "declutter_joy"] },
       { month: "Месяц 1 • Недели 3–4", title: "Фаза 2: Перезагрузка через тишину", mode: "🌿 Разгрузка • 1 практика", isUnload: true, desc: "Недели отдыха: первые 4 навыка укладываются в голове, а мы осваиваем честный отдых без гаджетов.", slots: ["antiseal"] },
       { month: "Месяц 2 • Недели 5–6", title: "Фаза 3: Закрепление базы и ревизия граблей", mode: "🔄 Повтор + Новое • 4 практики", isUnload: false, desc: "Закрепляем фрирайтинг и 3 победы, а также разбираем повторяющиеся ситуации и старые обиды.", slots: ["freewriting", "three_wins", "compromises_rakes", "killer_forgiveness"] },
-      { month: "Месяц 2 • Недели 7–8", title: "Фаза 4: Разгрузка + утренний хвост", mode: "🌿 Разгрузка + Хвост • 2 практики", isUnload: true, desc: "Закрепляем антиТЮлень и возвращаем утренние 20 минут без телефона.", slots: ["antiseal", "nihuane"] },
+      { month: "Месяц 2 • Недели 7–8", title: "Фаза 4: Разгрузка + утренний хвост", mode: "🌿 Разгрузка + Хвост • 2 практики", isUnload: true, desc: "Закрепляем антиТЮлень и возвращаем утренние 20 минут без экрана.", slots: ["antiseal", "nihuane"] },
       { month: "Месяц 3 • Недели 9–12", title: "Фаза 5: Личный Кодекс, самооценка и фокус", mode: "🔥 Интенсив • 4 практики", isUnload: false, desc: "Выстраиваем личные правила границ, собираем похвальную грамоту и тренируем концентрацию.", slots: ["larcido_code", "good_girl_list", "creative_hour", "black_dot_breath"] },
       { month: "Месяц 3 • Недели 11–12", title: "Фаза 6: Искусство маленьких шагов", mode: "🌿 Разгрузка • 1 практика", isUnload: true, desc: "Отдыхаем от нагрузки и оттачиваем мягкую дисциплину «Только сегодня».", slots: ["micro_decisions"] },
       { month: "Месяц 4 • Недели 13–14", title: "Фаза 7: Границы и Карта призвания", mode: "🔄 Повтор + Новое • 4 практики", isUnload: false, desc: "Сверяем жизнь с Кодексом и оцениваем свои интересы по Колесу призвания и системе ПАУК.", slots: ["larcido_code", "good_girl_list", "vocation_wheel", "five_year_pauk"] },
@@ -1239,12 +1294,12 @@
               <div class="tool-title">⏱️ Таймер практики (${mins} мин)</div>
               <div class="timer-row">
                 <div class="timer-display" id="timer-disp-${slotIdx}">${String(mins).padStart(2, '0')}:00</div>
-                <div style="display:flex; gap:6px;">
+                <div style="display:flex; gap:8px;">
                   <button class="small-btn" onclick="toggleTimer(${slotIdx}, ${mins})">Старт / Пауза</button>
                   <button class="small-btn pink" onclick="resetTimer(${slotIdx}, ${mins})">Сброс</button>
                 </div>
               </div>
-              ${ex.id === 'black_dot_breath' ? '<div style="text-align:center; font-size:42px; margin-top:10px; color:#000;">●</div>' : ''}
+              ${ex.id === 'black_dot_breath' ? '<div style="text-align:center; font-size:54px; margin-top:12px; color:#000;">●</div>' : ''}
             </div>
           `;
         }
@@ -1282,7 +1337,7 @@
             <div class="tool-box">
               <div class="tool-title">📝 Личный блокнот (сохраняется автоматически)</div>
               <textarea class="ex-textarea" placeholder="${escapeHtml(ex.placeholder || 'Ваши записи...')}" oninput="saveNote('${exId}', this.value)">${escapeHtml(savedText)}</textarea>
-              <div class="save-hint">✓ Сохранено в телефоне</div>
+              <div class="save-hint">✓ Сохранено на планшете</div>
             </div>
           `;
         }
@@ -1400,9 +1455,9 @@
         item.className = 'catalog-item';
         item.innerHTML = `
           <div>
-            <div style="font-size:11px; font-weight:800; color:#ff3b65;">${ex.tag} ${isMastered ? '• 🏆 Освоено' : ''}</div>
-            <div style="font-size:14px; font-weight:800; color:#2b1f14;">${ex.title}</div>
-            <div style="font-size:12px; color:#6e5d4f;">${ex.short}</div>
+            <div style="font-size:12px; font-weight:800; color:#ff3b65;">${ex.tag} ${isMastered ? '• 🏆 Освоено' : ''}</div>
+            <div style="font-size:15px; font-weight:800; color:#2b1f14;">${ex.title}</div>
+            <div style="font-size:13px; color:#6e5d4f;">${ex.short}</div>
           </div>
           <button class="small-btn" onclick="selectReplacement('${ex.id}')">Выбрать</button>
         `;
