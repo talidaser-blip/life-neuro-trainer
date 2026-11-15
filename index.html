@@ -102,11 +102,11 @@
       color: #ffffff;
     }
 
-    /* Главные 3 вкладки */
+    /* Главные 4 вкладки */
     .main-tabs {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
       background: #fff6e8;
       padding: 7px;
       border-radius: 22px;
@@ -117,14 +117,14 @@
       border: none;
       background: transparent;
       color: #7c4b00;
-      padding: 12px 10px;
+      padding: 11px 8px;
       border-radius: 16px;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 800;
       cursor: pointer;
       transition: all 0.2s ease;
       text-align: center;
-      line-height: 1.3;
+      line-height: 1.25;
     }
 
     .tab-btn.active {
@@ -228,7 +228,7 @@
       color: #9ca3af;
     }
 
-    /* Сетка карточек убеждений (на планшете 2 колонки) */
+    /* Сетка карточек убеждений */
     .phrase-list {
       display: grid;
       grid-template-columns: 1fr;
@@ -331,7 +331,6 @@
       transition: width 0.3s ease;
     }
 
-    /* Сетка упражнений (на планшете 2 колонки) */
     .ex-list {
       display: grid;
       grid-template-columns: 1fr;
@@ -472,6 +471,7 @@
     }
 
     .small-btn.pink { background: #ff5b79; }
+    .small-btn.gold { background: #e89500; }
 
     .ex-textarea {
       width: 100%;
@@ -620,6 +620,153 @@
       line-height: 1.5;
     }
 
+    /* =========================================================
+       СТИЛИ ДЛЯ ВКЛАДКИ 4: ГОЛОСОВЫЕ ДНЕВНИКИ
+       ========================================================= */
+    .diary-subtabs {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .diary-sub-btn {
+      padding: 12px 10px;
+      border-radius: 16px;
+      border: 2px solid #f6cf8a;
+      background: #fffaf4;
+      color: #7c4b00;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .diary-sub-btn.active {
+      background: #38b6ba;
+      border-color: #38b6ba;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(56, 182, 186, 0.3);
+    }
+
+    .diary-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .diary-composer {
+      background: #fff8ee;
+      border: 2px solid #f6cf8a;
+      border-radius: 24px;
+      padding: 18px;
+    }
+
+    .mic-btn {
+      width: 100%;
+      padding: 15px;
+      border-radius: 18px;
+      border: none;
+      background: #38b6ba;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 14px rgba(56, 182, 186, 0.35);
+      transition: all 0.2s ease;
+    }
+
+    .mic-btn.recording {
+      background: #ff3b65;
+      box-shadow: 0 4px 16px rgba(255, 59, 101, 0.45);
+      animation: pulse 1.2s infinite;
+    }
+
+    .mic-status {
+      font-size: 13px;
+      font-weight: 700;
+      color: #7c4b00;
+      text-align: center;
+      margin-bottom: 10px;
+      min-height: 18px;
+    }
+
+    .diary-tools-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      margin-bottom: 12px;
+    }
+
+    .diary-entry-card {
+      background: #fffaf4;
+      border: 1.5px solid #f6cf8a;
+      border-radius: 20px;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+    }
+
+    .diary-entry-card.task-completed {
+      background: #f2fbfb;
+      border-color: #38b6ba;
+      opacity: 0.82;
+    }
+
+    .diary-entry-card.task-completed .diary-entry-text {
+      text-decoration: line-through;
+      color: #6e8586;
+    }
+
+    .diary-entry-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #9d8b7a;
+    }
+
+    .diary-entry-text {
+      font-size: 16px;
+      color: #2b1f14;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      margin-bottom: 10px;
+    }
+
+    .raw-toggle {
+      font-size: 12px;
+      font-weight: 700;
+      color: #198c90;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .raw-box {
+      display: none;
+      margin-top: 8px;
+      padding: 10px;
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px dashed #d6aa65;
+      font-size: 13px;
+      color: #7c6b5d;
+    }
+
+    .raw-box.open { display: block; }
+
     /* Модальное окно замены упражнения */
     .modal-backdrop {
       display: none;
@@ -670,11 +817,14 @@
     @media (min-width: 768px) {
       body { padding: 24px; }
       .card { padding: 28px 32px; }
-      .tab-btn { font-size: 15px; padding: 14px 12px; }
+      .main-tabs { grid-template-columns: repeat(4, 1fr); }
+      .tab-btn { font-size: 14px; padding: 13px 10px; }
       h1 { font-size: 26px; }
       .phrase-list { grid-template-columns: repeat(2, 1fr); }
       .ex-list { grid-template-columns: repeat(2, 1fr); }
       .tips-grid { grid-template-columns: repeat(2, 1fr); }
+      .diary-subtabs { grid-template-columns: repeat(4, 1fr); }
+      .diary-layout { grid-template-columns: 1fr 1.25fr; }
     }
   </style>
 </head>
@@ -692,6 +842,7 @@
       <div class="main-tabs">
         <button class="tab-btn active" id="tabBtn-audio" onclick="switchTab('audio')">🎧 Убеждения<br><small>(8 блоков)</small></button>
         <button class="tab-btn" id="tabBtn-plan" onclick="switchTab('plan')">🎯 План 6 мес.<br><small>(12 фаз)</small></button>
+        <button class="tab-btn" id="tabBtn-diary" onclick="switchTab('diary')">🎙 Дневники<br><small>(4 ленты)</small></button>
         <button class="tab-btn" id="tabBtn-tips" onclick="switchTab('tips')">💡 Шпаргалки<br><small>(Законы)</small></button>
       </div>
     </div>
@@ -783,7 +934,54 @@
     </div>
 
     <!-- =========================================================
-         ВКЛАДКА 3: КОПИЛКА ПРАВИЛ, ЗАКОНОВ И ШПАРГАЛОК
+         ВКЛАДКА 3: ГОЛОСОВЫЕ ДНЕВНИКИ (4 РАЗДЕЛА + АВТО-РЕДАКТОР)
+         ========================================================= -->
+    <div class="tab-section" id="tab-diary">
+      <div class="header-row">
+        <span class="badge" id="diaryTypeBadge">📅 Дневник дня</span>
+        <span class="badge badge-teal" id="diaryCountBadge">Записей: 0</span>
+      </div>
+
+      <h1 id="diaryHeading">Дневник дня (Утро / Вечер)</h1>
+
+      <div class="diary-subtabs">
+        <button class="diary-sub-btn active" id="dSub-day" onclick="selectDiaryType('day')">📅 Дневник дня</button>
+        <button class="diary-sub-btn" id="dSub-ideas" onclick="selectDiaryType('ideas')">💡 Мои идеи</button>
+        <button class="diary-sub-btn" id="dSub-plots" onclick="selectDiaryType('plots')">📖 Сюжеты для книг</button>
+        <button class="diary-sub-btn" id="dSub-tasks" onclick="selectDiaryType('tasks')">⚡ Надо сделать</button>
+      </div>
+
+      <div class="diary-layout">
+        <!-- Левая колонка: диктовка и очистка -->
+        <div class="diary-composer">
+          <button class="mic-btn" id="diaryMicBtn" onclick="toggleDiaryMic()">
+            <span id="diaryMicIcon">🎙️</span>
+            <span id="diaryMicLabel">Включить микрофон</span>
+          </button>
+          <div class="mic-status" id="diaryMicStatus">Нажмите на кнопку и говорите свободно — текст появится ниже</div>
+
+          <textarea class="ex-textarea" id="diaryInputText" style="min-height: 165px;" placeholder="Надиктуйте голосом или напишите сюда..."></textarea>
+
+          <div class="diary-tools-row">
+            <button class="small-btn gold" style="flex:1;" onclick="polishDiaryDraft()">✨ Причесать текст</button>
+            <button class="small-btn" style="background:#9d8b7a;" onclick="clearDiaryDraft()">Очистить</button>
+          </div>
+
+          <button class="btn-done" style="width:100%; font-size:15px;" onclick="saveDiaryEntry()">
+            💾 Сохранить в дневник
+          </button>
+        </div>
+
+        <!-- Правая колонка: лента сохранённых записей -->
+        <div>
+          <input type="text" class="search-input" id="diarySearchInput" placeholder="🔍 Поиск по записям в этом дневнике..." oninput="renderDiaryEntries()">
+          <div id="diaryEntriesList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         ВКЛАДКА 4: КОПИЛКА ПРАВИЛ, ЗАКОНОВ И ШПАРГАЛОК
          ========================================================= -->
     <div class="tab-section" id="tab-tips">
       <div class="header-row">
@@ -1036,10 +1234,12 @@
       beliefDone: {},
       streakCounts: {},
       notes: {},
+      diaries: { day: [], ideas: [], plots: [], tasks: [] },
       wheel: { passion: 7, talent: 7, values: 8, state: 8 },
       masteredIds: []
     };
     if (!appState.beliefDone) appState.beliefDone = {};
+    if (!appState.diaries) appState.diaries = { day: [], ideas: [], plots: [], tasks: [] };
 
     function saveState() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
@@ -1052,11 +1252,13 @@
 
     function switchTab(tabName) {
       stopAudio();
+      stopDiaryMic();
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
       document.getElementById('tabBtn-' + tabName).classList.add('active');
       document.getElementById('tab-' + tabName).classList.add('active');
       if (tabName === 'plan') renderPhase();
+      if (tabName === 'diary') renderDiaryEntries();
       if (tabName === 'tips') renderTips();
     }
 
@@ -1483,6 +1685,264 @@
         saveState();
       }
       closeReplaceModal();
+    }
+
+    /* =========================================================
+       ГОЛОСОВЫЕ ДНЕВНИКИ + ЛОКАЛЬНЫЙ ОЧИСТИТЕЛЬ ТЕКСТА
+       ========================================================= */
+    const diaryMeta = {
+      day: { badge: "📅 Дневник дня", title: "Дневник дня (Утро / Вечер)", placeholder: "Надиктуйте, как прошёл день, что сделали, что почувствовали..." },
+      ideas: { badge: "💡 Мои идеи", title: "Копилка идей и озарений", placeholder: "Надиктуйте идею для проекта, жизни или творчества..." },
+      plots: { badge: "📖 Сюжеты для книг", title: "Сюжеты, сцены и герои для книг", placeholder: "Надиктуйте сюжетный поворот, образ героя или сцену..." },
+      tasks: { badge: "⚡ Надо сделать", title: "Быстрые дела и задачи на ходу", placeholder: "Надиктуйте то, что внезапно вспомнили сделать..." }
+    };
+
+    let currentDiaryType = 'day';
+    let lastRawDraft = "";
+    let recognition = null;
+    let isRecording = false;
+    let baseTextBeforeMic = "";
+
+    function selectDiaryType(type) {
+      currentDiaryType = type;
+      document.querySelectorAll('.diary-sub-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('dSub-' + type).classList.add('active');
+      document.getElementById('diaryTypeBadge').innerText = diaryMeta[type].badge;
+      document.getElementById('diaryHeading').innerText = diaryMeta[type].title;
+      document.getElementById('diaryInputText').placeholder = diaryMeta[type].placeholder;
+      renderDiaryEntries();
+    }
+
+    function toggleDiaryMic() {
+      if (isRecording) stopDiaryMic();
+      else startDiaryMic();
+    }
+
+    function startDiaryMic() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert("В этом браузере микрофон через сайт не поддерживается — используйте кнопку микрофона прямо на клавиатуре планшета!");
+        return;
+      }
+
+      recognition = new SpeechRecognition();
+      recognition.lang = 'ru-RU';
+      recognition.continuous = true;
+      recognition.interimResults = true;
+
+      const inputEl = document.getElementById('diaryInputText');
+      baseTextBeforeMic = inputEl.value.trim();
+      if (baseTextBeforeMic) baseTextBeforeMic += " ";
+
+      recognition.onstart = () => {
+        isRecording = true;
+        document.getElementById('diaryMicBtn').classList.add('recording');
+        document.getElementById('diaryMicIcon').innerText = "⏹️";
+        document.getElementById('diaryMicLabel').innerText = "Остановить запись";
+        document.getElementById('diaryMicStatus').innerText = "🔴 Идёт запись... Говорите спокойно в своём темпе";
+      };
+
+      recognition.onresult = (event) => {
+        let sessionTranscript = "";
+        for (let i = 0; i < event.results.length; i++) {
+          sessionTranscript += event.results[i][0].transcript;
+        }
+        inputEl.value = baseTextBeforeMic + sessionTranscript;
+      };
+
+      recognition.onerror = (event) => {
+        document.getElementById('diaryMicStatus').innerText = "Пауза микрофона (" + event.error + "). Нажмите снова, чтобы продолжить.";
+        stopDiaryMicUI();
+      };
+
+      recognition.onend = () => {
+        stopDiaryMicUI();
+      };
+
+      try {
+        recognition.start();
+      } catch (e) {
+        stopDiaryMicUI();
+      }
+    }
+
+    function stopDiaryMic() {
+      if (recognition) {
+        try { recognition.stop(); } catch (e) {}
+      }
+      stopDiaryMicUI();
+    }
+
+    function stopDiaryMicUI() {
+      isRecording = false;
+      const btn = document.getElementById('diaryMicBtn');
+      if (btn) btn.classList.remove('recording');
+      const icon = document.getElementById('diaryMicIcon');
+      if (icon) icon.innerText = "🎙️";
+      const label = document.getElementById('diaryMicLabel');
+      if (label) label.innerText = "Включить микрофон";
+      const status = document.getElementById('diaryMicStatus');
+      if (status) status.innerText = "Нажмите «✨ Причесать текст», чтобы убрать слова-паразиты";
+    }
+
+    /* Локальный скрипт очистки устной речи без API */
+    function cleanSpokenRussianText(raw) {
+      if (!raw || !raw.trim()) return "";
+      let text = " " + raw.trim().replace(/\s+/g, " ") + " ";
+
+      // 1. Убираем устойчивые устные связки и слова-паразиты
+      const fillerPhrases = [
+        "ну вот как-то так", "как-то так", "вот так вот", "ну вот", "ну короче",
+        "короче говоря", "в общем-то", "в общем", "так сказать", "как говорится",
+        "грубо говоря", "честно говоря", "на самом деле", "понимаешь", "знаешь",
+        "слушай", "смотри", "значит так", "то есть да", "да вот"
+      ];
+      fillerPhrases.forEach(phrase => {
+        const re = new RegExp("(^|[\\s,.;!?])" + phrase + "(?=[\\s,.;!?]|$)", "gi");
+        text = text.replace(re, "$1");
+      });
+
+      const fillerWords = [
+        "ну", "короче", "типа", "как бы", "вот", "блин", "эээ", "эм", "ммм", "ага", "угу", "получается", "значит"
+      ];
+      fillerWords.forEach(word => {
+        const re = new RegExp("(^|[\\s,.;!?])" + word + "(?=[\\s,.;!?]|$)", "gi");
+        text = text.replace(re, "$1");
+      });
+
+      // 2. Убираем случайные повторы одного и того же слова подряд ("я я", "надо надо")
+      text = text.replace(/\b([а-яёa-z]+)\s+\1\b/gi, "$1");
+
+      // 3. Делим сплошной поток на предложения перед смысловыми переходами
+      text = text.replace(/\s+(а ещё|и ещё|а потом|потом|затем|кроме того|кстати|а также)\s+/gi, ". $1 ");
+
+      // 4. Ставим базовые запятые перед подчинительными и противительными союзами
+      text = text.replace(/\s+(что|чтобы|потому что|так как|который|которая|которое|которые|но|однако|если|когда)\s+/gi, ", $1 ");
+
+      // 5. Чистим лишние пробелы и двойную пунктуацию
+      text = text.replace(/\s+/g, " ").trim();
+      text = text.replace(/\s+([,.;!?])/g, "$1");
+      text = text.replace(/([,.;!?]){2,}/g, "$1");
+      text = text.replace(/^[,.;!?\s]+/, "");
+
+      // 6. Делаем заглавную букву в начале текста и после каждой точки/восклицания
+      text = text.replace(/(^|[.!?]\s+)([а-яёa-z])/g, (m, p1, p2) => p1 + p2.toUpperCase());
+
+      // 7. Добавляем точку в конце, если её нет
+      if (text && !/[.!?]$/.test(text)) {
+        text += ".";
+      }
+
+      return text;
+    }
+
+    function polishDiaryDraft() {
+      stopDiaryMic();
+      const inputEl = document.getElementById('diaryInputText');
+      const current = inputEl.value.trim();
+      if (!current) return;
+      if (!lastRawDraft) lastRawDraft = current;
+      inputEl.value = cleanSpokenRussianText(current);
+      document.getElementById('diaryMicStatus').innerText = "✨ Текст причёсан! Можно подправить или сразу сохранить.";
+    }
+
+    function clearDiaryDraft() {
+      stopDiaryMic();
+      document.getElementById('diaryInputText').value = "";
+      lastRawDraft = "";
+      document.getElementById('diaryMicStatus').innerText = "Поле очищено";
+    }
+
+    function saveDiaryEntry() {
+      stopDiaryMic();
+      const inputEl = document.getElementById('diaryInputText');
+      const text = inputEl.value.trim();
+      if (!text) {
+        alert("Сначала надиктуйте или напишите текст записи.");
+        return;
+      }
+
+      const now = new Date();
+      const dateLabel = now.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      const timeLabel = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+
+      if (!appState.diaries[currentDiaryType]) appState.diaries[currentDiaryType] = [];
+      appState.diaries[currentDiaryType].unshift({
+        id: Date.now(),
+        date: `${dateLabel} • ${timeLabel}`,
+        text: text,
+        raw: lastRawDraft && lastRawDraft !== text ? lastRawDraft : "",
+        done: false
+      });
+
+      saveState();
+      inputEl.value = "";
+      lastRawDraft = "";
+      document.getElementById('diaryMicStatus').innerText = "✅ Запись сохранена!";
+      renderDiaryEntries();
+    }
+
+    function toggleDiaryTaskDone(entryId) {
+      const list = appState.diaries[currentDiaryType] || [];
+      const item = list.find(e => e.id === entryId);
+      if (item) {
+        item.done = !item.done;
+        saveState();
+        renderDiaryEntries();
+      }
+    }
+
+    function deleteDiaryEntry(entryId) {
+      if (!confirm("Удалить эту запись из дневника?")) return;
+      appState.diaries[currentDiaryType] = (appState.diaries[currentDiaryType] || []).filter(e => e.id !== entryId);
+      saveState();
+      renderDiaryEntries();
+    }
+
+    function toggleRawBox(entryId) {
+      const el = document.getElementById('raw-' + entryId);
+      if (el) el.classList.toggle('open');
+    }
+
+    function renderDiaryEntries() {
+      const list = appState.diaries[currentDiaryType] || [];
+      const q = (document.getElementById('diarySearchInput').value || "").toLowerCase().trim();
+      const filtered = list.filter(item => !q || item.text.toLowerCase().includes(q) || (item.raw && item.raw.toLowerCase().includes(q)));
+
+      document.getElementById('diaryCountBadge').innerText = `Записей: ${list.length}`;
+      const container = document.getElementById('diaryEntriesList');
+      container.innerHTML = "";
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="tip-card" style="text-align:center; color:#8c7b6d;">В этом дневнике пока нет записей. Нажмите «🎙️ Включить микрофон» слева, чтобы сделать первую!</div>`;
+        return;
+      }
+
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'diary-entry-card' + (item.done ? ' task-completed' : '');
+
+        const taskCheckboxHtml = currentDiaryType === 'tasks'
+          ? `<button class="small-btn ${item.done ? '' : 'pink'}" style="padding:5px 10px; font-size:12px;" onclick="toggleDiaryTaskDone(${item.id})">${item.done ? '✅ Сделано' : '⬜ Выполнить'}</button>`
+          : '';
+
+        const rawHtml = item.raw
+          ? `<div style="margin-top:6px;"><button class="raw-toggle" onclick="toggleRawBox(${item.id})">Показать оригинал диктовки</button><div class="raw-box" id="raw-${item.id}">${escapeHtml(item.raw)}</div></div>`
+          : '';
+
+        card.innerHTML = `
+          <div class="diary-entry-top">
+            <span>🕒 ${escapeHtml(item.date)}</span>
+            <div style="display:flex; gap:6px; align-items:center;">
+              ${taskCheckboxHtml}
+              <button style="background:none; border:none; color:#9d8b7a; font-weight:800; cursor:pointer; font-size:14px;" onclick="deleteDiaryEntry(${item.id})" title="Удалить">✕</button>
+            </div>
+          </div>
+          <div class="diary-entry-text">${escapeHtml(item.text)}</div>
+          ${rawHtml}
+        `;
+        container.appendChild(card);
+      });
     }
 
     /* Шпаргалки */
